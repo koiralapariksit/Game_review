@@ -1,0 +1,765 @@
+<!-- transfers/latest_transfers.html -->
+{% extends "base.html" %}
+
+{% block title %}Latest Confirmed Transfers - FC Barcelona{% endblock %}
+
+{% block content %}
+<div class="confirmed-transfers-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1 class="page-title">Confirmed Transfers</h1>
+                    <p class="page-subtitle">All confirmed signings for this transfer window</p>
+                </div>
+                <div class="stats-badge">
+                    <div class="badge-content">
+                        <span class="badge-number">{{ total_count }}</span>
+                        <span class="badge-text">Confirmed Deal{{ total_count|pluralize }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Filters -->
+    <div class="navigation-section">
+        <div class="container">
+            <div class="nav-filters">
+                <a href="{% url 'transfers:transfer_list' %}" class="filter-btn">
+                    <span class="filter-icon">📋</span>
+                    All Transfers
+                </a>
+                <a href="{% url 'transfers:latest_transfers' %}" class="filter-btn active">
+                    <span class="filter-icon">✅</span>
+                    Confirmed
+                </a>
+                <a href="{% url 'transfers:transfer_rumors' %}" class="filter-btn">
+                    <span class="filter-icon">💭</span>
+                    Rumors
+                </a>
+            </div>
+            
+            <!-- Sort Controls -->
+            <div class="sort-controls">
+                <button class="sort-btn active">All</button>
+                <button class="sort-btn">Most Expensive</button>
+                <button class="sort-btn">Youngest</button>
+                <button class="sort-btn">Recent</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfers Content -->
+    {% if transfers %}
+    <div class="transfers-section">
+        <div class="container">
+            <div class="transfers-grid">
+                {% for transfer in transfers %}
+                <div class="transfer-card">
+                    <div class="card-header">
+                        <div class="player-info">
+                            <div class="player-avatar">
+                                {% if transfer.image_url %}
+                                <img src="{{ transfer.image_url }}" alt="{{ transfer.player_name }}" class="avatar-img">
+                                {% else %}
+                                <div class="avatar-placeholder">
+                                    {{ transfer.player_name|first }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="player-details">
+                                <h3 class="player-name">
+                                    <a href="{% url 'transfers:transfer_detail' transfer.id %}" class="player-link">
+                                        {{ transfer.player_name }}
+                                    </a>
+                                </h3>
+                                <div class="player-meta">
+                                    <span class="player-age">Age 25</span>
+                                    <span class="player-nationality">🇪🇸 Spain</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="status-badge confirmed">
+                            <span class="badge-dot"></span>
+                            Confirmed
+                        </div>
+                    </div>
+                    
+                    <div class="transfer-details">
+                        <div class="transfer-route">
+                            <span class="from-club">{{ transfer.from_club }}</span>
+                            <span class="transfer-arrow">→</span>
+                            <span class="to-club {% if transfer.to_club == 'FC Barcelona' %}barcelona-club{% endif %}">
+                                {{ transfer.to_club }}
+                            </span>
+                        </div>
+                        
+                        <div class="transfer-info">
+                            <div class="info-item">
+                                <label>Transfer Fee</label>
+                                <span class="fee-amount">
+                                    {% if transfer.fee %}
+                                        {{ transfer.fee }}
+                                    {% else %}
+                                        Free Transfer
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <label>Date Confirmed</label>
+                                <span class="transfer-date">
+                                    {% if transfer.transfer_date %}
+                                        {{ transfer.transfer_date|date:"M d, Y" }}
+                                    {% else %}
+                                        TBD
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="posted-info">
+                            <span class="posted-date">{{ transfer.created_at|date:"M d, Y" }}</span>
+                            <span class="posted-by">by {{ transfer.posted_by.username }}</span>
+                        </div>
+                        <a href="{% url 'transfers:transfer_detail' transfer.id %}" class="view-details">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination-section">
+        <div class="container">
+            <nav class="pagination-nav">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">
+                                <span class="page-icon">⇤</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                <span class="page-icon">←</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                <span class="page-icon">→</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                <span class="page-icon">⇥</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            
+            <div class="pagination-info">
+                <span class="info-text">
+                    Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} confirmed transfers
+                </span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+        <div class="container">
+            <div class="empty-content">
+                <div class="empty-icon">✅</div>
+                <h3 class="empty-title">No Confirmed Transfers Yet</h3>
+                <p class="empty-message">
+                    No confirmed transfers have been posted at this time. Check back later for the latest official transfer news.
+                </p>
+                <div class="empty-actions">
+                    <a href="{% url 'transfers:transfer_list' %}" class="action-btn primary">
+                        <span class="btn-icon">📋</span>
+                        View All Transfers
+                    </a>
+                    <a href="{% url 'transfers:transfer_rumors' %}" class="action-btn secondary">
+                        <span class="btn-icon">💭</span>
+                        View Rumors
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 40px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.stats-badge {
+    background: #e6f7e6;
+    border-radius: 12px;
+    padding: 16px 24px;
+    border: 1px solid #c3e6c3;
+}
+
+.badge-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #006600;
+    display: block;
+}
+
+.badge-text {
+    font-size: 0.9rem;
+    color: #006600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Section */
+.navigation-section {
+    background: #ffffff;
+    padding: 24px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.nav-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background: #e9ecef;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+.filter-btn.active {
+    background: #e6f7e6;
+    border-color: #006600;
+    color: #006600;
+}
+
+.filter-icon {
+    font-size: 1.1rem;
+}
+
+.sort-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.sort-btn {
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+    background: #f8f9fa;
+    color: #1a1a1a;
+}
+
+.sort-btn.active {
+    background: #1a1a1a;
+    color: #ffffff;
+    border-color: #1a1a1a;
+}
+
+/* Transfers Section */
+.transfers-section {
+    padding: 40px 0;
+}
+
+.transfers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+}
+
+.transfer-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.transfer-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #d1d5db;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #e6f7e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #006600;
+    font-size: 1.2rem;
+}
+
+.player-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.player-link {
+    color: #1a1a1a;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.player-link:hover {
+    color: #006600;
+    text-decoration: underline;
+}
+
+.player-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.confirmed {
+    background: #e6f7e6;
+    color: #006600;
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.transfer-details {
+    margin-bottom: 20px;
+}
+
+.transfer-route {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.from-club {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.transfer-arrow {
+    color: #28a745;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.to-club {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.barcelona-club {
+    color: #004d9f !important;
+}
+
+.transfer-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-item label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fee-amount {
+    font-weight: 600;
+    color: #28a745;
+    font-size: 1.1rem;
+}
+
+.transfer-date {
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #e9ecef;
+}
+
+.posted-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.view-details {
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.view-details:hover {
+    background: #e9ecef;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+/* Pagination */
+.pagination-section {
+    padding: 40px 0;
+    border-top: 1px solid #e9ecef;
+}
+
+.pagination-nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.pagination {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+}
+
+.page-item {
+    display: flex;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    background: #f8f9fa;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+.page-item.active .page-link {
+    background: #1a1a1a;
+    color: #ffffff;
+    border-color: #1a1a1a;
+}
+
+.pagination-info {
+    text-align: center;
+}
+
+.info-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 80px 0;
+}
+
+.empty-content {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 24px;
+    opacity: 0.7;
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+
+.empty-message {
+    color: #6c757d;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.empty-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.action-btn.primary {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+.action-btn.primary:hover {
+    background: #333333;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.action-btn.secondary {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #e9ecef;
+}
+
+.action-btn.secondary:hover {
+    background: #e9ecef;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .transfers-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .nav-filters {
+        justify-content: center;
+    }
+    
+    .sort-controls {
+        justify-content: center;
+    }
+    
+    .transfer-route {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+    
+    .transfer-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-footer {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+    
+    .empty-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 16px;
+    }
+    
+    .transfer-card {
+        padding: 16px;
+    }
+    
+    .player-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+</style>
+{% endblock %}

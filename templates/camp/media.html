@@ -1,0 +1,429 @@
+{% extends 'base.html' %}
+
+{% block title %}Media - Aivco Reviews{% endblock %}
+
+{% block content %}
+<style>
+    .media-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: #666666;
+        font-weight: 400;
+    }
+
+    .media-filters {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #eeeeee;
+        background: #ffffff;
+        border-radius: 8px;
+        color: #666666;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+        border-color: #004d98;
+        color: #004d98;
+        background: #f8f9ff;
+    }
+
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .media-card {
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eeeeee;
+        transition: all 0.3s ease;
+    }
+
+    .media-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .media-thumbnail {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #004d98 0%, #0066cc 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .media-thumbnail::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+        opacity: 0.1;
+    }
+
+    .play-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #004d98;
+        font-size: 1.5rem;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+
+    .media-card:hover .play-btn {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .media-content {
+        padding: 1.5rem;
+    }
+
+    .media-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .media-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #666666;
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .media-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .media-description {
+        color: #666666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .media-type {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .featured-section {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eeeeee;
+        margin-bottom: 3rem;
+    }
+
+    .featured-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .featured-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .featured-media {
+        width: 100%;
+        height: 250px;
+        background: linear-gradient(135deg, #004d98 0%, #0066cc 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .featured-info h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.75rem;
+    }
+
+    .featured-info p {
+        color: #666666;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .view-btn {
+        padding: 0.75rem 1.5rem;
+        background: #004d98;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .view-btn:hover {
+        background: #003d7a;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .media-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .featured-content {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .media-filters {
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .media-container {
+            padding: 1rem 0.5rem;
+        }
+
+        .media-content {
+            padding: 1rem;
+        }
+
+        .featured-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="media-container">
+    <div class="page-header">
+        <h1 class="page-title">Media Gallery</h1>
+        <p class="page-subtitle">Latest photos, videos, and highlights from FC Barcelona</p>
+    </div>
+
+    <div class="media-filters">
+        <a href="#" class="filter-btn active">
+            <i class="fas fa-th"></i>
+            All Media
+        </a>
+        <a href="#" class="filter-btn">
+            <i class="fas fa-camera"></i>
+            Photos
+        </a>
+        <a href="#" class="filter-btn">
+            <i class="fas fa-video"></i>
+            Videos
+        </a>
+        <a href="#" class="filter-btn">
+            <i class="fas fa-trophy"></i>
+            Highlights
+        </a>
+    </div>
+
+    <div class="featured-section">
+        <h2 class="featured-title">Featured Content</h2>
+        <div class="featured-content">
+            <div class="featured-media">
+                <i class="fas fa-play-circle"></i>
+                <div class="media-type">Video</div>
+            </div>
+            <div class="featured-info">
+                <h3>El Clasico Highlights: Barcelona vs Real Madrid</h3>
+                <p>Relive the magic of the latest El Clasico with extended highlights, best moments, and post-match analysis. A thrilling encounter that showcased the best of Barcelona's attacking prowess.</p>
+                <a href="#" class="view-btn">
+                    <i class="fas fa-play"></i>
+                    Watch Now
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="media-grid">
+        <div class="media-card">
+            <div class="media-thumbnail">
+                <i class="fas fa-camera"></i>
+                <div class="media-type">Photo</div>
+            </div>
+            <div class="media-content">
+                <h3 class="media-title">Training Session at Joan Gamper</h3>
+                <div class="media-meta">
+                    <span><i class="fas fa-calendar"></i> 2 days ago</span>
+                    <span><i class="fas fa-eye"></i> 12.5K views</span>
+                </div>
+                <p class="media-description">Behind-the-scenes photos from the latest training session preparing for the upcoming match.</p>
+            </div>
+        </div>
+
+        <div class="media-card">
+            <div class="media-thumbnail">
+                <i class="fas fa-video"></i>
+                <div class="media-type">Video</div>
+                <div class="play-btn">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="media-content">
+                <h3 class="media-title">Player Interview: Captain's Corner</h3>
+                <div class="media-meta">
+                    <span><i class="fas fa-calendar"></i> 5 days ago</span>
+                    <span><i class="fas fa-eye"></i> 45.2K views</span>
+                </div>
+                <p class="media-description">Exclusive interview with the team captain discussing tactics and upcoming challenges.</p>
+            </div>
+        </div>
+
+        <div class="media-card">
+            <div class="media-thumbnail">
+                <i class="fas fa-trophy"></i>
+                <div class="media-type">Highlight</div>
+                <div class="play-btn">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="media-content">
+                <h3 class="media-title">Goal of the Week</h3>
+                <div class="media-meta">
+                    <span><i class="fas fa-calendar"></i> 1 week ago</span>
+                    <span><i class="fas fa-eye"></i> 78.9K views</span>
+                </div>
+                <p class="media-description">A spectacular long-range strike that left fans and opponents in awe.</p>
+            </div>
+        </div>
+
+        <div class="media-card">
+            <div class="media-thumbnail">
+                <i class="fas fa-camera"></i>
+                <div class="media-type">Photo</div>
+            </div>
+            <div class="media-content">
+                <h3 class="media-title">Match Day Atmosphere</h3>
+                <div class="media-meta">
+                    <span><i class="fas fa-calendar"></i> 1 week ago</span>
+                    <span><i class="fas fa-eye"></i> 23.1K views</span>
+                </div>
+                <p class="media-description">Capturing the electric atmosphere at Camp Nou during the last home match.</p>
+            </div>
+        </div>
+
+        <div class="media-card">
+            <div class="media-thumbnail">
+                <i class="fas fa-video"></i>
+                <div class="media-type">Video</div>
+                <div class="play-btn">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="media-content">
+                <h3 class="media-title">Tactical Analysis: Formation Deep Dive</h3>
+                <div class="media-meta">
+                    <span><i class="fas fa-calendar"></i> 2 weeks ago</span>
+                    <span><i class="fas fa-eye"></i> 34.7K views</span>
+                </div>
+                <p class="media-description">In-depth analysis of Barcelona's tactical setup and strategic approach.</p>
+            </div>
+        </div>
+
+        <div class="media-card">
+            <div class="media-thumbnail">
+                <i class="fas fa-images"></i>
+                <div class="media-type">Gallery</div>
+            </div>
+            <div class="media-content">
+                <h3 class="media-title">Season's Best Moments</h3>
+                <div class="media-meta">
+                    <span><i class="fas fa-calendar"></i> 2 weeks ago</span>
+                    <span><i class="fas fa-eye"></i> 19.3K views</span>
+                </div>
+                <p class="media-description">A curated collection of the season's most memorable moments and celebrations.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

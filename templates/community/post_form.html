@@ -1,0 +1,299 @@
+<!-- ===== templates/community/post_form.html ===== -->
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Community - FC Barcelona{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 3rem; background: linear-gradient(135deg, rgba(0, 77, 152, 0.1) 0%, rgba(26, 26, 46, 0.8) 100%); border-radius: 20px; padding: 2.5rem 2rem; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, #ffffff 0%, #ffb700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            <i class="fas fa-edit" style="margin-right: 1rem; color: #ffb700;"></i>
+            {{ title }}
+        </h1>
+        <p style="font-size: 1.2rem; color: #b8b8b8; max-width: 600px; margin: 0 auto;">
+            Share your thoughts, experiences, or start a discussion with the Barça community
+        </p>
+    </div>
+
+    <!-- Back Button -->
+    <div style="margin-bottom: 2rem;">
+        <a href="{% url 'community:post_list' %}" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #b8b8b8; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.color='#ffb700'; this.style.transform='translateX(-5px)'" onmouseout="this.style.color='#b8b8b8'; this.style.transform='translateX(0)'">
+            <i class="fas fa-arrow-left"></i>
+            Back to Community
+        </a>
+    </div>
+
+    <!-- Form Container -->
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 20px; padding: 2.5rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+        
+        <!-- Display Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Title Field -->
+            <div style="margin-bottom: 2rem;">
+                <label for="{{ form.title.id_for_label }}" style="display: block; color: #ffb700; font-weight: 600; font-size: 1.1rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-heading" style="margin-right: 0.5rem;"></i>
+                    Post Title
+                </label>
+                <input type="text" 
+                       name="{{ form.title.name }}" 
+                       id="{{ form.title.id_for_label }}"
+                       value="{{ form.title.value|default:'' }}"
+                       class="form-control"
+                       style="width: 100%; padding: 1rem 1.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: white; font-size: 1rem; transition: all 0.3s ease;"
+                       placeholder="Enter your post title..."
+                       {% if form.title.field.required %}required{% endif %}>
+                {% if form.title.help_text %}
+                    <p style="color: #b8b8b8; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">
+                        <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
+                        {{ form.title.help_text }}
+                    </p>
+                {% endif %}
+                {% if form.title.errors %}
+                    {% for error in form.title.errors %}
+                        <p style="color: #e57373; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 0.25rem;"></i>
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Content Field -->
+            <div style="margin-bottom: 2rem;">
+                <label for="{{ form.content.id_for_label }}" style="display: block; color: #ffb700; font-weight: 600; font-size: 1.1rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-align-left" style="margin-right: 0.5rem;"></i>
+                    Content
+                </label>
+                <textarea name="{{ form.content.name }}" 
+                          id="{{ form.content.id_for_label }}"
+                          class="form-control"
+                          rows="6"
+                          style="width: 100%; padding: 1rem 1.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: white; font-size: 1rem; font-family: inherit; resize: vertical; transition: all 0.3s ease;"
+                          placeholder="Write your post content here..."
+                          {% if form.content.field.required %}required{% endif %}>{{ form.content.value|default:'' }}</textarea>
+                {% if form.content.help_text %}
+                    <p style="color: #b8b8b8; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">
+                        <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
+                        {{ form.content.help_text }}
+                    </p>
+                {% endif %}
+                {% if form.content.errors %}
+                    {% for error in form.content.errors %}
+                        <p style="color: #e57373; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 0.25rem;"></i>
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Image Field -->
+            <div style="margin-bottom: 2rem;">
+                <label for="{{ form.image.id_for_label }}" style="display: block; color: #ffb700; font-weight: 600; font-size: 1.1rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-image" style="margin-right: 0.5rem;"></i>
+                    Add Image (Optional)
+                </label>
+                <div style="position: relative;">
+                    <!-- Custom File Upload Area -->
+                    <div class="file-upload-area" style="position: relative; cursor: pointer;">
+                        <input type="file" 
+                               name="{{ form.image.name }}" 
+                               id="{{ form.image.id_for_label }}"
+                               accept="image/*"
+                               style="position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2;">
+                        
+                        <div style="padding: 2rem; background: rgba(255, 183, 0, 0.1); border: 2px dashed rgba(255, 183, 0, 0.3); border-radius: 12px; text-align: center; transition: all 0.3s ease;" 
+                             onmouseover="this.style.borderColor='rgba(255, 183, 0, 0.5)'; this.style.background='rgba(255, 183, 0, 0.15)'" 
+                             onmouseout="this.style.borderColor='rgba(255, 183, 0, 0.3)'; this.style.background='rgba(255, 183, 0, 0.1)'">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 2.5rem; color: #ffb700; margin-bottom: 1rem; opacity: 0.7;"></i>
+                            <p style="color: #b8b8b8; margin: 0; font-size: 1rem; font-weight: 500;">
+                                Click to select an image or drag and drop
+                            </p>
+                            <p style="color: #888; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                                Supported formats: JPG, PNG, GIF (Max 5MB)
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- File name display -->
+                    <div id="file-name-display" style="margin-top: 0.5rem; color: #ffb700; font-size: 0.9rem; display: none;">
+                        <i class="fas fa-file-image" style="margin-right: 0.5rem;"></i>
+                        <span></span>
+                    </div>
+                </div>
+                {% if form.image.help_text %}
+                    <p style="color: #b8b8b8; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">
+                        <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
+                        {{ form.image.help_text }}
+                    </p>
+                {% endif %}
+                {% if form.image.errors %}
+                    {% for error in form.image.errors %}
+                        <p style="color: #e57373; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 0.25rem;"></i>
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Form Actions -->
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <a href="{% url 'community:post_list' %}" style="padding: 1rem 2rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: #b8b8b8; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.color='white'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.color='#b8b8b8'">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i>
+                    Cancel
+                </a>
+                
+                <button type="submit" style="padding: 1rem 2rem; background: linear-gradient(135deg, #a50044 0%, #d32f2f 100%); border: none; border-radius: 12px; color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(165, 0, 68, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 30px rgba(165, 0, 68, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(165, 0, 68, 0.3)'">
+                    <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>
+                    Publish Post
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Guidelines -->
+    <div style="margin-top: 3rem; background: rgba(255, 183, 0, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; border: 1px solid rgba(255, 183, 0, 0.2);">
+        <h3 style="color: #ffb700; font-size: 1.3rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-lightbulb"></i>
+            Community Guidelines
+        </h3>
+        <ul style="color: #b8b8b8; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
+            <li style="margin-bottom: 0.5rem;">Keep discussions respectful and constructive</li>
+            <li style="margin-bottom: 0.5rem;">Share your genuine thoughts and experiences</li>
+            <li style="margin-bottom: 0.5rem;">Use appropriate language suitable for all ages</li>
+            <li style="margin-bottom: 0.5rem;">Avoid spam, self-promotion, or off-topic content</li>
+            <li>Images should be relevant and appropriate</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+/* Alert/Message Styles */
+.alert {
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid;
+    animation: slideIn 0.3s ease-out;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: rgba(76, 175, 80, 0.5);
+    color: #81c784;
+}
+
+.alert-error {
+    background: rgba(244, 67, 54, 0.2);
+    border-color: rgba(244, 67, 54, 0.5);
+    color: #e57373;
+}
+
+.alert-info {
+    background: rgba(255, 183, 0, 0.2);
+    border-color: rgba(255, 183, 0, 0.5);
+    color: #ffb700;
+}
+
+.alert-warning {
+    background: rgba(255, 152, 0, 0.2);
+    border-color: rgba(255, 152, 0, 0.5);
+    color: #ffab40;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Enhanced form control styles */
+.form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus {
+    outline: none !important;
+    border-color: #ffb700 !important;
+    box-shadow: 0 0 0 3px rgba(255, 183, 0, 0.2) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* File upload area hover effects */
+.file-upload-area:hover .fa-cloud-upload-alt {
+    transform: translateY(-2px);
+    opacity: 1;
+}
+
+/* Custom styles for better mobile responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    [style*="font-size: 2.5rem"] {
+        font-size: 1.8rem !important;
+    }
+    
+    [style*="padding: 2.5rem"] {
+        padding: 1.5rem !important;
+    }
+    
+    [style*="display: flex; gap: 1rem; justify-content: flex-end"] {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+    
+    [style*="display: flex; gap: 1rem; justify-content: flex-end"] a,
+    [style*="display: flex; gap: 1rem; justify-content: flex-end"] button {
+        text-align: center !important;
+    }
+}
+</style>
+
+<script>
+// File upload functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('{{ form.image.id_for_label }}');
+    const fileDisplay = document.getElementById('file-name-display');
+    const fileDisplaySpan = fileDisplay.querySelector('span');
+    
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileDisplaySpan.textContent = file.name;
+                fileDisplay.style.display = 'block';
+            } else {
+                fileDisplay.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

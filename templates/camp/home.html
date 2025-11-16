@@ -1,0 +1,694 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Football Club{% endblock %}
+
+{% block content %}
+<style>
+    /* Hero Slideshow Styles */
+    .hero-slideshow {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        border-radius: 12px;
+        margin-bottom: 4rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .slide.active {
+        opacity: 1;
+    }
+
+    .slide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        color: white;
+        padding: 2rem;
+    }
+
+    .slide-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide-subtitle {
+        font-size: 1.25rem;
+        font-weight: 300;
+        opacity: 0.9;
+        max-width: 600px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .slideshow-nav {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .nav-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .nav-dot.active {
+        background: white;
+        transform: scale(1.2);
+    }
+
+    .slideshow-arrows {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        padding: 1rem;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .slideshow-arrows:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .prev-arrow {
+        left: 20px;
+    }
+
+    .next-arrow {
+        right: 20px;
+    }
+
+    /* Section Styles */
+    .section {
+        margin-bottom: 5rem;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: #666666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+        display: grid;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .cards-grid.four-cols {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .cards-grid.three-cols {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+
+    .cards-grid.two-cols {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+
+    /* Player Cards */
+    .player-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .player-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .player-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        font-weight: 700;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .player-info {
+        padding: 1.5rem;
+    }
+
+    .player-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1a1a1a;
+    }
+
+    .player-position {
+        color: #666666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Match Cards */
+    .match-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .match-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .match-teams {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .team {
+        text-align: center;
+        flex: 1;
+    }
+
+    .team-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+
+    .match-vs {
+        font-size: 0.9rem;
+        color: #666666;
+        margin: 0 1rem;
+    }
+
+    .match-info {
+        text-align: center;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .match-date {
+        font-size: 0.9rem;
+        color: #666666;
+        margin-bottom: 0.25rem;
+    }
+
+    .match-venue {
+        font-size: 0.85rem;
+        color: #888888;
+    }
+
+    /* Article Cards */
+    .article-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .article-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .article-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .article-content {
+        padding: 1.5rem;
+    }
+
+    .article-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #1a1a1a;
+        line-height: 1.4;
+    }
+
+    .article-description {
+        color: #666666;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* Transfer Cards */
+    .transfer-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border-left: 4px solid #ff6b6b;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .transfer-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .transfer-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1a1a1a;
+    }
+
+    .transfer-description {
+        color: #666666;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+    }
+
+    .transfer-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #888888;
+    }
+
+    /* Community Cards */
+    .community-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .community-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .community-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #1a1a1a;
+        line-height: 1.4;
+    }
+
+    .community-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: #666666;
+    }
+
+    /* Section Action Buttons */
+    .section-action {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        text-decoration: none;
+        color: white;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-slideshow {
+            height: 350px;
+            margin-bottom: 3rem;
+        }
+
+        .slide-title {
+            font-size: 2rem;
+        }
+
+        .slide-subtitle {
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .cards-grid {
+            gap: 1.5rem;
+        }
+
+        .cards-grid.four-cols,
+        .cards-grid.three-cols,
+        .cards-grid.two-cols {
+            grid-template-columns: 1fr;
+        }
+
+        .slideshow-arrows {
+            font-size: 1.2rem;
+            padding: 0.75rem;
+        }
+
+        .prev-arrow {
+            left: 15px;
+        }
+
+        .next-arrow {
+            right: 15px;
+        }
+    }
+</style>
+
+<!-- Hero Slideshow -->
+<div class="hero-slideshow">
+    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&h=500&fit=crop');">
+        <div class="slide-overlay">
+            <h2 class="slide-title">Welcome to Football Club</h2>
+            <p class="slide-subtitle">Experience the passion, pride, and glory of our beloved team</p>
+        </div>
+    </div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1459865264687-595d652de67e?w=1200&h=500&fit=crop');">
+        <div class="slide-overlay">
+            <h2 class="slide-title">Our Champions</h2>
+            <p class="slide-subtitle">Meet the extraordinary players who make our club legendary</p>
+        </div>
+    </div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=500&fit=crop');">
+        <div class="slide-overlay">
+            <h2 class="slide-title">Match Day Experience</h2>
+            <p class="slide-subtitle">Join thousands of fans in creating an unforgettable atmosphere</p>
+        </div>
+    </div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&h=500&fit=crop');">
+        <div class="slide-overlay">
+            <h2 class="slide-title">Victory Awaits</h2>
+            <p class="slide-subtitle">Together we rise, together we conquer every challenge</p>
+        </div>
+    </div>
+    
+    <button class="slideshow-arrows prev-arrow" onclick="changeSlide(-1)">‹</button>
+    <button class="slideshow-arrows next-arrow" onclick="changeSlide(1)">›</button>
+    
+    <div class="slideshow-nav">
+        <span class="nav-dot active" onclick="goToSlide(0)"></span>
+        <span class="nav-dot" onclick="goToSlide(1)"></span>
+        <span class="nav-dot" onclick="goToSlide(2)"></span>
+        <span class="nav-dot" onclick="goToSlide(3)"></span>
+    </div>
+</div>
+
+<!-- Top Players Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Our Star Players</h2>
+        <p class="section-subtitle">Meet the talented athletes who represent our club with pride and excellence</p>
+    </div>
+    
+    <div class="cards-grid four-cols">
+        {% for player in top_players %}
+        <a href="{% url 'players:player_detail' player.id %}" class="player-card">
+            <div class="player-image" {% if player.image %}style="background-image: url('{{ player.image.url }}');"{% endif %}>
+                {% if not player.image %}
+                    {{ player.name|first }}
+                {% endif %}
+            </div>
+            <div class="player-info">
+                <h3 class="player-name">{{ player.name }}</h3>
+                <p class="player-position">{{ player.position }}</p>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
+            No players available at the moment.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section-action">
+        <a href="{% url 'players:player_list' %}" class="btn-primary">View All Players</a>
+    </div>
+</section>
+
+<!-- Recent Matches Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Recent Matches</h2>
+        <p class="section-subtitle">Catch up on our latest games and upcoming fixtures</p>
+    </div>
+    
+    <div class="cards-grid three-cols">
+        {% for match in recent_matches %}
+        <a href="{% url 'matches:match_detail' match.id %}" class="match-card">
+            <div class="match-teams">
+                <div class="team">
+                    <div class="team-name">{{ match.home_team }}</div>
+                </div>
+                <div class="match-vs">VS</div>
+                <div class="team">
+                    <div class="team-name">{{ match.away_team }}</div>
+                </div>
+            </div>
+            <div class="match-info">
+                <div class="match-date">{{ match.date|date:"F j, Y" }}</div>
+                <div class="match-venue">{{ match.venue }}</div>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
+            No recent matches available.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section-action">
+        <a href="{% url 'matches:match_list' %}" class="btn-primary">View All Matches</a>
+    </div>
+</section>
+
+<!-- Transfer Rumors Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Transfer Rumors</h2>
+        <p class="section-subtitle">Stay updated with the latest transfer news and rumors</p>
+    </div>
+    
+    <div class="cards-grid three-cols">
+        {% for rumor in rumors %}
+        <a href="{% url 'transfers:transfer_detail' rumor.id %}" class="transfer-card">
+            <h3 class="transfer-title">{{ rumor.title }}</h3>
+            <p class="transfer-description">{{ rumor.description|truncatewords:20 }}</p>
+            <div class="transfer-meta">
+                <span>{{ rumor.created_at|date:"M j, Y" }}</span>
+                <span>{{ rumor.source }}</span>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
+            No transfer rumors available.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section-action">
+        <a href="{% url 'transfers:transfer_rumors' %}" class="btn-primary">View All Rumors</a>
+    </div>
+</section>
+
+<!-- Latest Analysis Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Match Analysis</h2>
+        <p class="section-subtitle">In-depth analysis and tactical insights from our experts</p>
+    </div>
+    
+    <div class="cards-grid two-cols">
+        {% for article in analysis_articles %}
+        <a href="{% url 'analysis:article_detail' article.slug %}" class="article-card">
+            <div class="article-image" {% if article.image %}style="background-image: url('{{ article.image.url }}');"{% endif %}>
+                {% if not article.image %}
+                    <i class="fas fa-chart-line"></i>
+                {% endif %}
+            </div>
+            <div class="article-content">
+                <h3 class="article-title">{{ article.title }}</h3>
+                <p class="article-description">{{ article.description|truncatewords:15 }}</p>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
+            No analysis articles available.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section-action">
+        <a href="{% url 'analysis:article_list' %}" class="btn-primary">View All Analysis</a>
+    </div>
+</section>
+
+<!-- Community Posts Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Community Discussions</h2>
+        <p class="section-subtitle">Join the conversation with fellow fans and share your thoughts</p>
+    </div>
+    
+    <div class="cards-grid two-cols">
+        {% for post in community_posts %}
+        <a href="{% url 'community:post_detail' post.pk %}" class="community-card">
+            <h3 class="community-title">{{ post.title }}</h3>
+            <div class="community-meta">
+                <span><i class="fas fa-user"></i> {{ post.author.username }}</span>
+                <span><i class="fas fa-clock"></i> {{ post.created_at|date:"M j, Y" }}</span>
+                <span><i class="fas fa-comments"></i> {{ post.comments.count }} comments</span>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
+            No community posts available.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section-action">
+        <a href="{% url 'community:post_list' %}" class="btn-primary">Join the Discussion</a>
+    </div>
+</section>
+
+<script>
+    // Slideshow functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.nav-dot');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+        slides[currentSlide].classList.remove('active');
+        dots[currentSlide].classList.remove('active');
+        
+        currentSlide = (n + totalSlides) % totalSlides;
+        
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
+    }
+
+    function changeSlide(direction) {
+        showSlide(currentSlide + direction);
+    }
+
+    function goToSlide(n) {
+        showSlide(n);
+    }
+
+    // Auto-advance slideshow
+    setInterval(() => {
+        changeSlide(1);
+    }, 5000);
+</script>
+{% endblock %}

@@ -1,0 +1,681 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} - FC Barcelona{% endblock %}
+
+{% block content %}
+<div class="article-detail-section">
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb">
+        <a href="/analysis/" class="breadcrumb-link">
+            <i class="fas fa-chevron-left"></i> Back to Analysis
+        </a>
+        {% if article.category %}
+        <span class="breadcrumb-separator">•</span>
+        <a href="/analysis/category/{{ article.category.slug }}/" class="breadcrumb-link category-link">
+            <i class="fas fa-folder"></i> Back to {{ article.category }}
+        </a>
+        {% endif %}
+    </nav>
+
+    <!-- Article Header -->
+    <header class="article-header">
+        <!-- Post Type Badge -->
+        {% if article.post_type %}
+        <div class="post-type-badge {{ article.post_type|lower }}">
+            <i class="fas fa-{% if article.post_type == 'Tactical' %}chess{% else %}comment{% endif %}"></i>
+            {{ article.post_type }}
+        </div>
+        {% endif %}
+
+        <h1 class="article-title">{{ article.title }}</h1>
+        
+        <div class="article-meta">
+            {% if article.author %}
+            <span class="meta-item">
+                <i class="fas fa-user"></i>
+                {{ article.author }}
+            </span>
+            {% endif %}
+            <span class="meta-item">
+                <i class="fas fa-calendar"></i>
+                {{ article.created_at|date:"F d, Y" }}
+            </span>
+            {% if article.category %}
+            <span class="meta-item category">
+                <i class="fas fa-tag"></i>
+                {{ article.category }}
+            </span>
+            {% endif %}
+            <!-- Reading Time -->
+            <span class="meta-item reading-time">
+                <i class="fas fa-clock"></i>
+                {{ article.reading_time|default:"5" }} min read
+            </span>
+        </div>
+
+        <!-- Tags Section -->
+        {% if article.tags.all %}
+        <div class="tags-section">
+            {% for tag in article.tags.all %}
+            <a href="/analysis/tag/{{ tag.slug }}/" class="tag-link">
+                #{{ tag.name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </header>
+
+    <!-- Optional Cover Image -->
+    {% if article.cover_image %}
+    <div class="cover-image-container">
+        <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="cover-image">
+        {% if article.cover_caption %}
+        <p class="cover-caption">{{ article.cover_caption }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Article Content -->
+    <article class="article-content">
+        <div class="content-wrapper">
+            {{ article.content|linebreaks }}
+        </div>
+    </article>
+
+    <!-- Social Media Share Buttons -->
+    <div class="social-share-section">
+        <h3 class="share-title">Share this article</h3>
+        <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" 
+               target="_blank" class="share-btn twitter">
+                <i class="fab fa-twitter"></i>
+                <span>Twitter</span>
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+               target="_blank" class="share-btn facebook">
+                <i class="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+               target="_blank" class="share-btn linkedin">
+                <i class="fab fa-linkedin-in"></i>
+                <span>LinkedIn</span>
+            </a>
+            <button onclick="copyToClipboard('{{ request.build_absolute_uri }}')" class="share-btn copy">
+                <i class="fas fa-link"></i>
+                <span>Copy Link</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Related Articles Section -->
+    {% if related_articles %}
+    <section class="related-articles">
+        <h2 class="related-title">Related Articles</h2>
+        <div class="related-grid">
+            {% for related in related_articles %}
+            <div class="related-card">
+                {% if related.cover_image %}
+                <div class="related-image">
+                    <img src="{{ related.cover_image.url }}" alt="{{ related.title }}" loading="lazy">
+                </div>
+                {% endif %}
+                <div class="related-content">
+                    {% if related.post_type %}
+                    <span class="related-badge {{ related.post_type|lower }}">{{ related.post_type }}</span>
+                    {% endif %}
+                    <h3 class="related-card-title">
+                        <a href="/analysis/{{ related.slug }}/" class="related-link">{{ related.title }}</a>
+                    </h3>
+                    <div class="related-meta">
+                        <span class="related-date">{{ related.created_at|date:"M d, Y" }}</span>
+                        {% if related.category %}
+                        <span class="related-category">{{ related.category }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Navigation Footer -->
+    <div class="article-navigation">
+        <a href="/analysis/" class="nav-btn primary-btn">
+            <i class="fas fa-list"></i>
+            View All Analysis
+        </a>
+        {% if article.category %}
+        <a href="/analysis/category/{{ article.category.slug }}/" class="nav-btn secondary-btn">
+            <i class="fas fa-folder"></i>
+            More {{ article.category }}
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .article-detail-section {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+
+    .breadcrumb {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .breadcrumb-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-gray);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+        padding: 0.5rem 0;
+    }
+
+    .breadcrumb-link:hover {
+        color: var(--gold);
+    }
+
+    .breadcrumb-separator {
+        color: var(--text-gray);
+        margin: 0 0.25rem;
+    }
+
+    .category-link {
+        color: var(--blue);
+    }
+
+    .article-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .post-type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .post-type-badge.tactical {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        color: white;
+    }
+
+    .post-type-badge.opinion {
+        background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+        color: white;
+    }
+
+    .article-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, var(--text-light) 0%, var(--gold) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .article-meta {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        color: var(--text-gray);
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .meta-item i {
+        color: var(--gold);
+    }
+
+    .meta-item.category {
+        background: var(--gradient-primary);
+        color: var(--text-light);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .meta-item.reading-time {
+        color: var(--blue);
+        font-weight: 500;
+    }
+
+    .tags-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .tag-link {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        color: var(--text-light);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .tag-link:hover {
+        background: var(--gold);
+        color: var(--dark-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+    }
+
+    .cover-image-container {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .cover-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .cover-caption {
+        padding: 1rem;
+        background: rgba(26, 26, 46, 0.9);
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        font-style: italic;
+        text-align: center;
+        margin: 0;
+    }
+
+    .article-content {
+        margin-bottom: 3rem;
+    }
+
+    .content-wrapper {
+        background: rgba(26, 26, 46, 0.4);
+        border-radius: 16px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: var(--text-light);
+    }
+
+    .content-wrapper p {
+        margin-bottom: 1.5rem;
+    }
+
+    .content-wrapper p:last-child {
+        margin-bottom: 0;
+    }
+
+    .social-share-section {
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: rgba(26, 26, 46, 0.3);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+    }
+
+    .share-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--gold);
+    }
+
+    .share-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        border: none;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+    }
+
+    .share-btn.twitter {
+        background: #1DA1F2;
+        color: white;
+    }
+
+    .share-btn.facebook {
+        background: #1877F2;
+        color: white;
+    }
+
+    .share-btn.linkedin {
+        background: #0A66C2;
+        color: white;
+    }
+
+    .share-btn.copy {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-light);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .share-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .related-articles {
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .related-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--gold);
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .related-card {
+        background: rgba(26, 26, 46, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .related-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-accent);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+        z-index: 1;
+    }
+
+    .related-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 77, 152, 0.25);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .related-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .related-image {
+        height: 160px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .related-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .related-card:hover .related-image img {
+        transform: scale(1.05);
+    }
+
+    .related-content {
+        padding: 1.5rem;
+        position: relative;
+    }
+
+    .related-badge {
+        position: absolute;
+        top: -0.5rem;
+        right: 1rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .related-badge.tactical {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+
+    .related-badge.opinion {
+        background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    }
+
+    .related-card-title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+        margin-top: 0.5rem;
+    }
+
+    .related-link {
+        color: var(--text-light);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .related-link:hover {
+        color: var(--gold);
+    }
+
+    .related-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        color: var(--text-gray);
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .related-category {
+        background: var(--gradient-primary);
+        color: var(--text-light);
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .article-navigation {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .primary-btn {
+        background: var(--gradient-primary);
+        color: var(--text-light);
+        box-shadow: 0 4px 15px rgba(0, 77, 152, 0.3);
+    }
+
+    .secondary-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-light);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 77, 152, 0.4);
+        background: var(--gradient-accent);
+    }
+
+    .secondary-btn:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .article-detail-section {
+            padding: 1rem 0;
+        }
+
+        .article-title {
+            font-size: 2.2rem;
+        }
+
+        .article-meta {
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .content-wrapper {
+            padding: 2rem;
+            font-size: 1rem;
+        }
+
+        .cover-image {
+            height: 250px;
+        }
+
+        .related-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .related-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .share-buttons {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .article-navigation {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .content-wrapper {
+            padding: 1.5rem;
+        }
+
+        .article-meta {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .tags-section {
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 0.875rem 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .share-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // Show success feedback
+        const button = event.target.closest('.share-btn');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> <span>Copied!</span>';
+        button.style.background = '#10B981';
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.background = 'rgba(255, 255, 255, 0.1)';
+        }, 2000);
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+
+{% block title %}All Matches - FC Barcelona{% endblock %}
+
+{% block content %}
+<style>
+    .matches-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .matches-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .match-box {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+        display: block;
+    }
+
+    .match-box:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+    }
+
+    .match-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: transform 0.3s ease;
+    }
+
+    .match-box:hover .match-background {
+        transform: scale(1.05);
+    }
+
+    .match-background-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #004d98, #a50044);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        transition: transform 0.3s ease;
+    }
+
+    .match-box:hover .match-background-placeholder {
+        transform: scale(1.05);
+    }
+
+    .match-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.2) 50%,
+            rgba(0, 0, 0, 0.8) 100%
+        );
+    }
+
+    .match-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.5rem;
+        color: white;
+        z-index: 2;
+    }
+
+    .match-status-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 3;
+    }
+
+    .badge-played {
+        background: rgba(76, 175, 80, 0.9);
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+
+    .badge-upcoming {
+        background: rgba(33, 150, 243, 0.9);
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+
+    .competition-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .match-teams {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .match-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .match-date {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .match-result {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #ffd700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .match-action-text {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .no-matches {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #666;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .no-matches i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #004d98;
+        opacity: 0.6;
+    }
+
+    .no-matches h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #1a1a2e;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .matches-container {
+            padding: 1rem;
+        }
+
+        .matches-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .match-teams {
+            font-size: 1.1rem;
+        }
+
+        .match-content {
+            padding: 1.25rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .matches-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+        }
+
+        .match-teams {
+            font-size: 1rem;
+        }
+
+        .match-content {
+            padding: 1rem;
+        }
+    }
+
+    /* Animation */
+    .match-box {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .match-box:nth-child(1) { animation-delay: 0.1s; }
+    .match-box:nth-child(2) { animation-delay: 0.2s; }
+    .match-box:nth-child(3) { animation-delay: 0.3s; }
+    .match-box:nth-child(4) { animation-delay: 0.4s; }
+    .match-box:nth-child(5) { animation-delay: 0.5s; }
+    .match-box:nth-child(6) { animation-delay: 0.6s; }
+    .match-box:nth-child(7) { animation-delay: 0.7s; }
+    .match-box:nth-child(8) { animation-delay: 0.8s; }
+</style>
+
+<div class="matches-container">
+    <div class="page-header">
+        <h1 class="page-title">All Matches</h1>
+        <p class="page-subtitle">Follow every moment of FC Barcelona's journey through the season</p>
+    </div>
+
+    {% if page_obj %}
+    <div class="matches-grid">
+        {% for match in page_obj %}
+        <a href="/matches/{{ match.id }}/" class="match-box">
+            <!-- Status Badge -->
+            <div class="match-status-badge {% if match.result %}badge-played{% else %}badge-upcoming{% endif %}">
+                {% if match.result %}Played{% else %}Upcoming{% endif %}
+            </div>
+
+            <!-- Background Image -->
+            {% if match.image_url %}
+            <div class="match-background" style="background-image: url('{{ match.image_url }}');"></div>
+            {% else %}
+            <div class="match-background-placeholder">
+                <i class="fas fa-futbol"></i>
+            </div>
+            {% endif %}
+
+            <!-- Overlay -->
+            <div class="match-overlay"></div>
+
+            <!-- Content -->
+            <div class="match-content">
+                <div class="competition-tag">
+                    {{ match.competition|default:"La Liga" }}
+                </div>
+                
+                <div class="match-teams">
+                    FC Barcelona vs {{ match.opponent }}
+                </div>
+                
+                <div class="match-info">
+                    <div class="match-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        {{ match.date|date:"M j, Y" }}
+                    </div>
+                    {% if match.result %}
+                        <div class="match-result">{{ match.result }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="match-action-text">
+                    {% if match.result %}
+                        <i class="fas fa-eye"></i> Read Full Review
+                    {% else %}
+                        <i class="fas fa-calendar-check"></i> View Match Preview
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-matches">
+        <i class="fas fa-futbol"></i>
+        <h3>No Matches Available</h3>
+        <p>Stay tuned for upcoming FC Barcelona matches and match reviews.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

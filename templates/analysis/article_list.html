@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} - FC Barcelona{% endblock %}
+
+{% block content %}
+<div class="article-list-section">
+    <!-- Header Area with Search and Filters -->
+    <div class="header-controls">
+        <div class="search-container">
+            <div class="search-wrapper">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search articles by title or content..." class="search-input">
+            </div>
+        </div>
+        
+        <div class="filter-buttons">
+            <button id="filterAll" class="filter-btn active" data-filter="all">
+                All Articles
+            </button>
+            <button id="filterTactical" class="filter-btn" data-filter="tactical">
+                Tactical Analysis
+            </button>
+            <button id="filterOpinion" class="filter-btn" data-filter="opinion">
+                Opinion
+            </button>
+        </div>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="articles-grid" id="articlesGrid">
+        {% for article in page_obj %}
+        <article class="article-card" data-type="{% if 'tactical' in article.title|lower or 'analysis' in article.title|lower %}tactical{% else %}opinion{% endif %}" data-title="{{ article.title|lower }}" data-content="{{ article.content|lower }}">
+            <div class="article-thumbnail">
+                {% if article.image %}
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" class="thumbnail-img">
+                {% else %}
+                <div class="default-thumbnail">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                    </svg>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="article-content">
+                <div class="article-header">
+                    <span class="article-type-tag {% if 'tactical' in article.title|lower or 'analysis' in article.title|lower %}tactical{% else %}opinion{% endif %}">
+                        {% if 'tactical' in article.title|lower or 'analysis' in article.title|lower %}
+                        Tactical
+                        {% else %}
+                        Opinion
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <h3 class="article-title">{{ article.title }}</h3>
+                
+                <div class="article-meta">
+                    <span class="article-author">
+                        {% if article.author %}{{ article.author }}{% else %}FC Barcelona{% endif %}
+                    </span>
+                    <span class="article-date">{{ article.created_at|date:"M d, Y" }}</span>
+                </div>
+                
+                <p class="article-snippet">
+                    {% with article.content|truncatewords:25 as snippet %}
+                        {{ snippet }}
+                    {% endwith %}
+                </p>
+                
+                <a href="/analysis/{{ article.slug }}/" class="read-more-btn">
+                    Read More
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                    </svg>
+                </a>
+            </div>
+        </article>
+        {% empty %}
+        <div class="no-articles" id="noArticles">
+            <div class="no-articles-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10,9 9,9 8,9"/>
+                </svg>
+            </div>
+            <h3>No articles found</h3>
+            <p>Try adjusting your search or filter criteria.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination-controls">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn prev-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+            Previous
+        </a>
+        {% endif %}
+
+        <div class="pagination-info">
+            <span class="page-numbers">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </div>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn next-btn">
+            Next
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        background-color: #fafafa;
+        color: #1a1a1a;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    .article-list-section {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+        background-color: #ffffff;
+        min-height: 100vh;
+    }
+
+    /* Header Controls */
+    .header-controls {
+        margin-bottom: 3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .search-wrapper {
+        position: relative;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.875rem 1rem 0.875rem 3rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+        background: #ffffff;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+
+    .search-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .filter-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        background: #ffffff;
+        color: #6b7280;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+
+    .filter-btn:hover {
+        border-color: #d1d5db;
+        background: #f9fafb;
+    }
+
+    .filter-btn.active {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Articles Grid */
+    .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .article-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border-color: #d1d5db;
+    }
+
+    .article-card.hidden {
+        display: none;
+    }
+
+    .article-thumbnail {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .thumbnail-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .default-thumbnail {
+        color: #9ca3af;
+    }
+
+    .article-content {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-header {
+        margin-bottom: 1rem;
+    }
+
+    .article-type-tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .article-type-tag.tactical {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .article-type-tag.opinion {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+
+    .article-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+        color: #1a1a1a;
+    }
+
+    .article-meta {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    .article-author {
+        font-weight: 500;
+    }
+
+    .article-date {
+        position: relative;
+        padding-left: 0.75rem;
+    }
+
+    .article-date::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+    }
+
+    .article-snippet {
+        color: #4b5563;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        font-size: 0.9375rem;
+        flex: 1;
+    }
+
+    .read-more-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 0.5rem 0;
+        transition: all 0.2s ease;
+        align-self: flex-start;
+    }
+
+    .read-more-btn:hover {
+        color: #1d4ed8;
+        transform: translateX(2px);
+    }
+
+    .read-more-btn svg {
+        transition: transform 0.2s ease;
+    }
+
+    .read-more-btn:hover svg {
+        transform: translate(2px, -2px);
+    }
+
+    /* No Articles State */
+    .no-articles {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        display: none;
+    }
+
+    .no-articles.show {
+        display: block;
+    }
+
+    .no-articles-icon {
+        color: #d1d5db;
+        margin-bottom: 1.5rem;
+    }
+
+    .no-articles h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #1a1a1a;
+    }
+
+    .no-articles p {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    /* Pagination */
+    .pagination-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .pagination-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #ffffff;
+        color: #1a1a1a;
+        text-decoration: none;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+    }
+
+    .pagination-btn:hover {
+        background: #f9fafb;
+        border-color: #d1d5db;
+        transform: translateY(-1px);
+    }
+
+    .pagination-info {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+    }
+
+    .page-numbers {
+        font-weight: 500;
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+
+    /* Responsive Design */
+    @media (min-width: 1024px) {
+        .articles-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .articles-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 767px) {
+        .article-list-section {
+            padding: 1.5rem 1rem;
+        }
+
+        .articles-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .filter-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .filter-btn {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .pagination-controls {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .pagination-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const articleCards = document.querySelectorAll('.article-card');
+    const noArticles = document.getElementById('noArticles');
+    
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    // Filter functionality
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update current filter
+            currentFilter = this.dataset.filter;
+            
+            // Apply filters
+            applyFilters();
+        });
+    });
+
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+        currentSearch = this.value.toLowerCase();
+        applyFilters();
+    });
+
+    function applyFilters() {
+        let visibleCount = 0;
+        
+        articleCards.forEach(card => {
+            const cardType = card.dataset.type;
+            const cardTitle = card.dataset.title;
+            const cardContent = card.dataset.content;
+            
+            // Check filter
+            const matchesFilter = currentFilter === 'all' || cardType === currentFilter;
+            
+            // Check search
+            const matchesSearch = currentSearch === '' || 
+                                cardTitle.includes(currentSearch) || 
+                                cardContent.includes(currentSearch);
+            
+            if (matchesFilter && matchesSearch) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+        
+        // Show/hide no articles message
+        if (visibleCount === 0) {
+            noArticles.classList.add('show');
+        } else {
+            noArticles.classList.remove('show');
+        }
+    }
+});
+</script>
+{% endblock %}

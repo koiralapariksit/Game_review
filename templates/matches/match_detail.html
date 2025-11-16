@@ -1,0 +1,547 @@
+{% extends 'base.html' %}
+
+{% block title %}FC Barcelona vs {{ match.opponent }} - {{ match.date|date:"M d, Y" }}{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f8f9fa;
+    }
+
+    .match-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        color: #495057;
+        background: #e9ecef;
+        text-decoration: none;
+    }
+
+    .match-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .match-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .match-meta {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .competition-badge {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid #bbdefb;
+    }
+
+    .match-image {
+        width: 100%;
+        max-width: 800px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin: 0 auto 2rem;
+        display: block;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-section {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .result-badge {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .result-played {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .result-upcoming {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .match-summary {
+        background: #f9f9f9;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 3rem;
+        border-left: 4px solid #007bff;
+        line-height: 1.8;
+    }
+
+    .match-summary h3 {
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .match-summary p {
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+
+    .author-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .author-avatar {
+        width: 40px;
+        height: 40px;
+        background: #007bff;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .author-details {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .author-name {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .comments-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    .comments-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .comments-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0;
+    }
+
+    .comments-count {
+        background: #e9ecef;
+        color: #495057;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .post-comment-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .post-comment-btn:hover {
+        background: #0056b3;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .comments-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .comment-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        transition: all 0.2s ease;
+    }
+
+    .comment-card:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .comment-avatar {
+        width: 36px;
+        height: 36px;
+        background: #6c757d;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .comment-author {
+        font-weight: 600;
+        color: #1a1a1a;
+        font-size: 0.95rem;
+    }
+
+    .comment-date {
+        color: #6c757d;
+        font-size: 0.85rem;
+        margin-left: auto;
+    }
+
+    .comment-text {
+        color: #495057;
+        line-height: 1.6;
+    }
+
+    .no-comments {
+        text-align: center;
+        color: #6c757d;
+        padding: 3rem 1rem;
+        font-style: italic;
+    }
+
+    .no-comments i {
+        font-size: 3rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .related-matches {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .related-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+    }
+
+    .related-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+    }
+
+    .related-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .related-matchup {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+
+    .related-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .related-competition {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .match-container {
+            padding: 1rem;
+        }
+
+        .match-title {
+            font-size: 2rem;
+        }
+
+        .match-meta {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .match-image {
+            height: 250px;
+        }
+
+        .match-summary {
+            padding: 1.5rem;
+        }
+
+        .comments-section,
+        .related-matches {
+            padding: 1.5rem;
+        }
+
+        .comments-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .post-comment-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .related-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .comment-header {
+            flex-wrap: wrap;
+        }
+
+        .comment-date {
+            margin-left: 0;
+            width: 100%;
+            margin-top: 0.25rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .match-title {
+            font-size: 1.75rem;
+        }
+
+        .back-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="match-container">
+    <a href="/matches/" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Back to All Matches
+    </a>
+
+    <!-- Match Header -->
+    <div class="match-header">
+        <h1 class="match-title">FC Barcelona vs {{ match.opponent }}</h1>
+        
+        <div class="match-meta">
+            <div class="meta-item">
+                <span class="competition-badge">{{ match.competition_display|default:"La Liga" }}</span>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                {{ match.date|date:"F j, Y - g:i A" }}
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ match.venue_display|default:"Camp Nou" }}
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-user"></i>
+                Posted by <span class="author-name">{{ match.posted_by.username }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Image -->
+    {% if match.image_url %}
+        <img src="{{ match.image_url }}" alt="FC Barcelona vs {{ match.opponent }}" class="match-image">
+    {% endif %}
+
+    <!-- Result Section -->
+    <div class="result-section">
+        {% if match.result %}
+            <div class="result-badge result-played">
+                Result: {{ match.result }}
+            </div>
+        {% else %}
+            <div class="result-badge result-upcoming">
+                Upcoming Match
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Match Summary -->
+    <div class="match-summary">
+        <h3>
+            {% if match.result %}Match Review{% else %}Match Preview{% endif %}
+        </h3>
+        
+        {% if match.summary %}
+            {% autoescape off %}
+                {{ match.summary|linebreaks }}
+            {% endautoescape %}
+        {% else %}
+            <p>No additional details available for this match.</p>
+        {% endif %}
+        
+        <div class="author-info">
+            <div class="author-avatar">
+                {{ match.posted_by.username|first|upper }}
+            </div>
+            <div class="author-details">
+                <div class="author-name">{{ match.posted_by.username }}</div>
+                <div>Posted on {{ match.date|date:"F j, Y" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <div class="comments-header">
+            <h3 class="comments-title">
+                Fan Comments
+                {% if comments %}
+                    <span class="comments-count">{{ comments|length }}</span>
+                {% endif %}
+            </h3>
+            <a href="{% url 'matches:post_comment' match.id %}" class="post-comment-btn">
+                <i class="fas fa-comment-dots"></i>
+                Leave a Comment
+            </a>
+        </div>
+        
+        <div class="comments-grid">
+            {% if comments %}
+                {% for comment in comments %}
+                <div class="comment-card">
+                    <div class="comment-header">
+                        <div class="comment-avatar">
+                            {{ comment.name|first|upper }}
+                        </div>
+                        <div class="comment-author">{{ comment.name }}</div>
+                        <div class="comment-date">{{ comment.created_at|date:"F j, Y" }}</div>
+                    </div>
+                    <div class="comment-text">
+                        {{ comment.comment|linebreaks }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-comments">
+                    <i class="fas fa-comments"></i>
+                    <p>No comments yet. Be the first to share your thoughts about this match!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Related Matches -->
+    {% if related_matches %}
+    <div class="related-matches">
+        <h3 class="related-title">Related Matches</h3>
+        <div class="related-grid">
+            {% for related in related_matches %}
+            <a href="/matches/{{ related.id }}/" class="related-card">
+                <div class="related-matchup">FC Barcelona vs {{ related.opponent }}</div>
+                <div class="related-date">{{ related.date|date:"F j, Y" }}</div>
+                <div class="related-competition">{{ related.competition_display|default:"La Liga" }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
