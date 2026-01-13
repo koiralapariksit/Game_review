@@ -1,419 +1,344 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ player.name }} - Player Profile{% endblock %}
+{% block title %}{{ player.full_name }} - Player Profile{% endblock %}
 
 {% block content %}
 <style>
     .player-detail-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 3rem 1.5rem;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #374151;
+        text-decoration: none;
+        margin-bottom: 2rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: #1a1a1a;
+        text-decoration: none;
+    }
+
+    .back-link::before {
+        content: '←';
     }
 
     .player-header {
         display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 60px;
-        margin-bottom: 60px;
+        grid-template-columns: 320px 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
         align-items: start;
     }
 
     .player-image-section {
-        position: relative;
+        position: sticky;
+        top: 90px;
     }
 
     .player-image-container {
-        width: 300px;
-        height: 400px;
-        border-radius: 20px;
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-        position: relative;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .player-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .player-image:hover {
-        transform: scale(1.05);
     }
 
     .player-image-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-        color: white;
-        font-size: 64px;
+        font-size: 5rem;
+        color: #d1d5db;
     }
 
     .player-info {
-        padding-top: 20px;
+        padding-top: 0.5rem;
     }
 
     .player-name {
-        font-size: 48px;
+        font-size: 3rem;
         font-weight: 700;
-        color: #212529;
-        margin: 0 0 12px 0;
+        color: #1a1a1a;
+        margin: 0 0 0.5rem 0;
         line-height: 1.1;
     }
 
     .player-position {
-        font-size: 20px;
+        display: inline-block;
+        background: #f3f4f6;
+        color: #374151;
+        padding: 0.5rem 1rem;
+        border-radius: 24px;
+        font-size: 0.95rem;
         font-weight: 600;
-        color: #6c757d;
-        margin-bottom: 32px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        margin-bottom: 1.5rem;
     }
 
-    .player-stats {
+    .player-quick-stats {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 24px;
-        margin-bottom: 40px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
     }
 
-    .stat-item {
+    .quick-stat {
         background: white;
-        padding: 24px;
+        border: 1px solid #e5e7eb;
+        padding: 1.25rem;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         text-align: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .stat-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    .quick-stat-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .quick-stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    /* Stats Grid */
+    .stats-section {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .stats-section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem 0;
     }
 
     .stat-label {
-        font-size: 14px;
-        font-weight: 500;
-        color: #6c757d;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6b7280;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
+        display: block;
     }
 
     .stat-value {
-        font-size: 24px;
+        font-size: 1.5rem;
         font-weight: 700;
-        color: #212529;
-        line-height: 1.2;
+        color: #1a1a1a;
     }
 
-    .player-bio-section {
+    /* Bio Section */
+    .bio-section {
         background: white;
-        padding: 40px;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        margin-bottom: 40px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
     }
 
-    .section-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: #212529;
-        margin-bottom: 24px;
-        position: relative;
-        padding-bottom: 12px;
+    .bio-section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f3f4f6;
     }
 
-    .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 60px;
-        height: 3px;
-        background: linear-gradient(90deg, #007bff, #0056b3);
-        border-radius: 2px;
-    }
-
-    .player-bio {
-        font-size: 16px;
+    .bio-text {
+        font-size: 1rem;
         line-height: 1.7;
         color: #495057;
         margin: 0;
     }
 
-    .player-bio p {
-        margin-bottom: 16px;
+    .bio-text p {
+        margin-bottom: 1rem;
     }
 
-    .player-bio p:last-child {
+    .bio-text p:last-child {
         margin-bottom: 0;
     }
 
-    .player-details-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 24px;
-        margin-bottom: 40px;
-    }
-
-    .detail-card {
-        background: white;
-        padding: 32px;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .detail-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
-
-    .detail-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 0;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .detail-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    .detail-item:first-child {
-        padding-top: 0;
-    }
-
-    .detail-label {
-        font-size: 14px;
-        font-weight: 600;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .detail-value {
-        font-size: 16px;
-        font-weight: 600;
-        color: #212529;
-        text-align: right;
-    }
-
-    .back-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 24px;
-        background: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: background-color 0.2s ease, transform 0.2s ease;
-        margin-bottom: 40px;
-    }
-
-    .back-button:hover {
-        background: #0056b3;
-        color: white;
-        text-decoration: none;
-        transform: translateY(-1px);
-    }
-
-    .back-button::before {
-        content: '←';
-        font-size: 16px;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .player-detail-container {
-            padding: 20px 16px;
-        }
-
+    /* Responsive */
+    @media (max-width: 968px) {
         .player-header {
             grid-template-columns: 1fr;
-            gap: 40px;
-            text-align: center;
+            gap: 2rem;
         }
 
-        .player-image-container {
-            width: 250px;
-            height: 320px;
-            margin: 0 auto;
+        .player-image-section {
+            position: static;
         }
 
         .player-name {
-            font-size: 36px;
+            font-size: 2.5rem;
         }
 
-        .player-stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .player-bio-section {
-            padding: 24px;
-        }
-
-        .detail-card {
-            padding: 24px;
-        }
-
-        .section-title {
-            font-size: 24px;
+        .player-image-container {
+            max-width: 300px;
         }
     }
 
-    @media (max-width: 480px) {
-        .player-stats {
+    @media (max-width: 640px) {
+        .player-detail-container {
+            padding: 1.5rem 1rem;
+        }
+
+        .player-name {
+            font-size: 2rem;
+        }
+
+        .player-quick-stats {
             grid-template-columns: 1fr;
         }
 
-        .player-details-grid {
+        .stats-grid {
             grid-template-columns: 1fr;
         }
 
-        .detail-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .detail-value {
-            text-align: left;
+        .stats-section,
+        .bio-section {
+            padding: 1.5rem;
         }
     }
 </style>
 
 <div class="player-detail-container">
-    <!-- Back Button -->
-    <a href="{% url 'players:player_list' %}" class="back-button">
-        Back to Players
-    </a>
+    <!-- Back Link -->
+    <a href="{% url 'players:player_list' %}" class="back-link">Back to Squad</a>
 
     <!-- Player Header -->
     <div class="player-header">
+        <!-- Image -->
         <div class="player-image-section">
             <div class="player-image-container">
                 {% if player.profile_image %}
-                    <img src="{{ player.profile_image.url }}" alt="{{ player.name }}" class="player-image">
+                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image">
                 {% else %}
                     <div class="player-image-placeholder">
-                        👤
+                        <i class="fas fa-user"></i>
                     </div>
                 {% endif %}
             </div>
         </div>
 
+        <!-- Info -->
         <div class="player-info">
-            <h1 class="player-name">{{ player.name }}</h1>
-            <div class="player-position">{{ player.get_position_display }}</div>
-            
-            <div class="player-stats">
-                {% if player.age %}
-                <div class="stat-item">
-                    <div class="stat-label">Age</div>
-                    <div class="stat-value">{{ player.age }}</div>
+            <h1 class="player-name">{{ player.full_name }}</h1>
+            <span class="player-position">{{ player.get_position_display }}</span>
+
+            <!-- Quick Stats -->
+            <div class="player-quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-label">Jersey</div>
+                    <div class="quick-stat-value">#{{ player.jersey_number }}</div>
                 </div>
-                {% endif %}
-                
-                {% if player.jersey_number %}
-                <div class="stat-item">
-                    <div class="stat-label">Jersey</div>
-                    <div class="stat-value">#{{ player.jersey_number }}</div>
+                <div class="quick-stat">
+                    <div class="quick-stat-label">Age</div>
+                    <div class="quick-stat-value">{{ player.age }}</div>
                 </div>
-                {% endif %}
-                
-                {% if player.nationality %}
-                <div class="stat-item">
-                    <div class="stat-label">Nationality</div>
-                    <div class="stat-value">{{ player.nationality }}</div>
+                <div class="quick-stat">
+                    <div class="quick-stat-label">Country</div>
+                    <div class="quick-stat-value" style="font-size: 0.95rem; font-weight: 500;">{{ player.nationality }}</div>
                 </div>
-                {% endif %}
-                
-                {% if player.height %}
-                <div class="stat-item">
-                    <div class="stat-label">Height</div>
-                    <div class="stat-value">{{ player.height }}cm</div>
+                <div class="quick-stat">
+                    <div class="quick-stat-label">Joined</div>
+                    <div class="quick-stat-value">{{ player.joined_year }}</div>
                 </div>
-                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Player Biography -->
+    <!-- Physical & Career Stats -->
+    <div class="stats-section">
+        <h2 class="stats-section-title">Physical & Career Details</h2>
+        <div class="stats-grid">
+            {% if player.height_cm %}
+            <div class="stat-card">
+                <span class="stat-label">Height</span>
+                <span class="stat-value">{{ player.height_cm }} cm</span>
+            </div>
+            {% endif %}
+
+            {% if player.weight_kg %}
+            <div class="stat-card">
+                <span class="stat-label">Weight</span>
+                <span class="stat-value">{{ player.weight_kg }} kg</span>
+            </div>
+            {% endif %}
+
+            <div class="stat-card">
+                <span class="stat-label">Preferred Foot</span>
+                <span class="stat-value">{{ player.get_preferred_foot_display }}</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Joined Barcelona</span>
+                <span class="stat-value">{{ player.joined_year }}</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Contract Until</span>
+                <span class="stat-value">{{ player.contract_until }}</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Date of Birth</span>
+                <span class="stat-value">{{ player.date_of_birth|date:"M d, Y" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biography -->
     {% if player.bio %}
-    <div class="player-bio-section">
-        <h2 class="section-title">Biography</h2>
-        <div class="player-bio">
+    <div class="bio-section">
+        <h2 class="bio-section-title">Professional Profile</h2>
+        <div class="bio-text">
             {{ player.bio|linebreaks }}
         </div>
     </div>
     {% endif %}
-
-    <!-- Player Details -->
-    <div class="player-details-grid">
-        <div class="detail-card">
-            <h3 class="section-title">Player Information</h3>
-            <div class="detail-item">
-                <span class="detail-label">Full Name</span>
-                <span class="detail-value">{{ player.name }}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Position</span>
-                <span class="detail-value">{{ player.get_position_display }}</span>
-            </div>
-            {% if player.age %}
-            <div class="detail-item">
-                <span class="detail-label">Age</span>
-                <span class="detail-value">{{ player.age }} years</span>
-            </div>
-            {% endif %}
-            {% if player.nationality %}
-            <div class="detail-item">
-                <span class="detail-label">Nationality</span>
-                <span class="detail-value">{{ player.nationality }}</span>
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="detail-card">
-            <h3 class="section-title">Physical Stats</h3>
-            {% if player.height %}
-            <div class="detail-item">
-                <span class="detail-label">Height</span>
-                <span class="detail-value">{{ player.height }} cm</span>
-            </div>
-            {% endif %}
-            {% if player.weight %}
-            <div class="detail-item">
-                <span class="detail-label">Weight</span>
-                <span class="detail-value">{{ player.weight }} kg</span>
-            </div>
-            {% endif %}
-            {% if player.jersey_number %}
-            <div class="detail-item">
-                <span class="detail-label">Jersey Number</span>
-                <span class="detail-value">#{{ player.jersey_number }}</span>
-            </div>
-            {% endif %}
-            {% if not player.height and not player.weight and not player.jersey_number %}
-            <div class="detail-item">
-                <span class="detail-label">Information</span>
-                <span class="detail-value">No physical stats available</span>
-            </div>
-            {% endif %}
-        </div>
-    </div>
 </div>
+
 {% endblock %}

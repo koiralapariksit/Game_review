@@ -35,7 +35,7 @@
     /* Players Grid */
     .players-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
         gap: 1.5rem;
         margin-bottom: 3rem;
     }
@@ -44,58 +44,74 @@
         background: white;
         border: 1px solid #e5e7eb;
         border-radius: 12px;
-        padding: 2rem 1.5rem;
-        transition: all 0.2s ease;
+        overflow: hidden;
+        transition: all 0.3s ease;
         text-decoration: none;
         color: inherit;
-        display: block;
-        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     .player-card:hover {
         border-color: #d1d5db;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
         text-decoration: none;
         color: inherit;
     }
 
+    .player-image-wrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: 100%;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        overflow: hidden;
+    }
+
     .player-image-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .player-image {
-        width: 150px;
-        height: 150px;
-        border-radius: 12px;
-        object-fit: cover;
-        border: 4px solid #f3f4f6;
-    }
-
-    .default-avatar {
-        width: 150px;
-        height: 150px;
-        border-radius: 12px;
-        background: #f3f4f6;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 3rem;
-        color: #9ca3af;
+    }
+
+    .player-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .default-avatar {
+        font-size: 4rem;
+        color: #d1d5db;
     }
 
     .player-info {
-        text-align: center;
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .player-name {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-weight: 600;
         color: #1a1a1a;
         margin-bottom: 0.5rem;
         line-height: 1.3;
+    }
+
+    .player-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
     }
 
     .player-position {
@@ -103,15 +119,21 @@
         color: #374151;
         padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        display: inline-block;
-        margin-bottom: 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .player-number {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #374151;
     }
 
     .player-nationality {
         color: #6b7280;
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         font-weight: 400;
     }
 
@@ -122,8 +144,11 @@
 
     .position-header {
         margin-bottom: 1.5rem;
-        padding-bottom: 0.75rem;
+        padding-bottom: 1rem;
         border-bottom: 2px solid #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .position-header h2 {
@@ -131,66 +156,15 @@
         font-weight: 600;
         color: #1a1a1a;
         margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
     }
 
     .position-count {
         background: #e5e7eb;
         color: #374151;
-        padding: 0.25rem 0.75rem;
+        padding: 0.4rem 0.9rem;
         border-radius: 20px;
         font-size: 0.875rem;
-        font-weight: 500;
-        margin-left: auto;
-    }
-
-    /* Pagination */
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 3rem;
-    }
-
-    .pagination {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .page-link {
-        padding: 0.5rem 0.75rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        color: #374151;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        background: white;
-    }
-
-    .page-link:hover {
-        background: #f9fafb;
-        border-color: #d1d5db;
-        color: #1a1a1a;
-        text-decoration: none;
-    }
-
-    .page-item.active .page-link {
-        background: #1a1a1a;
-        border-color: #1a1a1a;
-        color: white;
-    }
-
-    .page-item.disabled .page-link {
-        color: #9ca3af;
-        background: #f9fafb;
-        border-color: #f3f4f6;
-        cursor: not-allowed;
+        font-weight: 600;
     }
 
     /* Empty State */
@@ -223,30 +197,37 @@
         }
 
         .players-grid {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 1rem;
         }
 
-        .player-card {
-            padding: 1.25rem;
+        .position-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
         }
 
-        .position-header h2 {
-            font-size: 1.25rem;
+        .position-count {
+            align-self: flex-start;
         }
     }
 
     @media (max-width: 480px) {
         .players-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
         }
 
         .page-header h1 {
             font-size: 1.75rem;
         }
 
-        .pagination {
-            flex-wrap: wrap;
+        .player-info {
+            padding: 1rem;
+        }
+
+        .player-name {
+            font-size: 0.95rem;
         }
     }
 </style>
@@ -258,231 +239,137 @@
     </div>
 
     {% if players %}
-        <!-- Group players by position -->
-        {% regroup players by position as position_list %}
-        
         <!-- Goalkeepers -->
-        {% for position_group in position_list %}
-            {% if position_group.grouper == "GK" %}
-                <div class="position-group">
-                    <div class="position-header">
-                        <h2>
-                            Goalkeepers
-                            <span class="position-count">{{ position_group.list|length }}</span>
-                        </h2>
-                    </div>
-                    
-                    <div class="players-grid">
-                        {% for player in position_group.list %}
-                            <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                                <div class="player-image-container">
-                                    {% if player.profile_image %}
-                                        <img src="{{ player.profile_image }}" 
-                                             alt="{{ player.name }}" 
-                                             class="player-image" 
-                                             loading="lazy"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="default-avatar" style="display:none;">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% else %}
-                                        <div class="default-avatar">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="player-info">
-                                    <h3 class="player-name">{{ player.name }}</h3>
+        <div class="position-group">
+            <div class="position-header">
+                <h2>Goalkeepers</h2>
+                <span class="position-count">{{ gk_count }}</span>
+            </div>
+            <div class="players-grid">
+                {% for player in gk_players %}
+                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
+                        <div class="player-image-wrapper">
+                            <div class="player-image-container">
+                                {% if player.profile_image %}
+                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
+                                {% else %}
+                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="player-info">
+                            <div>
+                                <div class="player-name">{{ player.full_name }}</div>
+                                <div class="player-meta">
                                     <span class="player-position">{{ player.get_position_display }}</span>
-                                    <p class="player-nationality">{{ player.nationality }}</p>
+                                    <span class="player-number">#{{ player.jersey_number }}</span>
                                 </div>
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                            </div>
+                            <p class="player-nationality">{{ player.nationality }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
 
         <!-- Defenders -->
-        {% for position_group in position_list %}
-            {% if position_group.grouper == "DEF" %}
-                <div class="position-group">
-                    <div class="position-header">
-                        <h2>
-                            Defenders
-                            <span class="position-count">{{ position_group.list|length }}</span>
-                        </h2>
-                    </div>
-                    
-                    <div class="players-grid">
-                        {% for player in position_group.list %}
-                            <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                                <div class="player-image-container">
-                                    {% if player.profile_image %}
-                                        <img src="{{ player.profile_image }}" 
-                                             alt="{{ player.name }}" 
-                                             class="player-image" 
-                                             loading="lazy"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="default-avatar" style="display:none;">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% else %}
-                                        <div class="default-avatar">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="player-info">
-                                    <h3 class="player-name">{{ player.name }}</h3>
+        <div class="position-group">
+            <div class="position-header">
+                <h2>Defenders</h2>
+                <span class="position-count">{{ def_count }}</span>
+            </div>
+            <div class="players-grid">
+                {% for player in def_players %}
+                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
+                        <div class="player-image-wrapper">
+                            <div class="player-image-container">
+                                {% if player.profile_image %}
+                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
+                                {% else %}
+                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="player-info">
+                            <div>
+                                <div class="player-name">{{ player.full_name }}</div>
+                                <div class="player-meta">
                                     <span class="player-position">{{ player.get_position_display }}</span>
-                                    <p class="player-nationality">{{ player.nationality }}</p>
+                                    <span class="player-number">#{{ player.jersey_number }}</span>
                                 </div>
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                            </div>
+                            <p class="player-nationality">{{ player.nationality }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
 
         <!-- Midfielders -->
-        {% for position_group in position_list %}
-            {% if position_group.grouper == "MID" %}
-                <div class="position-group">
-                    <div class="position-header">
-                        <h2>
-                            Midfielders
-                            <span class="position-count">{{ position_group.list|length }}</span>
-                        </h2>
-                    </div>
-                    
-                    <div class="players-grid">
-                        {% for player in position_group.list %}
-                            <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                                <div class="player-image-container">
-                                    {% if player.profile_image %}
-                                        <img src="{{ player.profile_image }}" 
-                                             alt="{{ player.name }}" 
-                                             class="player-image" 
-                                             loading="lazy"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="default-avatar" style="display:none;">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% else %}
-                                        <div class="default-avatar">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="player-info">
-                                    <h3 class="player-name">{{ player.name }}</h3>
+        <div class="position-group">
+            <div class="position-header">
+                <h2>Midfielders</h2>
+                <span class="position-count">{{ mid_count }}</span>
+            </div>
+            <div class="players-grid">
+                {% for player in mid_players %}
+                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
+                        <div class="player-image-wrapper">
+                            <div class="player-image-container">
+                                {% if player.profile_image %}
+                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
+                                {% else %}
+                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="player-info">
+                            <div>
+                                <div class="player-name">{{ player.full_name }}</div>
+                                <div class="player-meta">
                                     <span class="player-position">{{ player.get_position_display }}</span>
-                                    <p class="player-nationality">{{ player.nationality }}</p>
+                                    <span class="player-number">#{{ player.jersey_number }}</span>
                                 </div>
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                            </div>
+                            <p class="player-nationality">{{ player.nationality }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
 
         <!-- Forwards -->
-        {% for position_group in position_list %}
-            {% if position_group.grouper == "FWD" %}
-                <div class="position-group">
-                    <div class="position-header">
-                        <h2>
-                            Forwards
-                            <span class="position-count">{{ position_group.list|length }}</span>
-                        </h2>
-                    </div>
-                    
-                    <div class="players-grid">
-                        {% for player in position_group.list %}
-                            <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                                <div class="player-image-container">
-                                    {% if player.profile_image %}
-                                        <img src="{{ player.profile_image }}" 
-                                             alt="{{ player.name }}" 
-                                             class="player-image" 
-                                             loading="lazy"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="default-avatar" style="display:none;">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% else %}
-                                        <div class="default-avatar">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="player-info">
-                                    <h3 class="player-name">{{ player.name }}</h3>
-                                    <span class="player-position">{{ player.get_position_display }}</span>
-                                    <p class="player-nationality">{{ player.nationality }}</p>
-                                </div>
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-
-        <!-- Pagination -->
-        {% if is_paginated %}
-            <div class="pagination-container">
-                <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1">First</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">First</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Previous</span>
-                        </li>
-                    {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ num }}</span>
-                            </li>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">Next</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Last</span>
-                        </li>
-                    {% endif %}
-                </ul>
+        <div class="position-group">
+            <div class="position-header">
+                <h2>Forwards</h2>
+                <span class="position-count">{{ fwd_count }}</span>
             </div>
-        {% endif %}
+            <div class="players-grid">
+                {% for player in fwd_players %}
+                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
+                        <div class="player-image-wrapper">
+                            <div class="player-image-container">
+                                {% if player.profile_image %}
+                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
+                                {% else %}
+                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="player-info">
+                            <div>
+                                <div class="player-name">{{ player.full_name }}</div>
+                                <div class="player-meta">
+                                    <span class="player-position">{{ player.get_position_display }}</span>
+                                    <span class="player-number">#{{ player.jersey_number }}</span>
+                                </div>
+                            </div>
+                            <p class="player-nationality">{{ player.nationality }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
         
     {% else %}
         <div class="no-players">
