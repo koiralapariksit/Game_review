@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Custom Admin Dashboard - FC Barcelona Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+    <!-- Dashboard Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; padding: 2rem; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #ffffff; margin-bottom: 0.5rem;">
+                <i class="fas fa-tachometer-alt" style="color: #ffb700; margin-right: 0.75rem;"></i>Staff Dashboard
+            </h1>
+            <p style="color: #94a3b8; font-size: 1rem; margin: 0;">Welcome, {{ user.username }} (Staff Member)</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'admin:index' %}" style="padding: 0.75rem 1.25rem; background: rgba(0, 77, 152, 0.6); color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 500; border: 1px solid rgba(0, 77, 152, 0.8);">
+                <i class="fas fa-cog" style="margin-right: 0.5rem;"></i>Django Admin
+            </a>
+            <a href="{% url 'customadmin:logout' %}" style="padding: 0.75rem 1.25rem; background: rgba(239, 68, 68, 0.2); color: #ef4444; text-decoration: none; border-radius: 10px; font-weight: 500; border: 1px solid rgba(239, 68, 68, 0.4);">
+                <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.04); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
+            <i class="fas fa-users" style="font-size: 2rem; color: #38bdf8; margin-bottom: 0.75rem;"></i>
+            <div style="font-size: 2rem; font-weight: 700; color: #ffffff;">{{ total_players }}</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">First Team Players</div>
+        </div>
+
+        <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.04); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
+            <i class="fas fa-futbol" style="font-size: 2rem; color: #4ade80; margin-bottom: 0.75rem;"></i>
+            <div style="font-size: 2rem; font-weight: 700; color: #ffffff;">{{ total_matches }}</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Total Fixtures</div>
+        </div>
+
+        <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.04); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
+            <i class="fas fa-newspaper" style="font-size: 2rem; color: #ffb700; margin-bottom: 0.75rem;"></i>
+            <div style="font-size: 2rem; font-weight: 700; color: #ffffff;">{{ total_posts }}</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Community Posts</div>
+        </div>
+
+        <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.04); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
+            <i class="fas fa-comments" style="font-size: 2rem; color: #ec4899; margin-bottom: 0.75rem;"></i>
+            <div style="font-size: 2rem; font-weight: 700; color: #ffffff;">{{ total_comments }}</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Total Comments</div>
+        </div>
+
+        <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.04); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
+            <i class="fas fa-exchange-alt" style="font-size: 2rem; color: #a855f7; margin-bottom: 0.75rem;"></i>
+            <div style="font-size: 2rem; font-weight: 700; color: #ffffff;">{{ total_transfers }}</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Transfers Logged</div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <!-- Recent Posts -->
+        <div style="padding: 2rem; background: rgba(255, 255, 255, 0.04); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <h3 style="font-size: 1.3rem; color: #ffb700; margin-bottom: 1.5rem;">
+                <i class="fas fa-file-alt" style="margin-right: 0.5rem;"></i>Recent Posts
+            </h3>
+            {% if recent_posts %}
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for post in recent_posts %}
+                    <li style="padding: 1rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <a href="{% url 'community:post_detail' post.pk %}" style="color: #ffffff; text-decoration: none; font-weight: 500;">
+                                {{ post.title|truncatechars:40 }}
+                            </a>
+                            <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 0.25rem;">
+                                by {{ post.author.username }} on {{ post.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: #94a3b8;">No posts yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Recent Comments -->
+        <div style="padding: 2rem; background: rgba(255, 255, 255, 0.04); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <h3 style="font-size: 1.3rem; color: #ffb700; margin-bottom: 1.5rem;">
+                <i class="fas fa-comment-dots" style="margin-right: 0.5rem;"></i>Recent Community Comments
+            </h3>
+            {% if recent_comments %}
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for c in recent_comments %}
+                    <li style="padding: 1rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div style="color: #ffffff; font-size: 0.95rem;">{{ c.content|truncatechars:60 }}</div>
+                        <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 0.25rem;">
+                            by {{ c.name|default:c.author.username|default:"Anonymous" }} on {{ c.created_at|date:"M d, Y H:i" }}
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: #94a3b8;">No comments yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

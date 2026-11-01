@@ -1,3 +1,4 @@
+from django_ratelimit.decorators import ratelimit
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.utils import timezone
@@ -72,6 +73,7 @@ def match_detail(request, match_id):
     return render(request, 'matches/match_detail.html', context)
 
 
+@ratelimit(key='ip', rate='10/m', method='POST', block=True)
 def post_comment(request, match_id):
     """Handle comment posting for a specific match"""
     match = get_object_or_404(Match, pk=match_id)

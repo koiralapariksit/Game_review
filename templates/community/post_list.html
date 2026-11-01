@@ -6,9 +6,16 @@
 {% block content %}
 <div class="community-container">
     <!-- Page Header -->
-    <div class="page-header">
-        <h1>Community Posts</h1>
-        <p>Stay updated with the latest news, insights, and discussions from our football community.</p>
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1>Community Posts</h1>
+            <p>Stay updated with the latest news, insights, and discussions from our football community.</p>
+        </div>
+        <div>
+            <a href="{% url 'community:post_create' %}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #004d98 0%, #a50044 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 77, 152, 0.4);">
+                <i class="fas fa-plus"></i> New Post
+            </a>
+        </div>
     </div>
 
     <!-- Search Bar -->

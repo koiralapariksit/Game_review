@@ -1,6 +1,21 @@
-Django>=5.1,<5.2
-Pillow>=10.0.0
+# Core Django framework
+Django>=5.0,<5.2
+asgiref>=3.8.1
+sqlparse>=0.3.1
 tzdata
-asgiref
-sqlparse
 
+# Environment and Database configuration
+python-dotenv>=1.0.1
+dj-database-url>=2.1.0
+psycopg2-binary>=2.9.9
+
+# Media and Image handling
+Pillow>=10.0.0
+
+# Security, Sanitization & Rate limiting
+nh3>=0.2.17
+django-ratelimit>=4.1.0
+
+# Static files & Production Server
+whitenoise[brotli]>=6.6.0
+gunicorn>=22.0.0

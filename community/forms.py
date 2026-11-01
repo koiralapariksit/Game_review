@@ -1,7 +1,8 @@
-
 # ===== community/forms.py =====
 from django import forms
-from .models import CommunityPost
+from .models import CommunityPost, Comment
+from culer.sanitizers import sanitize_plain_text, sanitize_rich_text
+
 
 class CommunityPostForm(forms.ModelForm):
     class Meta:
@@ -32,3 +33,35 @@ class CommunityPostForm(forms.ModelForm):
         self.fields['content'].help_text = 'Share your thoughts, experiences, or start a discussion'
         self.fields['image'].help_text = 'Optional: Add an image to your post (JPG, PNG, GIF)'
 
+    def clean_title(self):
+        title = self.cleaned_data.get('title', '')
+        return sanitize_plain_text(title)
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content', '')
+        return sanitize_rich_text(content)
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['name', 'content']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Your name (optional)...',
+            }),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Write your comment...',
+                'rows': 3,
+            })
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name', '')
+        return sanitize_plain_text(name)
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content', '')
+        return sanitize_rich_text(content)

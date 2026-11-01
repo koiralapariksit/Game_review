@@ -1,23 +1,37 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
 # Python
 __pycache__/
 *.py[cod]
+*.pyc
 *$py.class
 *.so
 .Python
 
-# Virtual Environment
+# Virtual Environments
 .venv/
 venv/
 ENV/
 env/
 
-# Django
+# Database
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+
+# Static & Media
+/staticfiles/
+staticfiles/
+
+# Django logs & local settings
 *.log
 local_settings.py
-db.sqlite3-journal
 
-# IDEs
+# IDEs & System
 .vscode/
 .idea/
 *.swp
-
+*.DS_Store

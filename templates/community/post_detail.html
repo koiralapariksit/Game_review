@@ -163,13 +163,13 @@
             </div>
         </div>
 
-        <!-- Post Content -->
+        <!-- Post Content (Sanitized Rich Text) -->
         <div class="post-text" style="
             font-size: 1.1rem;
             line-height: 1.8;
             color: var(--text-light);
             margin-bottom: 3rem;
-        ">{{ post.content|linebreaks }}</div>
+        ">{{ post.content|safe }}</div>
     </div>
 
     <!-- Share Section -->
@@ -293,6 +293,90 @@
                 <span id="copy-text">Copy Link</span>
             </button>
         </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section" style="
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-top: 2.5rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    ">
+        <h3 style="
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        ">
+            <i class="fas fa-comments"></i>
+            Discussion ({{ comments|length }})
+        </h3>
+
+        <!-- Comment Form -->
+        <form method="post" action="{% url 'community:add_comment' post.pk %}" style="margin-bottom: 2.5rem;">
+            {% csrf_token %}
+            <div style="margin-bottom: 1rem;">
+                <input type="text" name="name" placeholder="Your name (optional)" style="
+                    width: 100%;
+                    max-width: 300px;
+                    padding: 0.75rem 1rem;
+                    background: rgba(255, 255, 255, 0.08);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 10px;
+                    color: white;
+                    font-size: 0.95rem;
+                    margin-bottom: 0.75rem;
+                    display: block;
+                ">
+                <textarea name="content" rows="3" required placeholder="Join the discussion..." style="
+                    width: 100%;
+                    padding: 0.875rem 1rem;
+                    background: rgba(255, 255, 255, 0.08);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 10px;
+                    color: white;
+                    font-size: 1rem;
+                    resize: vertical;
+                    font-family: inherit;
+                    box-sizing: border-box;
+                "></textarea>
+            </div>
+            <button type="submit" style="
+                padding: 0.75rem 1.75rem;
+                background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            ">Post Comment</button>
+        </form>
+
+        <!-- Comments List -->
+        {% if comments %}
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                {% for c in comments %}
+                <div style="padding: 1.25rem; background: rgba(255, 255, 255, 0.04); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="font-weight: 600; color: #ffb700;">{{ c.author_name }}</span>
+                        <span style="color: #94a3b8; font-size: 0.85rem;">{{ c.created_at|date:'M d, Y H:i' }}</span>
+                    </div>
+                    <div style="color: #e2e8f0; line-height: 1.6;">{{ c.content|safe }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: #94a3b8; margin: 0;">No comments yet. Be the first to share your thoughts!</p>
+        {% endif %}
     </div>
 </div>
 

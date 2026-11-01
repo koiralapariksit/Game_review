@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+from culer.sanitizers import sanitize_plain_text, sanitize_rich_text
 
 
 class Match(models.Model):
@@ -88,6 +89,20 @@ class Match(models.Model):
         """Get human-readable venue name"""
         return dict(self.VENUE_CHOICES).get(self.venue, self.venue)
 
+    def clean(self):
+        super().clean()
+        if self.opponent:
+            self.opponent = sanitize_plain_text(self.opponent)
+        if self.summary:
+            self.summary = sanitize_rich_text(self.summary)
+
+    def save(self, *args, **kwargs):
+        if self.opponent:
+            self.opponent = sanitize_plain_text(self.opponent)
+        if self.summary:
+            self.summary = sanitize_rich_text(self.summary)
+        super().save(*args, **kwargs)
+
 
 class Comment(models.Model):
     match = models.ForeignKey(
@@ -153,3 +168,17 @@ class Comment(models.Model):
     def get_absolute_url(self):
         """Get URL to the match detail page with comment anchor"""
         return f"{self.match.get_absolute_url()}#comment-{self.pk}"
+
+    def clean(self):
+        super().clean()
+        if self.name:
+            self.name = sanitize_plain_text(self.name)
+        if self.comment:
+            self.comment = sanitize_rich_text(self.comment)
+
+    def save(self, *args, **kwargs):
+        if self.name:
+            self.name = sanitize_plain_text(self.name)
+        if self.comment:
+            self.comment = sanitize_rich_text(self.comment)
+        super().save(*args, **kwargs)
