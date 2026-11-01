@@ -1,0 +1,6 @@
+Django>=5.1,<5.2
+Pillow>=10.0.0
+tzdata
+asgiref
+sqlparse
+
