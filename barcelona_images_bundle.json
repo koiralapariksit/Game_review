@@ -1,0 +1,224 @@
+{
+  "bundle_name": "fc_barcelona_2026_27_player_images",
+  "django_media_subfolder": "players/barcelona/",
+  "total_players": 27,
+  "players": [
+    {
+      "jersey_number": 1,
+      "name": "Joan García",
+      "slug": "joan-garcia",
+      "position": "Goalkeeper",
+      "django_file_path": "players/barcelona/01_joan_garcia.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQPxyvCVYlc3OA3sWDdm0xi7LdTwbQNw3ngJRPRkVAZjT2t8M3IBHAHeeRb7uTHIHRKNCj3zGieF26vFug"
+    },
+    {
+      "jersey_number": 2,
+      "name": "João Cancelo",
+      "slug": "joao-cancelo",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/02_joao_cancelo.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTYA2yjIcJ4p2VhBZks8PmwQ_vHPkZb-ipTo2O8tbZodihf_UKam-mKFmwvgONQsSfuaH969rKYQhjNryk"
+    },
+    {
+      "jersey_number": 3,
+      "name": "Alejandro Balde",
+      "slug": "alejandro-balde",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/03_alejandro_balde.jpg",
+      "image_url": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcQPZ_xXixThlSDZogTMQMT5IN5IyLvPb2AA4zE6j7TFIVaxpZwEiduuKJYwu3UBu8X1qwvydzuC-YvPGh8"
+    },
+    {
+      "jersey_number": 4,
+      "name": "Brian Fariñas",
+      "slug": "brian-farinas",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/04_brian_farinas.jpg",
+      "image_url": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTGs6yQxFVHwYjWWUwY7aPKf1vko8n08ekIB_5VFD6bLKPRivP9npyma6Z3GZe9UithhHagJTQqgxwngmw"
+    },
+    {
+      "jersey_number": 5,
+      "name": "Pau Cubarsí",
+      "slug": "pau-cubarsi",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/05_pau_cubarsi.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTkieRZkP8HWvqiN8q7rlT_YFGlMuuwt8HY1YcZuFLk7SrvJFTf7MnDcVRspFrX4jB4W8y6IG2ey4hi9G8"
+    },
+    {
+      "jersey_number": 6,
+      "name": "Gavi",
+      "slug": "gavi",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/06_gavi.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQvg7kjQqnlzRezr-vOn1uKe4Vqy4-x2Kgis4wUl8blXVPqgZRweJAGfUthsHZ0YrW2kWeSqNVVjNkSM1Y"
+    },
+    {
+      "jersey_number": 7,
+      "name": "Fermín López",
+      "slug": "fermin-lopez",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/07_fermin_lopez.jpg",
+      "image_url": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcTCkz6TDNCZG18ims9UReLQ2LT5UAso_zOi2t48YBOUoY22JXunuRljoeCfe9gE2buL1vefYt7H_9Cj-y4"
+    },
+    {
+      "jersey_number": 8,
+      "name": "Pedri",
+      "slug": "pedri",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/08_pedri.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQGHUGu5hYaI3dFnJeV5BaGAN9DoXMqv3xEMCQv7sy_fIgg7jY_ly9pjcEqHw4HdV0cf-Xezt95Ln5UDvM"
+    },
+    {
+      "jersey_number": 9,
+      "name": "Gabriel Jesus",
+      "slug": "gabriel-jesus",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/09_gabriel_jesus.jpg",
+      "image_url": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcS-h6f8C2wKS42cWbs2aJ-_W8YEuZ76pxaM56D4rykh5b-HYJlFnOIpAYaPcbUMpuWibhXlE36h_uTqo3c"
+    },
+    {
+      "jersey_number": 10,
+      "name": "Lamine Yamal",
+      "slug": "lamine-yamal",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/10_lamine_yamal.jpg",
+      "image_url": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcS-d8JM48El7mIOXwrE1AqeV6ibFH0yN3nlAUCGvuyGeANYW8Unb8wiJWFWgERBFZc39o5pFHKl7HC-tp8"
+    },
+    {
+      "jersey_number": 11,
+      "name": "Raphinha",
+      "slug": "raphinha",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/11_raphinha.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQ699S_lcqhLPUR09t_gBV75H8rm2tRtZSTs05U1xTDCuAoolxh8bmZOYA2ofDVAEFflCTSQ7QYTGvM2fU"
+    },
+    {
+      "jersey_number": 12,
+      "name": "Xavi Espart",
+      "slug": "xavi-espart",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/12_xavi_espart.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcSYu2gN1E5ndixtLGKlykHeQrddq8dwIEaIRTjSN4oktLwfoAIbGv6j4Vo4Fs7UQ0LcQPb9IFfZUVvCWcg"
+    },
+    {
+      "jersey_number": 13,
+      "name": "Wojciech Szczęsny",
+      "slug": "wojciech-szczesny",
+      "position": "Goalkeeper",
+      "django_file_path": "players/barcelona/13_wojciech_szczesny.jpg",
+      "image_url": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcS8Lj7VEkXKte6KEG9E13QpnhQ3zqhcxREaRf0byGrb3_zheG4ZFcI1WNr5uUiBwtN62T6uHYAU1hUDvQ0"
+    },
+    {
+      "jersey_number": 14,
+      "name": "Karim Adeyemi",
+      "slug": "karim-adeyemi",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/14_karim_adeyemi.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcT022NgOkPJhmwxNNKrqqEUt1WXDc02cUTo74CFPYB2bRwYtBxbyWrYdU6I-vq8DnvAzXihMiY8dhtlL30"
+    },
+    {
+      "jersey_number": 15,
+      "name": "Andreas Christensen",
+      "slug": "andreas-christensen",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/15_andreas_christensen.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQYleuIG62CVwUEzceDB0ZeJDuEPIU8T3lXIsLw6hk4GJyPUk8EvrlUyL03vC4KsmHWl74FVRiaKRDCsjk"
+    },
+    {
+      "jersey_number": 16,
+      "name": "Rodri",
+      "slug": "rodri",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/16_rodri.jpg",
+      "image_url": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTMh6hI96RI5dYPj31vQEHLtbu6vhGQnBW-POe6I6VhKR3oTn1DGFvLEUaA4ZOkcyWeKPhqHJGHnmVh6qw"
+    },
+    {
+      "jersey_number": 17,
+      "name": "Anthony Gordon",
+      "slug": "anthony-gordon",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/17_anthony_gordon.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcS8N-AzmjLgplMgnDTqYNXOU4Q2Blkt6nJdZTpAzbnCI1w_6L3kVkZWxUUuJwwRmj1xaAUNb-n5jeCfBHM"
+    },
+    {
+      "jersey_number": 18,
+      "name": "Gerard Martín",
+      "slug": "gerard-martin",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/18_gerard_martin.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQpwl23hRo_IVt9GCyjCcUo0Fh0XR5PUhMYzxMNnF6u4gBX9yxqPzOef4O7qXaBJsbOaJ2Ag-pLzxN4cI4"
+    },
+    {
+      "jersey_number": 19,
+      "name": "Roony Bardghji",
+      "slug": "roony-bardghji",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/19_roony_bardghji.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcT3lQSO0EoSwZMLiqhTXT3qmXdY17AWulv4isgQoUtumKK64ZKf87sMA_jly6lEu10Z03-TNkAbX4NNqPA"
+    },
+    {
+      "jersey_number": 20,
+      "name": "Dani Olmo",
+      "slug": "dani-olmo",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/20_dani_olmo.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTRir_WE6UzyNIdzt8ZSi1RemUYxTA7smWm9hv4klP0GqJe_oJsCnnZ5F4JzgFiDNU8L3RiP4s1uCnjnHo"
+    },
+    {
+      "jersey_number": 21,
+      "name": "Frenkie de Jong",
+      "slug": "frenkie-de-jong",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/21_frenkie_de_jong.jpg",
+      "image_url": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRRW8jdKYq-zyhS42uyBD2vve9TAk35IgoWhMO7KSAHZXF9wIFZl2qlsAsI5GKS7d5Fc1v-EHw4qm8Qskc"
+    },
+    {
+      "jersey_number": 22,
+      "name": "Marc Bernal",
+      "slug": "marc-bernal",
+      "position": "Midfielder",
+      "django_file_path": "players/barcelona/22_marc_bernal.jpg",
+      "image_url": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcQsC8ZuVCH3u2vIMvj63QMsWPhQXVy0Na8PPVgZmAWoutDSDylEfqRQcl4KJy5UwL2zvP_7XDWczPFMT80"
+    },
+    {
+      "jersey_number": 23,
+      "name": "Jules Koundé",
+      "slug": "jules-kounde",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/23_jules_kounde.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQDxzZrbO1gCcDTTQyia-88W96GIo9o1CDODEldibpl0-bW3otEgyE_OvwmthfiB3u_2Xz9rIegiS4942w"
+    },
+    {
+      "jersey_number": 24,
+      "name": "Eric García",
+      "slug": "eric-garcia",
+      "position": "Defender",
+      "django_file_path": "players/barcelona/24_eric_garcia.jpg",
+      "image_url": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQNXEcqqLgpHjQQvzxN1sx3FaWvGaLdvkpXBnv_5-N_k6yiTo6KQgbErdhixEo_gS0NPNqtJyEia-wB-LU"
+    },
+    {
+      "jersey_number": 25,
+      "name": "Dominik Livaković",
+      "slug": "dominik-livakovic",
+      "position": "Goalkeeper",
+      "django_file_path": "players/barcelona/25_dominik_livakovic.jpg",
+      "image_url": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcRd_GE_9cLveV8dbnCDF7VOo147z-FV5CXkZZnFwWtqUUXNTDY09zmmH59m6CTfmSzfo_548qJy3kzVxjk"
+    },
+    {
+      "jersey_number": 27,
+      "name": "Jesse Bisiwu",
+      "slug": "jesse-bisiwu",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/27_jesse_bisiwu.jpg",
+      "image_url": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRTvx7rgOoo7uuLAkrmLEsFEY1DGASnm0a8kja0EEoJ8EqlsJuIgMijy_DUM2SOxpkhWHi9vCY2AWbSWhU"
+    },
+    {
+      "jersey_number": 29,
+      "name": "Hamza Abdelkarim",
+      "slug": "hamza-abdelkarim",
+      "position": "Forward",
+      "django_file_path": "players/barcelona/29_hamza_abdelkarim.jpg",
+      "image_url": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcQdyzUDt_UeVzrv3tAdJ28GaGC5cWPBXbEVxdzNfDzm0ULq1wyxn9d08cra0XBLx_JLI3NDVNgt4plFbMk"
+    }
+  ]
+}
+

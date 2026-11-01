@@ -1,0 +1,248 @@
+{
+  "season": "2026-2027",
+  "competitive_game_analyses": [
+    {
+      "match_id": 1,
+      "fixture": "Elche CF 0-5 FC Barcelona",
+      "date": "2026-08-23",
+      "competition": "La Liga",
+      "formation_used": "4-2-3-1",
+      "key_metrics": {
+        "possession": "53%",
+        "shots_total": 12,
+        "shots_on_target": 7,
+        "expected_goals_xg": 4.38,
+        "pass_accuracy": "88% (470/530)"
+      },
+      "man_of_the_match": "Raphinha (2 goals, 1 assist, 9.4 rating)",
+      "tactical_analysis": "Hansi Flick opened the title defense with Raphinha operating centrally as a mobile striker following Robert Lewandowski's departure. Despite sharing possession (53%) against Elche's compact 5-4-1 block, Barcelona generated massive transition threat (4.38 xG). Raphinha converted an early 14' penalty and set up debutant Karim Adeyemi right before halftime. Anthony Gordon came off the bench in the 65th minute to torment tired legs on the left wing, immediately registering back-to-back assists for Raphinha (67') and Fermín López (71'), before Xavi Espart assisted Fermín's second goal in the 79th minute."
+    },
+    {
+      "match_id": 2,
+      "fixture": "FC Barcelona 2-0 Athletic Club",
+      "date": "2026-08-27",
+      "competition": "La Liga",
+      "formation_used": "4-2-3-1",
+      "key_metrics": {
+        "possession": "72%",
+        "shots_total": 20,
+        "shots_on_target": 10,
+        "corners": 12,
+        "pass_accuracy": "92% (548/593)"
+      },
+      "man_of_the_match": "Fermín López / Raphinha",
+      "tactical_analysis": "In the first home match of the campaign, Barcelona suffocated Athletic Club with 72% possession and a relentless high offside trap that caught the visitors offside 5 times while holding them to 0 shots on target. Unai Simón made 8 saves to keep Athletic alive, but Raphinha broke the deadlock in the 37th minute. Rodri made his official Barça debut off the bench in the 62nd minute to lock down the midfield, and Pedri threaded an 82nd-minute assist to Fermín López to seal a controlled 2-0 victory."
+    },
+    {
+      "match_id": 3,
+      "fixture": "FC Barcelona 5-2 Rayo Vallecano",
+      "date": "2026-08-31",
+      "competition": "La Liga",
+      "formation_used": "4-2-3-1",
+      "key_metrics": {
+        "possession": "70%",
+        "shots_total": 18,
+        "shots_on_target": 6,
+        "corners": 9,
+        "pass_accuracy": "92% (587/634)"
+      },
+      "man_of_the_match": "Lamine Yamal (2 goals) & Raphinha (2 goals)",
+      "tactical_analysis": "Rayo Vallecano stunned Camp Nou early when Sergio Camello scored in the 12th minute, exposing space behind Barça's high line. Barcelona responded within nine minutes via a quickfire double from Raphinha (19', assisted by Anthony Gordon) and Lamine Yamal (21', assisted by Marc Bernal). After Florian Lejeune's 51' own goal and Camello's second goal (59') made it 3-2, Flick introduced Rodri and Fermín López to stabilize the center. Xavi Espart assisted Raphinha's brace in the 71st minute, and substitute Karim Adeyemi set up Yamal in the 90th minute to close out a 5-2 win."
+    },
+    {
+      "match_id": 4,
+      "fixture": "Valencia CF 0-5 FC Barcelona",
+      "date": "2026-09-06",
+      "competition": "La Liga",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "70%",
+        "shots_total": 25,
+        "shots_on_target": 9,
+        "pass_accuracy": "93% (735/785)"
+      },
+      "man_of_the_match": "Fermín López (1 goal, 2 assists) & Lamine Yamal (2 goals)",
+      "tactical_analysis": "Switching to a 4-3-3 with Rodri making his first start as the lone pivot behind Pedri and Fermín López, Barcelona completely dismantled Valencia's 5-4-1 setup at Mestalla. Lamine Yamal scored in the 6th minute off a Fermín assist, and Fermín doubled the lead in the 22nd minute from an Anthony Gordon pass. Even after Eric García exited early in the 28th minute for Jules Koundé, Barça out-shot Valencia 25 to 2. Raphinha scored in the 50th minute, and late substitute Dani Olmo provided two assists in 16 minutes for Pedri (79') and Yamal (84')."
+    },
+    {
+      "match_id": 5,
+      "fixture": "FC Barcelona 5-1 Feyenoord",
+      "date": "2026-09-09",
+      "competition": "UEFA Champions League",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "67%",
+        "shots_total": 22,
+        "shots_on_target": 9,
+        "pass_accuracy": "94% (751/797)"
+      },
+      "man_of_the_match": "Raphinha (2 goals, 9.8 rating) & Lamine Yamal (1 goal, 2 assists)",
+      "tactical_analysis": "Barcelona opened their Champions League campaign with a clinical display of positional play (94% pass completion across nearly 800 passes) and a high line that trapped Feyenoord offside 8 times. Raphinha scored in the 3rd minute from a Yamal pass, and Karim Adeyemi made it 2-0 in the 22nd minute courtesy of João Cancelo. Pedri assisted Raphinha's second goal in the 57th minute, Yamal added a 77th-minute strike, and late substitute Gabriel Jesus scored his first goal for the club in the 85th minute (assisted by Yamal) just three minutes after coming on."
+    },
+    {
+      "match_id": 6,
+      "fixture": "Levante UD 2-4 FC Barcelona",
+      "date": "2026-09-13",
+      "competition": "La Liga",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "68%",
+        "shots_total": 8,
+        "shots_on_target": 6,
+        "pass_accuracy": "92% (729/786)"
+      },
+      "man_of_the_match": "Lamine Yamal (2 goals) & Raphinha (2 assists)",
+      "tactical_analysis": "Barcelona raced into a 3-0 lead through Xavi Espart's 5th-minute opener and a Lamine Yamal brace (19' and a 48' penalty), with Raphinha assisting the first two goals. However, after Flick rotated heavily around the 65th minute—withdrawing Yamal, Pedri, and Gordon—Levante capitalized on defensive complacency to score twice on the counter through Iván Romero (79') and Roger Brugué (88'). With the lead cut to 3-2, substitutes Marc Bernal and Karim Adeyemi combined in the 92nd minute for Adeyemi to clinch a 4-2 win."
+    },
+    {
+      "match_id": 7,
+      "fixture": "FC Barcelona 7-2 Real Racing Club",
+      "date": "2026-09-16",
+      "competition": "La Liga",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "70%",
+        "shots_total": 28,
+        "shots_on_target": 11,
+        "corners": 18,
+        "pass_accuracy": "92% (598/645)"
+      },
+      "man_of_the_match": "Raphinha (Hat-trick: 3 goals)",
+      "tactical_analysis": "An ultra-attacking siege in which Barcelona generated 28 shots and 18 corners. João Cancelo opened the scoring in the 8th minute, and Raphinha recorded a hat-trick (including two penalties in the 25th and 67th minutes alongside a 42nd-minute open-play goal), even with Lamine Yamal missing a 44th-minute penalty. Joan García was substituted at halftime as a precaution due to mild right knee discomfort, bringing Wojciech Szczęsny on for the second half. Substitute Gabriel Jesus (79') and Lamine Yamal (89') rounded out the 7-2 rout."
+    },
+    {
+      "match_id": 8,
+      "fixture": "Sevilla FC 1-3 FC Barcelona",
+      "date": "2026-09-19",
+      "competition": "La Liga",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "69%",
+        "shots_total": 24,
+        "shots_on_target": 7,
+        "clearances": 54,
+        "pass_accuracy": "92% (573/617)"
+      },
+      "man_of_the_match": "Raphinha (Hat-trick: 3 goals)",
+      "tactical_analysis": "With Joan García resting his knee, Dominik Livaković made his first start in goal. Sevilla struck first through Youssouf Fofana in the 19th minute, but Raphinha immediately equalized three minutes later (22'). In the second half, Lamine Yamal and Raphinha tore Sevilla's backline apart: Raphinha scored his second successive La Liga hat-trick with finishes in the 52nd and 69th minutes (assisted by Andreas Christensen and two creations from Lamine Yamal) to secure a 3-1 comeback win at the Ramón Sánchez-Pizjuán."
+    },
+    {
+      "match_id": 9,
+      "fixture": "FC Barcelona 3-0 Getafe CF",
+      "date": "2026-10-10",
+      "competition": "La Liga",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "82%",
+        "shots_total": 22,
+        "shots_on_target": 8,
+        "corners": 9,
+        "pass_accuracy": "92% (787/849)"
+      },
+      "man_of_the_match": "Anthony Gordon (1 goal) & Jules Koundé (1 goal)",
+      "tactical_analysis": "Getafe parked a deep 5-4-1 bus with just 18% possession, but Barcelona ruined their game plan in the 2nd minute when Anthony Gordon scored his first La Liga goal. With Raphinha rested, Gabriel Jesus started at striker and doubled the lead in the 30th minute. Barça monopolized the ball (787 accurate passes, 100% tackle win rate), and Jules Koundé added a 73rd-minute goal assisted by Lamine Yamal to equal the club's best-ever 8-0-0 start to a La Liga season."
+    },
+    {
+      "match_id": 10,
+      "fixture": "Galatasaray S.K. 1-4 FC Barcelona",
+      "date": "2026-10-13",
+      "competition": "UEFA Champions League",
+      "formation_used": "4-2-3-1",
+      "key_metrics": {
+        "possession": "65%",
+        "shots_total": 23,
+        "shots_on_target": 12,
+        "offsides_forced": 8,
+        "pass_accuracy": "92% (584/628)"
+      },
+      "man_of_the_match": "Lamine Yamal (2 assists) & João Cancelo (1 goal)",
+      "tactical_analysis": "Facing a dangerous Galatasaray attack featuring Victor Osimhen and Rafael Leão in Istanbul, Barcelona fell behind to Aleksey Batrakov's deflected 28th-minute strike. Crucially, Barça's offside trap neutralized Osimhen and Leão 8 times while holding the hosts to just 2 shots all night. Dani Olmo set up João Cancelo's 43rd-minute equalizer right before the break. In the second half, Lamine Yamal took over with two assists in three minutes for Fermín López (50' header) and Anthony Gordon (53'), before substitutes Gabriel Jesus and Karim Adeyemi combined for Adeyemi's 65th-minute clincher."
+    },
+    {
+      "match_id": 11,
+      "fixture": "Real Betis Balompié 2-5 FC Barcelona",
+      "date": "2026-10-17",
+      "competition": "La Liga",
+      "formation_used": "4-2-3-1",
+      "key_metrics": {
+        "possession": "58%",
+        "shots_total": 16,
+        "shots_on_target": 10,
+        "tackles_won": "93% (15/16)",
+        "pass_accuracy": "94% (686/729)"
+      },
+      "man_of_the_match": "Lamine Yamal (1 goal, 1 assist) & Pau Cubarsí (2 assists)",
+      "tactical_analysis": "A chaotic, high-tempo showdown at La Cartuja. Lamine Yamal scored in the 10th minute, and after Valentín Gómez equalized (27'), Rodri headed home a Fermín López corner in the 41st minute for his first Barcelona goal. Early in the second half, Yamal assisted Gabriel Jesus (51') to make it 3-1, and although Abde Ezzalzouli pulled one back (53'), Betis midfielder Facundo Bernal was sent off in the 54th minute. Against 10 men, substitute Eric García (62') and Dani Olmo (81') scored to seal a historic 9th straight La Liga win."
+    },
+    {
+      "match_id": 12,
+      "fixture": "Paris Saint-Germain 4-2 FC Barcelona",
+      "date": "2026-10-20",
+      "competition": "UEFA Champions League",
+      "formation_used": "4-2-3-1",
+      "key_metrics": {
+        "possession": "54%",
+        "shots_total": 20,
+        "shots_on_target": 9,
+        "saves_by_joan_garcia": 8,
+        "pass_accuracy": "89% (461/517)"
+      },
+      "man_of_the_match": "Désiré Doué (PSG) / Lamine Yamal (Barça)",
+      "tactical_analysis": "Barcelona suffered their first defeat of the season at the Parc des Princes. Starting without Rodri in the XI (Marc Bernal partnered Pedri) and losing Dani Olmo to an early 26th-minute substitution, Barça struggled to contain PSG's dynamic midfield of Vitinha, João Neves, and Fabián Ruiz, alongside Désiré Doué. Despite 8 saves from Joan García and twice fighting back to within a goal via Xavi Espart (55') and Lamine Yamal (79'), PSG's 14 shots on target overwhelmed Barça's high line, with Vitinha (81') and Fabián Ruiz (86') punishing defensive gaps late on."
+    },
+    {
+      "match_id": 13,
+      "fixture": "FC Barcelona 1-2 Real Madrid",
+      "date": "2026-10-25",
+      "competition": "La Liga (El Clásico)",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "63%",
+        "shots_total": 16,
+        "shots_on_target": 6,
+        "pass_accuracy": "90% (581/643)"
+      },
+      "man_of_the_match": "Kylian Mbappé (Real Madrid - 2 goals)",
+      "tactical_analysis": "Just five days after the Paris defeat, Barcelona dropped their first La Liga points of the season in El Clásico. Forced into an early 29th-minute change when Alejandro Balde replaced Xavi Espart, Barça controlled 63% possession and out-shot Real Madrid 16 to 9, but struggled to break down Madrid's compact 4-4-2 block. Kylian Mbappé opened the scoring in the 41st minute. Raphinha equalized in the 61st minute off a Pedri assist, and Frenkie de Jong returned from injury in the 73rd minute, but Mbappé struck on an 87th-minute transition (assisted by Eduardo Camavinga) to hand Madrid a 2-1 victory."
+    },
+    {
+      "match_id": 14,
+      "fixture": "FC Barcelona 6-1 Deportivo Alavés",
+      "date": "2026-10-31",
+      "competition": "La Liga",
+      "formation_used": "4-3-3",
+      "key_metrics": {
+        "possession": "77%",
+        "shots_total": 13,
+        "shots_on_target": 7,
+        "tackles_won": "92% (12/13)",
+        "pass_accuracy": "93% (765/822)"
+      },
+      "man_of_the_match": "Lamine Yamal (2 goals, 1 assist) & Fermín López (1 goal, 2 assists)",
+      "tactical_analysis": "Bouncing back emphatically from consecutive losses to PSG and Real Madrid, Flick handed Frenkie de Jong and Brian Fariñas starts while deploying Rodri at the base of midfield. Barcelona blew Alavés away in the first half with four unanswered goals: Raphinha (8', 41'), Fermín López (23'), and Lamine Yamal (45+1'). Maintaining 77% possession and 93% passing accuracy, Yamal added his second goal in the 64th minute and substitute Anthony Gordon scored in the 81st minute (assisted by Gabriel Jesus) for an emphatic 6-1 statement win."
+    }
+  ],
+  "preseason_analyses_summary": [
+    {
+      "fixture": "FC Barcelona 4-1 CE Europa (2026-07-24)",
+      "analysis": "A traditional La Masia-heavy pre-season opener at Ciutat Esportiva where academy talents Ibrahim Diarra, Héctor Fort, Ebrima Tunkara, and Álex González all found the net."
+    },
+    {
+      "fixture": "Birmingham City 2-2 (3-2 PEN) FC Barcelona (2026-07-31)",
+      "analysis": "New Egyptian striker signing Hamza Abdelkarim announced himself with a brace (42' pen, 60') as Barcelona dominated 69% possession and 2.23 xG before losing the friendly penalty shootout."
+    },
+    {
+      "fixture": "FC Barcelona 1-0 Nottingham Forest & Udinese 1-0 FC Barcelona (2026-08-08)",
+      "analysis": "Split-squad 45-minute mini-tournament matches in the Friuli Venezia Giulia Cup. Fermín López shone in his return from injury as Raphinha's late penalty beat Forest 1-0, while a rotated second XI fell 1-0 to Udinese via Vakoun Bayo's 45th-minute strike."
+    },
+    {
+      "fixture": "FC Basel 2-5 FC Barcelona (2026-08-16)",
+      "analysis": "High-scoring Swiss tune-up where summer signings Karim Adeyemi (34'), Hamza Abdelkarim (49'), and 18-year-old Belgian winger Jesse Bisiwu (late brace in 89' and 90+1') starred alongside returning World Cup winner Lamine Yamal (81' pen)."
+    },
+    {
+      "fixture": "FC Barcelona 2-1 Al Ahly SC (2026-08-19 - Joan Gamper Trophy)",
+      "analysis": "In the return of the Gamper Trophy to Spotify Camp Nou, Hamza Abdelkarim scored against his former club (29') and Raphinha converted a 45' penalty to secure the preseason trophy."
+    }
+  ]
+}
+
