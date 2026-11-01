@@ -27,6 +27,7 @@ class Player(models.Model):
     nickname = models.CharField(max_length=100, blank=True, null=True)
     jersey_number = models.PositiveIntegerField(unique=True)
     position = models.CharField(max_length=3, choices=POSITION_CHOICES)
+    preferred_position = models.CharField(max_length=100, blank=True, null=True, help_text="Detailed preferred position")
     
     # Personal Details
     nationality = models.CharField(max_length=50)
@@ -41,7 +42,7 @@ class Player(models.Model):
     
     # Media & Bio
     profile_image = models.URLField(max_length=500, blank=True, null=True, help_text="Enter image URL")
-    bio = models.TextField()
+    bio = models.TextField(blank=True, default='')
     
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True)

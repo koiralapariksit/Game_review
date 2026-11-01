@@ -1,330 +1,347 @@
 import os
 import django
-from datetime import datetime, date
+import json
+from datetime import date
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'culer.settings')
 django.setup()
 
 from players.models import Player
 
-# Player data for FC Barcelona
-players_data = [
-    # Goalkeepers
-    {
-        'full_name': 'Marc-André ter Stegen',
-        'jersey_number': 1,
-        'position': 'GK',
-        'nationality': 'Germany',
-        'date_of_birth': date(1992, 4, 30),
-        'height_cm': 187,
-        'weight_kg': 85,
-        'preferred_foot': 'R',
-        'joined_year': 2014,
-        'contract_until': 2028,
-        'bio': 'Long-serving club captain and a modern archetype of the "sweeper-keeper." Known for his exceptional distribution and reflex saves, he has won every major trophy with the club.'
+# Known details for first-team players
+KNOWN_PROFILES = {
+    "Joan García": {
+        "date_of_birth": date(2001, 5, 4),
+        "height_cm": 193,
+        "weight_kg": 85,
+        "preferred_foot": "R",
+        "joined_year": 2025,
+        "contract_until": 2031,
+        "bio": "Commanding goalkeeper signed from Espanyol in 2025 as the long-term successor for the starting role, possessing excellent aerial reach, reflexes, and distribution."
     },
-    {
-        'full_name': 'Joan García',
-        'jersey_number': 13,
-        'position': 'GK',
-        'nationality': 'Spain',
-        'date_of_birth': date(2001, 5, 4),
-        'height_cm': 193,
-        'weight_kg': 85,
-        'preferred_foot': 'R',
-        'joined_year': 2025,
-        'contract_until': 2031,
-        'bio': 'Signed from local rivals Espanyol in the summer of 2025 as the long-term successor to the starting role. A commanding presence in the air with excellent shot-stopping abilities.'
+    "João Cancelo": {
+        "date_of_birth": date(1994, 5, 27),
+        "height_cm": 182,
+        "weight_kg": 74,
+        "preferred_foot": "R",
+        "joined_year": 2023,
+        "contract_until": 2027,
+        "bio": "Dynamic and technically gifted full-back capable of operating on either flank or stepping into central midfield as an inverted playmaker."
     },
-    {
-        'full_name': 'Wojciech Szczęsny',
-        'jersey_number': 25,
-        'position': 'GK',
-        'nationality': 'Poland',
-        'date_of_birth': date(1990, 4, 18),
-        'height_cm': 195,
-        'weight_kg': 90,
-        'preferred_foot': 'R',
-        'joined_year': 2024,
-        'contract_until': 2027,
-        'bio': 'Experienced veteran who came out of brief retirement to provide elite depth. A former Juventus and Arsenal standout known for his positioning and leadership in the dressing room.'
+    "Alejandro Balde": {
+        "date_of_birth": date(2003, 10, 18),
+        "height_cm": 177,
+        "weight_kg": 76,
+        "preferred_foot": "L",
+        "joined_year": 2011,
+        "contract_until": 2028,
+        "bio": "Explosive full-back with elite speed and dribbling ability. A core component of the team's offensive width on the left flank."
     },
-    
-    # Defenders
-    {
-        'full_name': 'Ronald Araújo',
-        'jersey_number': 4,
-        'position': 'CB',
-        'nationality': 'Uruguay',
-        'date_of_birth': date(1999, 3, 7),
-        'height_cm': 191,
-        'weight_kg': 96,
-        'preferred_foot': 'R',
-        'joined_year': 2018,
-        'contract_until': 2031,
-        'bio': 'The bedrock of the Barcelona defense, Araújo is renowned for his immense physical strength and recovery speed. He serves as one of the club\'s vice-captains.'
+    "Brian Fariñas": {
+        "date_of_birth": date(2006, 2, 9),
+        "height_cm": 176,
+        "weight_kg": 70,
+        "preferred_foot": "R",
+        "joined_year": 2018,
+        "contract_until": 2029,
+        "bio": "Promising La Masia talent known for versatile midfield capabilities, press resistance, and tactical discipline across central midfield and right-back."
     },
-    {
-        'full_name': 'Pau Cubarsí',
-        'jersey_number': 5,
-        'position': 'CB',
-        'nationality': 'Spain',
-        'date_of_birth': date(2007, 1, 22),
-        'height_cm': 184,
-        'weight_kg': 79,
-        'preferred_foot': 'R',
-        'joined_year': 2018,
-        'contract_until': 2029,
-        'bio': 'A La Masia graduate who broke into the first team at 17. Exceptional at breaking lines with his passing, he is considered one of the best ball-playing defenders of his generation.'
+    "Pau Cubarsí": {
+        "date_of_birth": date(2007, 1, 22),
+        "height_cm": 184,
+        "weight_kg": 79,
+        "preferred_foot": "R",
+        "joined_year": 2018,
+        "contract_until": 2029,
+        "bio": "La Masia sensation and one of the finest young ball-playing centre-backs in world football, renowned for his poise and vision under pressure."
     },
-    {
-        'full_name': 'Jules Koundé',
-        'jersey_number': 23,
-        'position': 'RB',
-        'nationality': 'France',
-        'date_of_birth': date(1998, 11, 12),
-        'height_cm': 181,
-        'weight_kg': 84,
-        'preferred_foot': 'R',
-        'joined_year': 2022,
-        'contract_until': 2030,
-        'bio': 'A versatile defender who transitioned into a world-class right-back. Known for his tactical intelligence, 1-on-1 defending, and impact in the attacking phase.'
+    "Gavi": {
+        "date_of_birth": date(2004, 8, 5),
+        "height_cm": 173,
+        "weight_kg": 69,
+        "preferred_foot": "R",
+        "joined_year": 2015,
+        "contract_until": 2030,
+        "bio": "Heart and soul of the Barcelona midfield, celebrated for high intensity, tireless pressing, and exceptional close control in tight spaces."
     },
-    {
-        'full_name': 'Alejandro Balde',
-        'jersey_number': 3,
-        'position': 'LB',
-        'nationality': 'Spain',
-        'date_of_birth': date(2003, 10, 18),
-        'height_cm': 177,
-        'weight_kg': 76,
-        'preferred_foot': 'L',
-        'joined_year': 2011,
-        'contract_until': 2028,
-        'bio': 'Explosive full-back with elite speed and dribbling ability. He successfully replaced club legend Jordi Alba and is a core component of the team\'s offensive width.'
+    "Fermín López": {
+        "date_of_birth": date(2003, 5, 11),
+        "height_cm": 175,
+        "weight_kg": 73,
+        "preferred_foot": "R",
+        "joined_year": 2016,
+        "contract_until": 2029,
+        "bio": "Prolific attacking midfielder celebrated for dynamic late box arrivals, tireless work ethic, and venomous long-range striking capability."
     },
-    {
-        'full_name': 'Andreas Christensen',
-        'jersey_number': 15,
-        'position': 'CB',
-        'nationality': 'Denmark',
-        'date_of_birth': date(1996, 4, 10),
-        'height_cm': 187,
-        'weight_kg': 82,
-        'preferred_foot': 'R',
-        'joined_year': 2022,
-        'contract_until': 2026,
-        'bio': 'An elegant defender known for his composure on the ball. He has proven highly adaptable, often stepping into a pivot role in midfield when required.'
+    "Pedri": {
+        "date_of_birth": date(2002, 11, 25),
+        "height_cm": 174,
+        "weight_kg": 68,
+        "preferred_foot": "R",
+        "joined_year": 2020,
+        "contract_until": 2030,
+        "bio": "Golden Boy winner and creative maestro who dictates the tempo and orchestrates the team's attack with unmatched vision and elegance."
     },
-    {
-        'full_name': 'Eric García',
-        'jersey_number': 24,
-        'position': 'CB',
-        'nationality': 'Spain',
-        'date_of_birth': date(2001, 1, 9),
-        'height_cm': 182,
-        'weight_kg': 77,
-        'preferred_foot': 'R',
-        'joined_year': 2021,
-        'contract_until': 2031,
-        'bio': 'A high-IQ defender who returned to his boyhood club from Manchester City. Excellent at reading the game and initiating play from the defensive third.'
+    "Gabriel Jesus": {
+        "date_of_birth": date(1997, 4, 3),
+        "height_cm": 175,
+        "weight_kg": 73,
+        "preferred_foot": "R",
+        "joined_year": 2026,
+        "contract_until": 2029,
+        "bio": "Intelligent and hardworking Brazilian striker who combines clinical penalty-box movement, link-up play, and aggressive forward pressing."
     },
-    {
-        'full_name': 'Gerard Martín',
-        'jersey_number': 18,
-        'position': 'LB',
-        'nationality': 'Spain',
-        'date_of_birth': date(2002, 2, 26),
-        'height_cm': 186,
-        'weight_kg': 82,
-        'preferred_foot': 'L',
-        'joined_year': 2023,
-        'contract_until': 2028,
-        'bio': 'Promoted from Barça Atlètic after impressing the coaching staff. Provides a more physical and defensive alternative on the left flank compared to Balde.'
+    "Lamine Yamal": {
+        "date_of_birth": date(2007, 7, 13),
+        "height_cm": 180,
+        "weight_kg": 72,
+        "preferred_foot": "L",
+        "joined_year": 2014,
+        "contract_until": 2031,
+        "bio": "Generational prodigy wearing the iconic number 10 jersey. An electric right winger whose balance, trickery, and decision-making captivate world football."
     },
-    
-    # Midfielders
-    {
-        'full_name': 'Pedro González (Pedri)',
-        'jersey_number': 8,
-        'position': 'CM',
-        'nationality': 'Spain',
-        'date_of_birth': date(2002, 11, 25),
-        'height_cm': 174,
-        'weight_kg': 68,
-        'preferred_foot': 'R',
-        'joined_year': 2020,
-        'contract_until': 2030,
-        'bio': 'The creative heartbeat of the team. A Golden Boy winner renowned for his vision, close control, and ability to dictate the tempo of matches.'
+    "Raphinha": {
+        "date_of_birth": date(1996, 12, 14),
+        "height_cm": 176,
+        "weight_kg": 72,
+        "preferred_foot": "L",
+        "joined_year": 2022,
+        "contract_until": 2028,
+        "bio": "Club captain and relentless attacking engine whose relentless pressing, direct running, and decisive goal contributions define the team's forward line."
     },
-    {
-        'full_name': 'Pablo Páez Gaviria (Gavi)',
-        'jersey_number': 6,
-        'position': 'CM',
-        'nationality': 'Spain',
-        'date_of_birth': date(2004, 8, 5),
-        'height_cm': 173,
-        'weight_kg': 69,
-        'preferred_foot': 'R',
-        'joined_year': 2015,
-        'contract_until': 2030,
-        'bio': 'Known for his incredible intensity and competitive spirit. Despite his young age, he is already a leader on the pitch and a fan favorite for his work rate.'
+    "Xavi Espart": {
+        "date_of_birth": date(2007, 5, 21),
+        "height_cm": 177,
+        "weight_kg": 71,
+        "preferred_foot": "R",
+        "joined_year": 2015,
+        "contract_until": 2029,
+        "bio": "Highly rated youth academy graduate showcasing tactical maturity, combative ball recovery, and positional flexibility between right-back and defensive midfield."
     },
-    {
-        'full_name': 'Frenkie de Jong',
-        'jersey_number': 21,
-        'position': 'CM',
-        'nationality': 'Netherlands',
-        'date_of_birth': date(1997, 5, 12),
-        'height_cm': 181,
-        'weight_kg': 75,
-        'preferred_foot': 'R',
-        'joined_year': 2019,
-        'contract_until': 2029,
-        'bio': 'A world-class ball-carrier who excels at transitioning play from defense to attack. He is one of the club\'s primary captains and most experienced midfielders.'
+    "Wojciech Szczęsny": {
+        "date_of_birth": date(1990, 4, 18),
+        "height_cm": 195,
+        "weight_kg": 90,
+        "preferred_foot": "R",
+        "joined_year": 2024,
+        "contract_until": 2027,
+        "bio": "Veteran goalkeeper who brings elite European experience, calm leadership, and shot-stopping reliability to the squad."
     },
-    {
-        'full_name': 'Dani Olmo',
-        'jersey_number': 20,
-        'position': 'AM',
-        'nationality': 'Spain',
-        'date_of_birth': date(1998, 5, 7),
-        'height_cm': 179,
-        'weight_kg': 73,
-        'preferred_foot': 'R',
-        'joined_year': 2024,
-        'contract_until': 2030,
-        'bio': 'Rejoined the club after a successful stint in Germany. A versatile attacking threat capable of playing between the lines and scoring crucial goals.'
+    "Karim Adeyemi": {
+        "date_of_birth": date(2002, 1, 18),
+        "height_cm": 180,
+        "weight_kg": 75,
+        "preferred_foot": "L",
+        "joined_year": 2026,
+        "contract_until": 2030,
+        "bio": "Blisteringly fast forward who wreaks havoc in transition, capable of beating defenders for pace and creating high-quality scoring chances."
     },
-    {
-        'full_name': 'Fermín López',
-        'jersey_number': 16,
-        'position': 'AM',
-        'nationality': 'Spain',
-        'date_of_birth': date(2003, 5, 11),
-        'height_cm': 175,
-        'weight_kg': 73,
-        'preferred_foot': 'R',
-        'joined_year': 2016,
-        'contract_until': 2029,
-        'bio': 'A late bloomer who rose to stardom following a prolific 2024 season. Noted for his off-the-ball movement and long-range shooting ability.'
+    "Andreas Christensen": {
+        "date_of_birth": date(1996, 4, 10),
+        "height_cm": 187,
+        "weight_kg": 82,
+        "preferred_foot": "R",
+        "joined_year": 2022,
+        "contract_until": 2027,
+        "bio": "Cool-headed Danish international with outstanding anticipation and passing precision, excelling as both central defender and defensive pivot."
     },
-    {
-        'full_name': 'Marc Casadó',
-        'jersey_number': 17,
-        'position': 'DM',
-        'nationality': 'Spain',
-        'date_of_birth': date(2003, 9, 14),
-        'height_cm': 172,
-        'weight_kg': 66,
-        'preferred_foot': 'R',
-        'joined_year': 2016,
-        'contract_until': 2028,
-        'bio': 'A disciplined tactical midfielder who specializes in defensive positioning and recycling possession. Emerged as a reliable pivot option in the first team.'
+    "Rodri": {
+        "date_of_birth": date(1996, 6, 22),
+        "height_cm": 191,
+        "weight_kg": 82,
+        "preferred_foot": "R",
+        "joined_year": 2026,
+        "contract_until": 2030,
+        "bio": "Ballon d'Or winning midfielder who anchors the team with masterclass positioning, immaculate ball retention, and championship leadership."
     },
-    {
-        'full_name': 'Marc Bernal',
-        'jersey_number': 22,
-        'position': 'DM',
-        'nationality': 'Spain',
-        'date_of_birth': date(2007, 5, 26),
-        'height_cm': 191,
-        'weight_kg': 87,
-        'preferred_foot': 'L',
-        'joined_year': 2014,
-        'contract_until': 2029,
-        'bio': 'A tall, physical defensive midfielder with a high ceiling. Despite an early injury setback, he is viewed as the natural heir to the holding midfield role.'
+    "Anthony Gordon": {
+        "date_of_birth": date(2001, 2, 24),
+        "height_cm": 183,
+        "weight_kg": 74,
+        "preferred_foot": "R",
+        "joined_year": 2026,
+        "contract_until": 2031,
+        "bio": "Tenacious direct winger with relentless work rate, rapid acceleration, and lethal deliveries from wide areas."
     },
-    
-    # Forwards
-    {
-        'full_name': 'Robert Lewandowski',
-        'jersey_number': 9,
-        'position': 'CF',
-        'nationality': 'Poland',
-        'date_of_birth': date(1988, 8, 21),
-        'height_cm': 185,
-        'weight_kg': 81,
-        'preferred_foot': 'R',
-        'joined_year': 2022,
-        'contract_until': 2026,
-        'bio': 'One of the greatest strikers of all time. His clinical finishing and elite movement continue to make him the primary goalscoring threat for the Blaugrana.'
+    "Gerard Martín": {
+        "date_of_birth": date(2002, 2, 26),
+        "height_cm": 186,
+        "weight_kg": 82,
+        "preferred_foot": "L",
+        "joined_year": 2023,
+        "contract_until": 2028,
+        "bio": "Robust defender offering physical resilience, strong aerial dominance, and reliable cover across left-back and central defense."
     },
-    {
-        'full_name': 'Lamine Yamal',
-        'jersey_number': 10,
-        'position': 'W',
-        'nationality': 'Spain',
-        'date_of_birth': date(2007, 7, 13),
-        'height_cm': 180,
-        'weight_kg': 72,
-        'preferred_foot': 'L',
-        'joined_year': 2014,
-        'contract_until': 2031,
-        'bio': 'The crown jewel of La Masia. Inherited the legendary number 10 shirt after becoming the youngest player to dominate at both club and international levels.'
+    "Roony Bardghji": {
+        "date_of_birth": date(2005, 11, 15),
+        "height_cm": 173,
+        "weight_kg": 73,
+        "preferred_foot": "L",
+        "joined_year": 2025,
+        "contract_until": 2029,
+        "bio": "Swedish technical prodigy known for incisive cut-inside dribbling, quick change of pace, and sharp finishing from the right wing."
     },
-    {
-        'full_name': 'Raphinha',
-        'jersey_number': 11,
-        'position': 'W',
-        'nationality': 'Brazil',
-        'date_of_birth': date(1996, 12, 14),
-        'height_cm': 176,
-        'weight_kg': 72,
-        'preferred_foot': 'L',
-        'joined_year': 2022,
-        'contract_until': 2028,
-        'bio': 'A tireless worker on the wing with exceptional output in terms of goals and assists. He has grown into a leader and the club\'s fourth captain.'
+    "Dani Olmo": {
+        "date_of_birth": date(1998, 5, 7),
+        "height_cm": 179,
+        "weight_kg": 73,
+        "preferred_foot": "R",
+        "joined_year": 2024,
+        "contract_until": 2030,
+        "bio": "La Masia product who returned to orchestrate attacking play, gifted with spatial intelligence, quick combination play, and goal instinct."
     },
-    {
-        'full_name': 'Marcus Rashford',
-        'jersey_number': 14,
-        'position': 'W',
-        'nationality': 'England',
-        'date_of_birth': date(1997, 10, 31),
-        'height_cm': 188,
-        'weight_kg': 80,
-        'preferred_foot': 'R',
-        'joined_year': 2025,
-        'contract_until': 2026,
-        'bio': 'Joined on a high-profile loan from Manchester United in the summer of 2025. Known for his blistering pace and directness when cutting inside from the left.'
+    "Frenkie de Jong": {
+        "date_of_birth": date(1997, 5, 12),
+        "height_cm": 181,
+        "weight_kg": 75,
+        "preferred_foot": "R",
+        "joined_year": 2019,
+        "contract_until": 2029,
+        "bio": "Midfield orchestrator and captain renowned for gliding past pressing lines with supreme carrying ability and passing vision."
     },
-    {
-        'full_name': 'Ferran Torres',
-        'jersey_number': 7,
-        'position': 'W',
-        'nationality': 'Spain',
-        'date_of_birth': date(2000, 2, 29),
-        'height_cm': 184,
-        'weight_kg': 80,
-        'preferred_foot': 'R',
-        'joined_year': 2022,
-        'contract_until': 2027,
-        'bio': 'A versatile attacker capable of playing across the front three. Known for his intelligent movement off the ball and clinical finishing in the box.'
+    "Marc Bernal": {
+        "date_of_birth": date(2007, 5, 26),
+        "height_cm": 191,
+        "weight_kg": 87,
+        "preferred_foot": "L",
+        "joined_year": 2014,
+        "contract_until": 2029,
+        "bio": "Towering midfield talent recognized for tactical composure, progressive passing range, and innate defensive intelligence in the pivot role."
     },
-    {
-        'full_name': 'Roony Bardghji',
-        'jersey_number': 28,
-        'position': 'W',
-        'nationality': 'Sweden',
-        'date_of_birth': date(2005, 11, 15),
-        'height_cm': 173,
-        'weight_kg': 73,
-        'preferred_foot': 'L',
-        'joined_year': 2025,
-        'contract_until': 2029,
-        'bio': 'A Swedish prodigy signed from Copenhagen. A technical dribbler with a dangerous left foot, brought in to provide depth and competition on the wings.'
+    "Jules Koundé": {
+        "date_of_birth": date(1998, 11, 12),
+        "height_cm": 181,
+        "weight_kg": 84,
+        "preferred_foot": "R",
+        "joined_year": 2022,
+        "contract_until": 2030,
+        "bio": "World-class defender providing defensive solidity and attacking flair down the right side, exceptional in 1-on-1 containment."
     },
-]
+    "Eric García": {
+        "date_of_birth": date(2001, 1, 9),
+        "height_cm": 182,
+        "weight_kg": 77,
+        "preferred_foot": "R",
+        "joined_year": 2021,
+        "contract_until": 2031,
+        "bio": "Tactically astute defender known for crisp passing out from the back and reliable versatility across the backline."
+    },
+    "Dominik Livaković": {
+        "date_of_birth": date(1995, 1, 9),
+        "height_cm": 188,
+        "weight_kg": 82,
+        "preferred_foot": "R",
+        "joined_year": 2026,
+        "contract_until": 2029,
+        "bio": "Croatian international goalkeeper renowned worldwide for peerless reflex stops, penalty heroics, and calm authority in goal."
+    },
+    "Jesse Bisiwu": {
+        "date_of_birth": date(2008, 1, 22),
+        "height_cm": 175,
+        "weight_kg": 68,
+        "preferred_foot": "R",
+        "joined_year": 2025,
+        "contract_until": 2030,
+        "bio": "Electrifying young winger endowed with sharp agility, rapid burst of pace, and direct flair in 1-on-1 situations on either flank."
+    },
+    "Hamza Abdelkarim": {
+        "date_of_birth": date(2006, 8, 15),
+        "height_cm": 186,
+        "weight_kg": 78,
+        "preferred_foot": "R",
+        "joined_year": 2025,
+        "contract_until": 2030,
+        "bio": "Imposing young centre-forward who offers physical presence, clinical finishing instinct inside the penalty box, and strong hold-up play."
+    }
+}
 
-# Clear existing players
+POSITION_MAP = {
+    "Goalkeeper": "GK",
+    "Defender": "CB",
+    "Midfielder": "CM",
+    "Forward": "CF"
+}
+
+DEFENDER_SPECIFIC = {
+    "João Cancelo": "RB",
+    "Alejandro Balde": "LB",
+    "Pau Cubarsí": "CB",
+    "Xavi Espart": "RB",
+    "Andreas Christensen": "CB",
+    "Gerard Martín": "LB",
+    "Jules Koundé": "RB",
+    "Eric García": "CB",
+}
+
+MIDFIELDER_SPECIFIC = {
+    "Brian Fariñas": "CM",
+    "Gavi": "CM",
+    "Fermín López": "AM",
+    "Pedri": "CM",
+    "Rodri": "DM",
+    "Dani Olmo": "AM",
+    "Frenkie de Jong": "CM",
+    "Marc Bernal": "DM",
+}
+
+FORWARD_SPECIFIC = {
+    "Gabriel Jesus": "CF",
+    "Lamine Yamal": "W",
+    "Raphinha": "W",
+    "Karim Adeyemi": "W",
+    "Anthony Gordon": "W",
+    "Roony Bardghji": "W",
+    "Jesse Bisiwu": "W",
+    "Hamza Abdelkarim": "CF",
+}
+
+def resolve_position_code(name, broad_pos):
+    if broad_pos == "Defender" and name in DEFENDER_SPECIFIC:
+        return DEFENDER_SPECIFIC[name]
+    if broad_pos == "Midfielder" and name in MIDFIELDER_SPECIFIC:
+        return MIDFIELDER_SPECIFIC[name]
+    if broad_pos == "Forward" and name in FORWARD_SPECIFIC:
+        return FORWARD_SPECIFIC[name]
+    return POSITION_MAP.get(broad_pos, "CM")
+
+with open('players_2026_2027.json', 'r', encoding='utf-8') as f:
+    payload = json.load(f)
+
+print(f"Clearing previous player records ({Player.objects.count()} existing)...")
 Player.objects.all().delete()
 
-# Create players
+print("Populating new 2026-2027 season players...")
 created_count = 0
-for player_info in players_data:
-    player = Player.objects.create(**player_info)
+for p in payload['players']:
+    name = p['name']
+    profile = KNOWN_PROFILES.get(name, {
+        "date_of_birth": date(2000, 1, 1),
+        "height_cm": 180,
+        "weight_kg": 75,
+        "preferred_foot": "R",
+        "joined_year": 2026,
+        "contract_until": 2029,
+        "bio": f"First-team player for FC Barcelona in the 2026-2027 season under Hansi Flick."
+    })
+    
+    pos_code = resolve_position_code(name, p['position'])
+    
+    player = Player.objects.create(
+        full_name=name,
+        jersey_number=p['jersey_number'],
+        position=pos_code,
+        preferred_position=p.get('preferred_position', ''),
+        nationality=p.get('national_team', ''),
+        date_of_birth=profile['date_of_birth'],
+        height_cm=profile.get('height_cm'),
+        weight_kg=profile.get('weight_kg'),
+        preferred_foot=profile.get('preferred_foot', 'R'),
+        joined_year=profile.get('joined_year', 2026),
+        contract_until=profile.get('contract_until', 2029),
+        profile_image=p.get('picture_url', ''),
+        bio=profile.get('bio', '')
+    )
     created_count += 1
-    print(f"Created: {player.full_name} (#{player.jersey_number})")
+    print(f"[{created_count}/27] Added #{player.jersey_number} {player.full_name} ({player.get_position_display()} - {player.preferred_position})")
 
-print(f"\n✓ Successfully created {created_count} players!")
+print(f"\nAll previous records removed. Successfully populated {created_count} players for 2026-2027!")

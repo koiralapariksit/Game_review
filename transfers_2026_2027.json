@@ -1,0 +1,204 @@
+{
+  "transfer_window": "Summer 2026 (2026-2027 Season)",
+  "financial_summary": {
+    "total_spend_euros": "€184.0M",
+    "total_income_euros": "€89.5M",
+    "net_spend_euros": "-€94.5M"
+  },
+  "arrivals": [
+    {
+      "player": "Anthony Gordon",
+      "age": 25,
+      "position": "Left Winger",
+      "from_club": "Newcastle United",
+      "transfer_type": "Permanent Transfer",
+      "fee": "€80.0M (£69.0M)",
+      "date_completed": "2026-07-01",
+      "assigned_jersey": 17
+    },
+    {
+      "player": "Rodri",
+      "age": 30,
+      "position": "Defensive Midfielder",
+      "from_club": "Manchester City",
+      "transfer_type": "Permanent Transfer",
+      "fee": "€60.0M",
+      "date_completed": "2026-08-18",
+      "assigned_jersey": 16
+    },
+    {
+      "player": "Karim Adeyemi",
+      "age": 24,
+      "position": "Right Winger",
+      "from_club": "Borussia Dortmund",
+      "transfer_type": "Permanent Transfer",
+      "fee": "€22.0M",
+      "date_completed": "2026-07-23",
+      "assigned_jersey": 14
+    },
+    {
+      "player": "Gabriel Jesus",
+      "age": 29,
+      "position": "Striker",
+      "from_club": "Arsenal",
+      "transfer_type": "Permanent Transfer",
+      "fee": "€10.0M (£8.6M)",
+      "date_completed": "2026-08-31",
+      "assigned_jersey": 9
+    },
+    {
+      "player": "Jesse Bisiwu",
+      "age": 18,
+      "position": "Left Winger",
+      "from_club": "Club Brugge",
+      "transfer_type": "Permanent Transfer",
+      "fee": "€8.5M",
+      "date_completed": "2026-07-31",
+      "assigned_jersey": 27
+    },
+    {
+      "player": "Dominik Livaković",
+      "age": 31,
+      "position": "Goalkeeper",
+      "from_club": "Fenerbahçe",
+      "transfer_type": "Permanent Transfer",
+      "fee": "€2.0M",
+      "date_completed": "2026-08-27",
+      "assigned_jersey": 25
+    },
+    {
+      "player": "Hamza Abdelkarim",
+      "age": 18,
+      "position": "Striker",
+      "from_club": "Al Ahly SC",
+      "transfer_type": "Permanent Transfer",
+      "fee": "€1.5M",
+      "date_completed": "2026-07-01",
+      "assigned_jersey": 29
+    },
+    {
+      "player": "João Cancelo",
+      "age": 32,
+      "position": "Right-Back",
+      "from_club": "Al-Hilal",
+      "transfer_type": "Free Transfer (Permanent after January 2026 loan)",
+      "fee": "Free",
+      "date_completed": "2026-08-20",
+      "assigned_jersey": 2
+    },
+    {
+      "player": "Brian Fariñas",
+      "age": 20,
+      "position": "Central Midfielder",
+      "from_club": "Barça Atlètic (La Masia)",
+      "transfer_type": "Promoted to First Team",
+      "fee": "Internal Promotion",
+      "date_completed": "2026-08-31",
+      "assigned_jersey": 4
+    },
+    {
+      "player": "Xavi Espart",
+      "age": 19,
+      "position": "Right-Back / Midfielder",
+      "from_club": "Barça Atlètic (La Masia)",
+      "transfer_type": "Promoted to First Team",
+      "fee": "Internal Promotion",
+      "date_completed": "2026-08-26",
+      "assigned_jersey": 12
+    }
+  ],
+  "departures": [
+    {
+      "player": "Ferran Torres",
+      "to_club": "Paris Saint-Germain",
+      "transfer_type": "Permanent Sale",
+      "fee": "€48.5M (£43.0M)",
+      "date_completed": "2026-08-15"
+    },
+    {
+      "player": "Ansu Fati",
+      "to_club": "AS Monaco",
+      "transfer_type": "Permanent Sale",
+      "fee": "€11.0M (£9.5M)",
+      "date_completed": "2026-07-01"
+    },
+    {
+      "player": "Tommy Marqués",
+      "to_club": "Sold (Permanent)",
+      "transfer_type": "Permanent Sale",
+      "fee": "€11.0M",
+      "date_completed": "2026-08-21"
+    },
+    {
+      "player": "Héctor Fort",
+      "to_club": "Real Sociedad",
+      "transfer_type": "Permanent Sale",
+      "fee": "€8.5M",
+      "date_completed": "2026-08-29"
+    },
+    {
+      "player": "Guille Fernández",
+      "to_club": "Sold (Permanent)",
+      "transfer_type": "Permanent Sale",
+      "fee": "€4.0M",
+      "date_completed": "2026-09-01"
+    },
+    {
+      "player": "Álvaro Cortés",
+      "to_club": "Sold (Permanent)",
+      "transfer_type": "Permanent Sale",
+      "fee": "€3.5M",
+      "date_completed": "2026-09-01"
+    },
+    {
+      "player": "Iñaki Peña",
+      "to_club": "Panathinaikos",
+      "transfer_type": "Permanent Sale",
+      "fee": "€3.0M (£2.5M)",
+      "date_completed": "2026-07-01"
+    },
+    {
+      "player": "Robert Lewandowski",
+      "to_club": "Chicago Fire",
+      "transfer_type": "Free Transfer (End of Contract)",
+      "fee": "Free",
+      "date_completed": "2026-07-01"
+    },
+    {
+      "player": "Marcus Rashford",
+      "to_club": "Manchester United",
+      "transfer_type": "End of Loan Return",
+      "fee": "N/A",
+      "date_completed": "2026-06-30"
+    },
+    {
+      "player": "Marc-André ter Stegen",
+      "to_club": "AFC Ajax",
+      "transfer_type": "Loan Out",
+      "fee": "Loan",
+      "date_completed": "2026-08-04"
+    },
+    {
+      "player": "Ronald Araújo",
+      "to_club": "Liverpool FC",
+      "transfer_type": "Loan Out",
+      "fee": "Loan",
+      "date_completed": "2026-08-10"
+    },
+    {
+      "player": "Marc Casadó",
+      "to_club": "Deportivo La Coruña",
+      "transfer_type": "Loan Out (with Buy Option)",
+      "fee": "Loan",
+      "date_completed": "2026-09-01"
+    },
+    {
+      "player": "Diego Kochen",
+      "to_club": "Lyngby BK",
+      "transfer_type": "Loan Out",
+      "fee": "Loan",
+      "date_completed": "2026-07-15"
+    }
+  ]
+}
+

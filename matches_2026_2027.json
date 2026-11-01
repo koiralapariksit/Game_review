@@ -1,0 +1,726 @@
+{
+  "season": "2026-2027",
+  "competitive_record_summary": {
+    "played": 14,
+    "won": 12,
+    "drawn": 0,
+    "lost": 2,
+    "goals_for": 57,
+    "goals_against": 18,
+    "la_liga_standing": "1st (10W-0D-1L, 30 pts)",
+    "ucl_league_phase_standing": "8th (2W-0D-1L, 6 pts)"
+  },
+  "competitive_matches": [
+    {
+      "match_id": 1,
+      "date": "2026-08-23",
+      "competition": "La Liga (Matchday 2 - Season Opener)",
+      "venue": "Estadio Manuel Martínez Valero, Elche",
+      "home_team": "Elche CF",
+      "away_team": "FC Barcelona",
+      "score": "0-5",
+      "scorers": {
+        "barcelona": [
+          "Raphinha (14' PEN, 67')",
+          "Karim Adeyemi (45+3')",
+          "Fermín López (71', 79')"
+        ],
+        "opponent": []
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Xavi Espart (#12)",
+          "Andreas Christensen (#15)",
+          "Eric García (#24)",
+          "Gerard Martín (#18)",
+          "Gavi (#6)",
+          "Marc Bernal (#22)",
+          "Lamine Yamal (#10)",
+          "Fermín López (#7)",
+          "Raphinha (#11)",
+          "Karim Adeyemi (#14)"
+        ],
+        "substitutes": [
+          "Pedri (#8 - subbed on 45')",
+          "Anthony Gordon (#17 - subbed on 65')",
+          "Dani Olmo (#20 - subbed on 65')",
+          "João Cancelo (#2 - subbed on 80')",
+          "Jules Koundé (#23 - subbed on 80')",
+          "Brian Fariñas (#4)",
+          "Pau Cubarsí (#5)",
+          "Wojciech Szczęsny (#13)",
+          "Álvaro Cortés (#26)",
+          "Hamza Abdelkarim (#29)",
+          "Eder Aller (#31)",
+          "Jordi Pesquer Barraquer (#33)"
+        ]
+      }
+    },
+    {
+      "match_id": 2,
+      "date": "2026-08-27",
+      "competition": "La Liga (Matchday 1 - Rescheduled)",
+      "venue": "Spotify Camp Nou, Barcelona",
+      "home_team": "FC Barcelona",
+      "away_team": "Athletic Club",
+      "score": "2-0",
+      "scorers": {
+        "barcelona": [
+          "Raphinha (37')",
+          "Fermín López (82')"
+        ],
+        "opponent": []
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Eric García (#24)",
+          "Pau Cubarsí (#5)",
+          "Gerard Martín (#18)",
+          "Xavi Espart (#12)",
+          "Marc Bernal (#22)",
+          "Pedri (#8)",
+          "Lamine Yamal (#10)",
+          "Fermín López (#7)",
+          "Anthony Gordon (#17)",
+          "Raphinha (#11)"
+        ],
+        "substitutes": [
+          "Dani Olmo (#20 - subbed on 62')",
+          "Rodri (#16 - subbed on 62')",
+          "Jules Koundé (#23 - subbed on 79')",
+          "Karim Adeyemi (#14 - subbed on 79')",
+          "João Cancelo (#2 - subbed on 84')",
+          "Alejandro Balde (#3)",
+          "Brian Fariñas (#4)",
+          "Wojciech Szczęsny (#13)",
+          "Andreas Christensen (#15)",
+          "Hamza Abdelkarim (#29)",
+          "Eder Aller (#31)"
+        ]
+      }
+    },
+    {
+      "match_id": 3,
+      "date": "2026-08-31",
+      "competition": "La Liga (Matchday 3)",
+      "venue": "Spotify Camp Nou, Barcelona",
+      "home_team": "FC Barcelona",
+      "away_team": "Rayo Vallecano",
+      "score": "5-2",
+      "scorers": {
+        "barcelona": [
+          "Raphinha (19', 71')",
+          "Lamine Yamal (21', 90')",
+          "Florian Lejeune (51' OG)"
+        ],
+        "opponent": [
+          "Sergio Camello (12', 59')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Jules Koundé (#23)",
+          "Pau Cubarsí (#5)",
+          "Andreas Christensen (#15)",
+          "Xavi Espart (#12)",
+          "Pedri (#8)",
+          "Marc Bernal (#22)",
+          "Lamine Yamal (#10)",
+          "Dani Olmo (#20)",
+          "Anthony Gordon (#17)",
+          "Raphinha (#11)"
+        ],
+        "substitutes": [
+          "Fermín López (#7 - subbed on 63')",
+          "Rodri (#16 - subbed on 63')",
+          "Karim Adeyemi (#14 - subbed on 76')",
+          "João Cancelo (#2 - subbed on 77')",
+          "Hamza Abdelkarim (#29 - subbed on 85')",
+          "Alejandro Balde (#3)",
+          "Brian Fariñas (#4)",
+          "Wojciech Szczęsny (#13)",
+          "Gerard Martín (#18)",
+          "Eric García (#24)",
+          "Eder Aller (#31)"
+        ]
+      }
+    },
+    {
+      "match_id": 4,
+      "date": "2026-09-06",
+      "competition": "La Liga (Matchday 4)",
+      "venue": "Mestalla Stadium, Valencia",
+      "home_team": "Valencia CF",
+      "away_team": "FC Barcelona",
+      "score": "0-5",
+      "scorers": {
+        "barcelona": [
+          "Lamine Yamal (6', 84')",
+          "Fermín López (22')",
+          "Raphinha (50')",
+          "Pedri (79')"
+        ],
+        "opponent": []
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Eric García (#24)",
+          "Pau Cubarsí (#5)",
+          "Gerard Martín (#18)",
+          "Xavi Espart (#12)",
+          "Fermín López (#7)",
+          "Rodri (#16)",
+          "Pedri (#8)",
+          "Lamine Yamal (#10)",
+          "Raphinha (#11)",
+          "Anthony Gordon (#17)"
+        ],
+        "substitutes": [
+          "Jules Koundé (#23 - subbed on 28')",
+          "Karim Adeyemi (#14 - subbed on 61')",
+          "Marc Bernal (#22 - subbed on 61')",
+          "Andreas Christensen (#15 - subbed on 61')",
+          "Dani Olmo (#20 - subbed on 74')",
+          "Gabriel Jesus (#9 - subbed on 80')",
+          "João Cancelo (#2)",
+          "Alejandro Balde (#3)",
+          "Gavi (#6)",
+          "Wojciech Szczęsny (#13)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)"
+        ]
+      }
+    },
+    {
+      "match_id": 5,
+      "date": "2026-09-09",
+      "competition": "UEFA Champions League (Matchday 1)",
+      "venue": "Spotify Camp Nou, Barcelona",
+      "home_team": "FC Barcelona",
+      "away_team": "Feyenoord",
+      "score": "5-1",
+      "scorers": {
+        "barcelona": [
+          "Raphinha (3', 57')",
+          "Karim Adeyemi (22')",
+          "Lamine Yamal (77')",
+          "Gabriel Jesus (85')"
+        ],
+        "opponent": [
+          "Sem Steijn (82')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Jules Koundé (#23)",
+          "Pau Cubarsí (#5)",
+          "Andreas Christensen (#15)",
+          "João Cancelo (#2)",
+          "Dani Olmo (#20)",
+          "Rodri (#16)",
+          "Pedri (#8)",
+          "Lamine Yamal (#10)",
+          "Raphinha (#11)",
+          "Karim Adeyemi (#14)"
+        ],
+        "substitutes": [
+          "Marc Bernal (#22 - subbed on 62')",
+          "Anthony Gordon (#17 - subbed on 62')",
+          "Fermín López (#7 - subbed on 70')",
+          "Gavi (#6 - subbed on 82')",
+          "Gabriel Jesus (#9 - subbed on 82')",
+          "Alejandro Balde (#3)",
+          "Brian Fariñas (#4)",
+          "Xavi Espart (#12)",
+          "Wojciech Szczęsny (#13)",
+          "Gerard Martín (#18)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)"
+        ]
+      }
+    },
+    {
+      "match_id": 6,
+      "date": "2026-09-13",
+      "competition": "La Liga (Matchday 5)",
+      "venue": "Estadio Ciudad de Valencia, Valencia",
+      "home_team": "Levante UD",
+      "away_team": "FC Barcelona",
+      "score": "2-4",
+      "scorers": {
+        "barcelona": [
+          "Xavi Espart (5')",
+          "Lamine Yamal (19', 48' PEN)",
+          "Karim Adeyemi (90+2')"
+        ],
+        "opponent": [
+          "Iván Romero (79')",
+          "Roger Brugué (88')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Eric García (#24)",
+          "Pau Cubarsí (#5)",
+          "Gerard Martín (#18)",
+          "Xavi Espart (#12)",
+          "Fermín López (#7)",
+          "Rodri (#16)",
+          "Pedri (#8)",
+          "Lamine Yamal (#10)",
+          "Raphinha (#11)",
+          "Anthony Gordon (#17)"
+        ],
+        "substitutes": [
+          "Andreas Christensen (#15 - subbed on 45')",
+          "Dani Olmo (#20 - subbed on 65')",
+          "Marc Bernal (#22 - subbed on 65')",
+          "Karim Adeyemi (#14 - subbed on 65')",
+          "João Cancelo (#2 - subbed on 79')",
+          "Alejandro Balde (#3)",
+          "Gavi (#6)",
+          "Gabriel Jesus (#9)",
+          "Wojciech Szczęsny (#13)",
+          "Jules Koundé (#23)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)"
+        ]
+      }
+    },
+    {
+      "match_id": 7,
+      "date": "2026-09-16",
+      "competition": "La Liga (Matchday 6)",
+      "venue": "Spotify Camp Nou, Barcelona",
+      "home_team": "FC Barcelona",
+      "away_team": "Real Racing Club",
+      "score": "7-2",
+      "scorers": {
+        "barcelona": [
+          "João Cancelo (8')",
+          "Raphinha (25' PEN, 42', 67' PEN)",
+          "Asier Villalibre (36' OG)",
+          "Gabriel Jesus (79')",
+          "Lamine Yamal (89')"
+        ],
+        "opponent": [
+          "Maguette Gueye (30')",
+          "Yassir Zabiri (65')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Eric García (#24)",
+          "Andreas Christensen (#15)",
+          "Gerard Martín (#18)",
+          "João Cancelo (#2)",
+          "Pedri (#8)",
+          "Rodri (#16)",
+          "Dani Olmo (#20)",
+          "Lamine Yamal (#10)",
+          "Raphinha (#11)",
+          "Karim Adeyemi (#14)"
+        ],
+        "substitutes": [
+          "Wojciech Szczęsny (#13 - subbed on 45')",
+          "Marc Bernal (#22 - subbed on 60')",
+          "Gavi (#6 - subbed on 60')",
+          "Gabriel Jesus (#9 - subbed on 68')",
+          "Alejandro Balde (#3 - subbed on 77')",
+          "Pau Cubarsí (#5)",
+          "Fermín López (#7)",
+          "Xavi Espart (#12)",
+          "Anthony Gordon (#17)",
+          "Jules Koundé (#23)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)"
+        ]
+      }
+    },
+    {
+      "match_id": 8,
+      "date": "2026-09-19",
+      "competition": "La Liga (Matchday 7)",
+      "venue": "Ramón Sánchez-Pizjuán, Seville",
+      "home_team": "Sevilla FC",
+      "away_team": "FC Barcelona",
+      "score": "1-3",
+      "scorers": {
+        "barcelona": [
+          "Raphinha (22', 52', 69')"
+        ],
+        "opponent": [
+          "Youssouf Fofana (19')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Dominik Livaković (#25)",
+          "Eric García (#24)",
+          "Pau Cubarsí (#5)",
+          "Andreas Christensen (#15)",
+          "João Cancelo (#2)",
+          "Pedri (#8)",
+          "Rodri (#16)",
+          "Fermín López (#7)",
+          "Lamine Yamal (#10)",
+          "Raphinha (#11)",
+          "Anthony Gordon (#17)"
+        ],
+        "substitutes": [
+          "Gerard Martín (#18 - subbed on 58')",
+          "Dani Olmo (#20 - subbed on 75')",
+          "Karim Adeyemi (#14 - subbed on 76')",
+          "Gabriel Jesus (#9 - subbed on 85')",
+          "Marc Bernal (#22 - subbed on 85')",
+          "Alejandro Balde (#3)",
+          "Gavi (#6)",
+          "Xavi Espart (#12)",
+          "Wojciech Szczęsny (#13)",
+          "Jules Koundé (#23)",
+          "Hamza Abdelkarim (#29)",
+          "Iker Rodríguez (#35)"
+        ]
+      }
+    },
+    {
+      "match_id": 9,
+      "date": "2026-10-10",
+      "competition": "La Liga (Matchday 8)",
+      "venue": "Spotify Camp Nou, Barcelona",
+      "home_team": "FC Barcelona",
+      "away_team": "Getafe CF",
+      "score": "3-0",
+      "scorers": {
+        "barcelona": [
+          "Anthony Gordon (2')",
+          "Gabriel Jesus (30')",
+          "Jules Koundé (73')"
+        ],
+        "opponent": []
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Jules Koundé (#23)",
+          "Eric García (#24)",
+          "Gerard Martín (#18)",
+          "Xavi Espart (#12)",
+          "Gavi (#6)",
+          "Rodri (#16)",
+          "Dani Olmo (#20)",
+          "Lamine Yamal (#10)",
+          "Gabriel Jesus (#9)",
+          "Anthony Gordon (#17)"
+        ],
+        "substitutes": [
+          "Fermín López (#7 - subbed on 59')",
+          "Pedri (#8 - subbed on 59')",
+          "Marc Bernal (#22 - subbed on 70')",
+          "Karim Adeyemi (#14 - subbed on 71')",
+          "Hamza Abdelkarim (#29 - subbed on 81')",
+          "João Cancelo (#2)",
+          "Alejandro Balde (#3)",
+          "Brian Fariñas (#4)",
+          "Pau Cubarsí (#5)",
+          "Wojciech Szczęsny (#13)",
+          "Dominik Livaković (#25)"
+        ]
+      }
+    },
+    {
+      "match_id": 10,
+      "date": "2026-10-13",
+      "competition": "UEFA Champions League (Matchday 2)",
+      "venue": "RAMS Park, Istanbul",
+      "home_team": "Galatasaray S.K.",
+      "away_team": "FC Barcelona",
+      "score": "1-4",
+      "scorers": {
+        "barcelona": [
+          "João Cancelo (43')",
+          "Fermín López (50')",
+          "Anthony Gordon (53')",
+          "Karim Adeyemi (65')"
+        ],
+        "opponent": [
+          "Aleksey Batrakov (28')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Eric García (#24)",
+          "Pau Cubarsí (#5)",
+          "Gerard Martín (#18)",
+          "João Cancelo (#2)",
+          "Rodri (#16)",
+          "Pedri (#8)",
+          "Lamine Yamal (#10)",
+          "Fermín López (#7)",
+          "Anthony Gordon (#17)",
+          "Dani Olmo (#20)"
+        ],
+        "substitutes": [
+          "Gabriel Jesus (#9 - subbed on 58')",
+          "Karim Adeyemi (#14 - subbed on 58')",
+          "Jules Koundé (#23 - subbed on 72')",
+          "Marc Bernal (#22 - subbed on 72')",
+          "Gavi (#6 - subbed on 81')",
+          "Alejandro Balde (#3)",
+          "Brian Fariñas (#4)",
+          "Xavi Espart (#12)",
+          "Wojciech Szczęsny (#13)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)"
+        ]
+      }
+    },
+    {
+      "match_id": 11,
+      "date": "2026-10-17",
+      "competition": "La Liga (Matchday 9)",
+      "venue": "Estadio de La Cartuja, Seville",
+      "home_team": "Real Betis Balompié",
+      "away_team": "FC Barcelona",
+      "score": "2-5",
+      "scorers": {
+        "barcelona": [
+          "Lamine Yamal (10')",
+          "Rodri (41')",
+          "Gabriel Jesus (51')",
+          "Eric García (62')",
+          "Dani Olmo (81')"
+        ],
+        "opponent": [
+          "Valentín Gómez (27')",
+          "Abde Ezzalzouli (53')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Jules Koundé (#23)",
+          "Pau Cubarsí (#5)",
+          "Gerard Martín (#18)",
+          "Xavi Espart (#12)",
+          "Rodri (#16)",
+          "Pedri (#8)",
+          "Lamine Yamal (#10)",
+          "Fermín López (#7)",
+          "Karim Adeyemi (#14)",
+          "Gabriel Jesus (#9)"
+        ],
+        "substitutes": [
+          "Eric García (#24 - subbed on 45')",
+          "Dani Olmo (#20 - subbed on 61')",
+          "Anthony Gordon (#17 - subbed on 61')",
+          "Raphinha (#11 - subbed on 69')",
+          "Gavi (#6 - subbed on 78')",
+          "João Cancelo (#2)",
+          "Alejandro Balde (#3)",
+          "Brian Fariñas (#4)",
+          "Wojciech Szczęsny (#13)",
+          "Frenkie de Jong (#21)",
+          "Marc Bernal (#22)",
+          "Dominik Livaković (#25)"
+        ]
+      }
+    },
+    {
+      "match_id": 12,
+      "date": "2026-10-20",
+      "competition": "UEFA Champions League (Matchday 3)",
+      "venue": "Parc des Princes, Paris",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Barcelona",
+      "score": "4-2",
+      "scorers": {
+        "barcelona": [
+          "Xavi Espart (55')",
+          "Lamine Yamal (79')"
+        ],
+        "opponent": [
+          "Désiré Doué (38')",
+          "Lucas Hernández (72')",
+          "Vitinha (81')",
+          "Fabián Ruiz (86')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Xavi Espart (#12)",
+          "Pau Cubarsí (#5)",
+          "Gerard Martín (#18)",
+          "João Cancelo (#2)",
+          "Marc Bernal (#22)",
+          "Pedri (#8)",
+          "Lamine Yamal (#10)",
+          "Dani Olmo (#20)",
+          "Anthony Gordon (#17)",
+          "Raphinha (#11)"
+        ],
+        "substitutes": [
+          "Fermín López (#7 - subbed on 26')",
+          "Rodri (#16 - subbed on 59')",
+          "Gavi (#6 - subbed on 59')",
+          "Karim Adeyemi (#14 - subbed on 59')",
+          "Alejandro Balde (#3 - subbed on 73')",
+          "Brian Fariñas (#4)",
+          "Gabriel Jesus (#9)",
+          "Wojciech Szczęsny (#13)",
+          "Frenkie de Jong (#21)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)",
+          "Álex Campos (#41)"
+        ]
+      }
+    },
+    {
+      "match_id": 13,
+      "date": "2026-10-25",
+      "competition": "La Liga (Matchday 10 - El Clásico)",
+      "venue": "Spotify Camp Nou, Barcelona",
+      "home_team": "FC Barcelona",
+      "away_team": "Real Madrid",
+      "score": "1-2",
+      "scorers": {
+        "barcelona": [
+          "Raphinha (61')"
+        ],
+        "opponent": [
+          "Kylian Mbappé (41', 87')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Xavi Espart (#12)",
+          "Pau Cubarsí (#5)",
+          "Gerard Martín (#18)",
+          "João Cancelo (#2)",
+          "Pedri (#8)",
+          "Rodri (#16)",
+          "Fermín López (#7)",
+          "Lamine Yamal (#10)",
+          "Raphinha (#11)",
+          "Anthony Gordon (#17)"
+        ],
+        "substitutes": [
+          "Alejandro Balde (#3 - subbed on 29')",
+          "Frenkie de Jong (#21 - subbed on 73')",
+          "Gabriel Jesus (#9 - subbed on 85')",
+          "Karim Adeyemi (#14 - subbed on 85')",
+          "Brian Fariñas (#4)",
+          "Gavi (#6)",
+          "Wojciech Szczęsny (#13)",
+          "Marc Bernal (#22)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)",
+          "Orian Goren (#32)",
+          "Álex Campos (#41)"
+        ]
+      }
+    },
+    {
+      "match_id": 14,
+      "date": "2026-10-31",
+      "competition": "La Liga (Matchday 11)",
+      "venue": "Spotify Camp Nou, Barcelona",
+      "home_team": "FC Barcelona",
+      "away_team": "Deportivo Alavés",
+      "score": "6-1",
+      "scorers": {
+        "barcelona": [
+          "Raphinha (8', 41')",
+          "Fermín López (23')",
+          "Lamine Yamal (45+1', 64')",
+          "Anthony Gordon (81')"
+        ],
+        "opponent": [
+          "Mariano Díaz (84')"
+        ]
+      },
+      "barcelona_squad": {
+        "starting_xi": [
+          "Joan García (#1)",
+          "Brian Fariñas (#4)",
+          "Pau Cubarsí (#5)",
+          "Frenkie de Jong (#21)",
+          "João Cancelo (#2)",
+          "Pedri (#8)",
+          "Rodri (#16)",
+          "Fermín López (#7)",
+          "Lamine Yamal (#10)",
+          "Raphinha (#11)",
+          "Karim Adeyemi (#14)"
+        ],
+        "substitutes": [
+          "Marc Bernal (#22 - subbed on 45')",
+          "Alejandro Balde (#3 - subbed on 61')",
+          "Gabriel Jesus (#9 - subbed on 61')",
+          "Anthony Gordon (#17 - subbed on 73')",
+          "Gerard Martín (#18 - subbed on 81')",
+          "Gavi (#6)",
+          "Wojciech Szczęsny (#13)",
+          "Dominik Livaković (#25)",
+          "Hamza Abdelkarim (#29)",
+          "Ebrima Tunkara (#30)",
+          "Álex Campos (#41)"
+        ]
+      }
+    }
+  ],
+  "preseason_friendlies": [
+    {
+      "date": "2026-07-24",
+      "competition": "Club Friendly",
+      "match": "FC Barcelona vs CE Europa",
+      "score": "4-1",
+      "barcelona_scorers": ["Ibrahim Diarra (13')", "Héctor Fort (29')", "Ebrima Tunkara (48')", "Álex González (58')"]
+    },
+    {
+      "date": "2026-07-31",
+      "competition": "Club Friendly",
+      "match": "Birmingham City vs FC Barcelona",
+      "score": "2-2 (3-2 PEN)",
+      "barcelona_scorers": ["Hamza Abdelkarim (42' PEN, 60')"]
+    },
+    {
+      "date": "2026-08-08",
+      "competition": "Friuli Venezia Giulia Cup (45-min match)",
+      "match": "FC Barcelona vs Nottingham Forest",
+      "score": "1-0",
+      "barcelona_scorers": ["Raphinha (45+2' PEN)"]
+    },
+    {
+      "date": "2026-08-08",
+      "competition": "Friuli Venezia Giulia Cup (45-min match)",
+      "match": "Udinese Calcio vs FC Barcelona",
+      "score": "1-0",
+      "barcelona_scorers": []
+    },
+    {
+      "date": "2026-08-16",
+      "competition": "Club Friendly",
+      "match": "FC Basel 1893 vs FC Barcelona",
+      "score": "2-5",
+      "barcelona_scorers": ["Karim Adeyemi (34')", "Hamza Abdelkarim (49')", "Lamine Yamal (81' PEN)", "Jesse Bisiwu (89', 90+1')"]
+    },
+    {
+      "date": "2026-08-19",
+      "competition": "Joan Gamper Trophy",
+      "match": "FC Barcelona vs Al Ahly SC",
+      "score": "2-1",
+      "barcelona_scorers": ["Hamza Abdelkarim (29')", "Raphinha (45' PEN)"]
+    }
+  ]
+}

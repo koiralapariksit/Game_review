@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Upcoming Matches - FC Barcelona{% endblock %}
+
+{% block content %}
+<style>
+    .matches-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .matches-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .match-box {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+        display: block;
+    }
+
+    .match-box:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+    }
+
+    .match-background-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #004d98, #a50044);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+    }
+
+    .match-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.2) 50%,
+            rgba(0, 0, 0, 0.8) 100%
+        );
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1.5rem;
+        color: white;
+    }
+
+    .match-status-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background: #007bff;
+        color: white;
+    }
+
+    .match-content {
+        margin-top: auto;
+    }
+
+    .match-competition {
+        font-size: 0.85rem;
+        color: #ffd700;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+    }
+
+    .match-teams {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .match-date {
+        font-size: 1rem;
+        color: #e0e0e0;
+    }
+
+    .no-matches {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #666;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+</style>
+
+<div class="matches-container">
+    <div class="page-header">
+        <h1 class="page-title">Upcoming Fixtures</h1>
+        <p class="page-subtitle">Upcoming matches and fixtures for FC Barcelona</p>
+    </div>
+
+    {% if page_obj %}
+    <div class="matches-grid">
+        {% for match in page_obj %}
+        <a href="/matches/{{ match.id }}/" class="match-box">
+            <div class="match-status-badge">Upcoming</div>
+            <div class="match-background-placeholder">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="match-overlay">
+                <div></div>
+                <div class="match-content">
+                    <div class="match-competition">{{ match.competition_display|default:match.competition }}</div>
+                    <div class="match-teams">FC Barcelona vs {{ match.opponent }}</div>
+                    <div class="match-date">{{ match.date|date:"F j, Y - g:i A" }}</div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-matches">
+        <h3>No Upcoming Matches Scheduled</h3>
+        <p>Check back soon for new fixture updates.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

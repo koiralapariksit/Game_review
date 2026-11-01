@@ -1,0 +1,226 @@
+{
+  "club": "FC Barcelona",
+  "season": "2026-2027",
+  "head_coach": "Hansi Flick",
+  "total_first_team_players": 27,
+  "last_verified": "2026-11-01",
+  "players": [
+    {
+      "jersey_number": 1,
+      "name": "Joan García",
+      "position": "Goalkeeper",
+      "preferred_position": "Goalkeeper (Sweeper Keeper)",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/110491/joan-garcia"
+    },
+    {
+      "jersey_number": 2,
+      "name": "João Cancelo",
+      "position": "Defender",
+      "preferred_position": "Right-Back / Inverted Left-Back",
+      "national_team": "Portugal",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/joao-cancelo"
+    },
+    {
+      "jersey_number": 3,
+      "name": "Alejandro Balde",
+      "position": "Defender",
+      "preferred_position": "Left-Back",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/alejandro-balde"
+    },
+    {
+      "jersey_number": 4,
+      "name": "Brian Fariñas",
+      "position": "Midfielder",
+      "preferred_position": "Central Midfielder / Right-Back",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/brian-farinas"
+    },
+    {
+      "jersey_number": 5,
+      "name": "Pau Cubarsí",
+      "position": "Defender",
+      "preferred_position": "Centre-Back (Ball-Playing Defender)",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/pau-cubarsi"
+    },
+    {
+      "jersey_number": 6,
+      "name": "Gavi",
+      "position": "Midfielder",
+      "preferred_position": "Central Midfielder / Box-to-Box Midfielder",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/gavi"
+    },
+    {
+      "jersey_number": 7,
+      "name": "Fermín López",
+      "position": "Midfielder",
+      "preferred_position": "Attacking Midfielder (CAM)",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/fermin-lopez"
+    },
+    {
+      "jersey_number": 8,
+      "name": "Pedri",
+      "position": "Midfielder",
+      "preferred_position": "Central Midfielder / Deep-Lying Playmaker",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/pedri"
+    },
+    {
+      "jersey_number": 9,
+      "name": "Gabriel Jesus",
+      "position": "Forward",
+      "preferred_position": "Centre-Forward / Striker",
+      "national_team": "Brazil",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/gabriel-jesus"
+    },
+    {
+      "jersey_number": 10,
+      "name": "Lamine Yamal",
+      "position": "Forward",
+      "preferred_position": "Right Winger",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/lamine-yamal"
+    },
+    {
+      "jersey_number": 11,
+      "name": "Raphinha",
+      "position": "Forward",
+      "preferred_position": "Left Winger / Centre-Forward / Right Winger",
+      "national_team": "Brazil",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/raphinha"
+    },
+    {
+      "jersey_number": 12,
+      "name": "Xavi Espart",
+      "position": "Defender",
+      "preferred_position": "Right-Back / Defensive Midfielder",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/xavi-espart"
+    },
+    {
+      "jersey_number": 13,
+      "name": "Wojciech Szczęsny",
+      "position": "Goalkeeper",
+      "preferred_position": "Goalkeeper",
+      "national_team": "Poland",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/wojciech-szczesny"
+    },
+    {
+      "jersey_number": 14,
+      "name": "Karim Adeyemi",
+      "position": "Forward",
+      "preferred_position": "Right Winger / Inside Forward",
+      "national_team": "Germany",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/karim-adeyemi"
+    },
+    {
+      "jersey_number": 15,
+      "name": "Andreas Christensen",
+      "position": "Defender",
+      "preferred_position": "Centre-Back",
+      "national_team": "Denmark",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/andreas-christensen"
+    },
+    {
+      "jersey_number": 16,
+      "name": "Rodri",
+      "position": "Midfielder",
+      "preferred_position": "Defensive Midfielder (Pivot)",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/rodrigo"
+    },
+    {
+      "jersey_number": 17,
+      "name": "Anthony Gordon",
+      "position": "Forward",
+      "preferred_position": "Left Winger",
+      "national_team": "England",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/anthony-gordon"
+    },
+    {
+      "jersey_number": 18,
+      "name": "Gerard Martín",
+      "position": "Defender",
+      "preferred_position": "Left-Sided Centre-Back / Left-Back",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/gerard-martin"
+    },
+    {
+      "jersey_number": 19,
+      "name": "Roony Bardghji",
+      "position": "Forward",
+      "preferred_position": "Right Winger",
+      "national_team": "Sweden",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/roony-bardghji"
+    },
+    {
+      "jersey_number": 20,
+      "name": "Dani Olmo",
+      "position": "Midfielder",
+      "preferred_position": "Attacking Midfielder / False Nine",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/dani-olmo"
+    },
+    {
+      "jersey_number": 21,
+      "name": "Frenkie de Jong",
+      "position": "Midfielder",
+      "preferred_position": "Central Midfielder / Deep-Lying Playmaker",
+      "national_team": "Netherlands",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/frenkie-de-jong"
+    },
+    {
+      "jersey_number": 22,
+      "name": "Marc Bernal",
+      "position": "Midfielder",
+      "preferred_position": "Defensive Midfielder (Pivot)",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/marc-bernal"
+    },
+    {
+      "jersey_number": 23,
+      "name": "Jules Koundé",
+      "position": "Defender",
+      "preferred_position": "Right-Back / Centre-Back",
+      "national_team": "France",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/jules-kounde"
+    },
+    {
+      "jersey_number": 24,
+      "name": "Eric García",
+      "position": "Defender",
+      "preferred_position": "Centre-Back / Right-Back",
+      "national_team": "Spain",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/eric-garcia"
+    },
+    {
+      "jersey_number": 25,
+      "name": "Dominik Livaković",
+      "position": "Goalkeeper",
+      "preferred_position": "Goalkeeper",
+      "national_team": "Croatia",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/dominik-livakovic"
+    },
+    {
+      "jersey_number": 27,
+      "name": "Jesse Bisiwu",
+      "position": "Forward",
+      "preferred_position": "Left Winger / Right Winger",
+      "national_team": "Belgium",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/jesse-bisiwu"
+    },
+    {
+      "jersey_number": 29,
+      "name": "Hamza Abdelkarim",
+      "position": "Forward",
+      "preferred_position": "Centre-Forward / Striker",
+      "national_team": "Egypt",
+      "picture_url": "https://www.fcbarcelona.com/en/football/first-team/players/hamza-abdelkarim"
+    }
+  ]
+}
+
