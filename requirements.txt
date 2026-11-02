@@ -27,3 +27,6 @@ django-ratelimit>=4.1.0
 # Static files & Production Server
 whitenoise[brotli]>=6.6.0
 gunicorn>=22.0.0
+
+# Data Validation & AI Output Schemas (P2-2)
+pydantic>=2.0.0
