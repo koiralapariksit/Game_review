@@ -79,3 +79,4 @@ class HomepageViewTestCase(TestCase):
         self.assertContains(response, "64%")
         self.assertContains(response, "18")
         self.assertNotContains(response, ">None<")
+

@@ -1,344 +1,169 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ player.full_name }} - Player Profile{% endblock %}
+{% block title %}{{ player.full_name }} (#{{ player.jersey_number }}) | Player Intelligence{% endblock %}
 
 {% block content %}
-<style>
-    .player-detail-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 3rem 1.5rem;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
 
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #374151;
-        text-decoration: none;
-        margin-bottom: 2rem;
-        font-weight: 500;
-        transition: color 0.2s ease;
-    }
+    <a href="{% url 'players:player_list' %}" class="section-link" style="margin-bottom: 1.5rem; display: inline-flex;">
+        &larr; Return to Squad Directory
+    </a>
 
-    .back-link:hover {
-        color: #1a1a1a;
-        text-decoration: none;
-    }
-
-    .back-link::before {
-        content: '←';
-    }
-
-    .player-header {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 3rem;
-        margin-bottom: 3rem;
-        align-items: start;
-    }
-
-    .player-image-section {
-        position: sticky;
-        top: 90px;
-    }
-
-    .player-image-container {
-        width: 100%;
-        aspect-ratio: 3 / 4;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
-        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .player-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .player-image-placeholder {
-        font-size: 5rem;
-        color: #d1d5db;
-    }
-
-    .player-info {
-        padding-top: 0.5rem;
-    }
-
-    .player-name {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin: 0 0 0.5rem 0;
-        line-height: 1.1;
-    }
-
-    .player-position {
-        display: inline-block;
-        background: #f3f4f6;
-        color: #374151;
-        padding: 0.5rem 1rem;
-        border-radius: 24px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 1.5rem;
-    }
-
-    .player-quick-stats {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .quick-stat {
-        background: white;
-        border: 1px solid #e5e7eb;
-        padding: 1.25rem;
-        border-radius: 12px;
-        text-align: center;
-    }
-
-    .quick-stat-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.5rem;
-    }
-
-    .quick-stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1a1a1a;
-    }
-
-    /* Stats Grid */
-    .stats-section {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .stats-section-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin: 0 0 1.5rem 0;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f3f4f6;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-    }
-
-    .stat-card {
-        padding: 1.25rem 0;
-    }
-
-    .stat-label {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-
-    .stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1a1a1a;
-    }
-
-    /* Bio Section */
-    .bio-section {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .bio-section-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin: 0 0 1.5rem 0;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f3f4f6;
-    }
-
-    .bio-text {
-        font-size: 1rem;
-        line-height: 1.7;
-        color: #495057;
-        margin: 0;
-    }
-
-    .bio-text p {
-        margin-bottom: 1rem;
-    }
-
-    .bio-text p:last-child {
-        margin-bottom: 0;
-    }
-
-    /* Responsive */
-    @media (max-width: 968px) {
-        .player-header {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        .player-image-section {
-            position: static;
-        }
-
-        .player-name {
-            font-size: 2.5rem;
-        }
-
-        .player-image-container {
-            max-width: 300px;
-        }
-    }
-
-    @media (max-width: 640px) {
-        .player-detail-container {
-            padding: 1.5rem 1rem;
-        }
-
-        .player-name {
-            font-size: 2rem;
-        }
-
-        .player-quick-stats {
-            grid-template-columns: 1fr;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .stats-section,
-        .bio-section {
-            padding: 1.5rem;
-        }
-    }
-</style>
-
-<div class="player-detail-container">
-    <!-- Back Link -->
-    <a href="{% url 'players:player_list' %}" class="back-link">Back to Squad</a>
-
-    <!-- Player Header -->
-    <div class="player-header">
-        <!-- Image -->
-        <div class="player-image-section">
-            <div class="player-image-container">
-                {% if player.profile_image %}
-                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image">
-                {% else %}
-                    <div class="player-image-placeholder">
-                        <i class="fas fa-user"></i>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Info -->
-        <div class="player-info">
-            <h1 class="player-name">{{ player.full_name }}</h1>
-            <span class="player-position">{{ player.get_position_display }}</span>
-
-            <!-- Quick Stats -->
-            <div class="player-quick-stats">
-                <div class="quick-stat">
-                    <div class="quick-stat-label">Jersey</div>
-                    <div class="quick-stat-value">#{{ player.jersey_number }}</div>
+    <!-- Player Bio & Header Card -->
+    <div class="surface-card" style="display: grid; grid-template-columns: 280px 1fr; gap: 2.5rem; margin-bottom: 2.5rem; align-items: center;">
+        <div style="text-align: center;">
+            {% if player.profile_image %}
+                <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" style="width: 100%; border-radius: var(--radius-md); border: 2px solid var(--border-subtle); object-fit: cover; max-height: 320px;">
+            {% else %}
+                <div class="crest-icon" style="width: 100%; height: 280px; font-size: 3.5rem; border-radius: var(--radius-md);">
+                    #{{ player.jersey_number }}
                 </div>
-                <div class="quick-stat">
-                    <div class="quick-stat-label">Age</div>
-                    <div class="quick-stat-value">{{ player.age }}</div>
-                </div>
-                <div class="quick-stat">
-                    <div class="quick-stat-label">Country</div>
-                    <div class="quick-stat-value" style="font-size: 0.95rem; font-weight: 500;">{{ player.nationality }}</div>
-                </div>
-                <div class="quick-stat">
-                    <div class="quick-stat-label">Joined</div>
-                    <div class="quick-stat-value">{{ player.joined_year }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Physical & Career Stats -->
-    <div class="stats-section">
-        <h2 class="stats-section-title">Physical & Career Details</h2>
-        <div class="stats-grid">
-            {% if player.height_cm %}
-            <div class="stat-card">
-                <span class="stat-label">Height</span>
-                <span class="stat-value">{{ player.height_cm }} cm</span>
-            </div>
             {% endif %}
+        </div>
 
-            {% if player.weight_kg %}
-            <div class="stat-card">
-                <span class="stat-label">Weight</span>
-                <span class="stat-value">{{ player.weight_kg }} kg</span>
-            </div>
-            {% endif %}
-
-            <div class="stat-card">
-                <span class="stat-label">Preferred Foot</span>
-                <span class="stat-value">{{ player.get_preferred_foot_display }}</span>
+        <div>
+            <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                <span class="badge" style="background: rgba(237, 187, 0, 0.15); color: var(--accent-gold); font-size: 0.9rem;">
+                    #{{ player.jersey_number }}
+                </span>
+                <span class="badge">{{ player.get_position_display }}</span>
+                <span class="badge" style="background: rgba(0, 77, 152, 0.2); color: #93c5fd;">{{ player.nationality }}</span>
             </div>
 
-            <div class="stat-card">
-                <span class="stat-label">Joined Barcelona</span>
-                <span class="stat-value">{{ player.joined_year }}</span>
+            <h1 style="font-size: 2.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 0.75rem;">
+                {{ player.full_name }}
+            </h1>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+                <span><strong>Age:</strong> {{ player.age|default:"Unavailable" }}</span>
+                <span><strong>Preferred Foot:</strong> {{ player.get_preferred_foot_display|default:"Unavailable" }}</span>
+                <span><strong>Contract Until:</strong> {{ player.contract_until|default:"Unavailable" }}</span>
+                <span><strong>Joined:</strong> {{ player.joined_year|default:"Unavailable" }}</span>
             </div>
 
-            <div class="stat-card">
-                <span class="stat-label">Contract Until</span>
-                <span class="stat-value">{{ player.contract_until }}</span>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Date of Birth</span>
-                <span class="stat-value">{{ player.date_of_birth|date:"M d, Y" }}</span>
-            </div>
+            <p style="color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem;">
+                {{ player.bio|default:"First-team squad member active in primary competitions with deterministic performance logging." }}
+            </p>
         </div>
     </div>
 
-    <!-- Biography -->
-    {% if player.bio %}
-    <div class="bio-section">
-        <h2 class="bio-section-title">Professional Profile</h2>
-        <div class="bio-text">
-            {{ player.bio|linebreaks }}
+    <!-- Position-Appropriate Season Statistics Grid -->
+    <div class="surface-card" style="margin-bottom: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <h3 style="font-size: 1.25rem; font-weight: 800;">
+                <i class="fa-solid fa-chart-line" style="color: var(--accent-gold);"></i> Season Statistics
+            </h3>
+            <span class="badge" style="text-transform: uppercase;">Role: {{ player.get_position_display }}</span>
         </div>
+
+        {% if season_stats %}
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Season</th>
+                            <th>Competition</th>
+                            <th style="text-align: right;">Appearances</th>
+                            <th style="text-align: right;">Minutes</th>
+                            {% if player.position == 'GK' or player.position == 'CB' or player.position == 'RB' or player.position == 'LB' %}
+                                <th style="text-align: right;">Clean Sheets / Yellows</th>
+                            {% else %}
+                                <th style="text-align: right;">Goals</th>
+                                <th style="text-align: right;">Assists</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in season_stats %}
+                            <tr>
+                                <td style="font-weight: 700;">{{ s.season }}</td>
+                                <td>{{ s.competition }}</td>
+                                <td class="tabular-numbers" style="text-align: right;">{{ s.appearances }}</td>
+                                <td class="tabular-numbers" style="text-align: right;">{{ s.minutes_played }}'</td>
+                                {% if player.position == 'GK' or player.position == 'CB' or player.position == 'RB' or player.position == 'LB' %}
+                                    <td class="tabular-numbers" style="text-align: right;">{{ s.yellow_cards }} cards</td>
+                                {% else %}
+                                    <td class="tabular-numbers" style="text-align: right; font-weight: 700; color: var(--accent-gold);">{{ s.goals }}</td>
+                                    <td class="tabular-numbers" style="text-align: right;">{{ s.assists }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1.5rem 0;">
+                Season stats for this player are currently unavailable.
+            </p>
+        {% endif %}
     </div>
+
+    <!-- Match-by-Match Performance Log -->
+    <div class="surface-card" style="margin-bottom: 2.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.25rem;">
+            <i class="fa-solid fa-list-check" style="color: var(--accent-gold);"></i> Recent Match Performances
+        </h3>
+
+        {% if recent_performances %}
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Match</th>
+                            <th>Rating</th>
+                            <th style="text-align: right;">Minutes</th>
+                            <th style="text-align: right;">Goals</th>
+                            <th style="text-align: right;">Assists</th>
+                            <th style="text-align: right;">Shots</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for perf in recent_performances %}
+                            <tr>
+                                <td>{{ perf.match.match_date|date:"d M Y" }}</td>
+                                <td style="font-weight: 600;">
+                                    <a href="{% url 'matches:match_detail' perf.match.id %}" style="color: var(--text-primary);">
+                                        {{ perf.match }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if perf.rating is not None %}
+                                        <span class="rating-pill" style="font-size: 0.8rem; padding: 0.2rem 0.6rem;">{{ perf.rating }}</span>
+                                    {% else %}
+                                        <span style="color: var(--text-muted);">Unavailable</span>
+                                    {% endif %}
+                                </td>
+                                <td class="tabular-numbers" style="text-align: right;">{{ perf.minutes_played }}'</td>
+                                <td class="tabular-numbers" style="text-align: right;">{{ perf.goals }}</td>
+                                <td class="tabular-numbers" style="text-align: right;">{{ perf.assists }}</td>
+                                <td class="tabular-numbers" style="text-align: right;">{{ perf.shots }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1.5rem 0;">
+                No individual match performance records found yet.
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- Linked AI Player Intelligence Report -->
+    {% if latest_player_report %}
+        <div class="surface-card" style="border-left: 4px solid var(--accent-blau);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span class="badge badge-ai"><i class="fa-solid fa-brain"></i> AI SCOUTING REPORT</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">{{ latest_player_report.created_at|date:"d M Y" }}</span>
+            </div>
+            <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem;">{{ latest_player_report.title }}</h3>
+            <div style="color: var(--text-secondary); line-height: 1.8; white-space: pre-wrap;">
+                {{ latest_player_report.content }}
+            </div>
+        </div>
     {% endif %}
-</div>
 
+</div>
 {% endblock %}

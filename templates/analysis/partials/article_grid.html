@@ -1,0 +1,41 @@
+{% if page_obj %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% for article in page_obj %}
+            <div class="surface-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span class="badge" style="background: rgba(0, 77, 152, 0.2); color: #93c5fd;">
+                            {{ article.get_category_display }}
+                        </span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">
+                            {{ article.published_at|default:article.created_at|date:"d M Y" }}
+                        </span>
+                    </div>
+
+                    <h4 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.35;">
+                        <a href="{% url 'analysis:article_detail' article.slug %}" style="color: var(--text-primary);">
+                            {{ article.title }}
+                        </a>
+                    </h4>
+
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                        {{ article.get_content_preview|truncatewords:24 }}
+                    </p>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 0.75rem;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-brain"></i> AI Verified</span>
+                    <a href="{% url 'analysis:article_detail' article.slug %}" style="color: var(--accent-gold); font-size: 0.85rem; font-weight: 600;">
+                        Read report &rarr;
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state-card">
+        <i class="fa-regular fa-newspaper empty-state-icon"></i>
+        <h3>No articles found</h3>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">No intelligence dispatches found matching your filter selection.</p>
+    </div>
+{% endif %}

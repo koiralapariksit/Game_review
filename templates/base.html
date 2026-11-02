@@ -51,9 +51,9 @@
 
             <!-- Search Bar & Action Pill -->
             <div class="nav-actions">
-                <form action="{% url 'matches:match_list' %}" method="get" class="search-bar-form">
+                <form action="{% url 'global_search' %}" method="get" class="search-bar-form">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" name="search" placeholder="Search matches, tactics..." class="search-input" value="{{ request.GET.search|default:'' }}">
+                    <input type="text" name="q" placeholder="Search matches, tactics, players..." class="search-input" value="{{ query|default:'' }}">
                 </form>
 
                 <a href="{% url 'analysis:article_list' %}" class="cta-pill">

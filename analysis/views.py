@@ -6,12 +6,16 @@ from .models import Article
 
 
 def article_list(request):
-    """Display all published articles with optimized relations and pagination"""
+    """Display all published articles with optimized relations, pagination, and HTMX filtering"""
     articles = Article.objects.filter(
         status=Article.STATUS_PUBLISHED
     ).select_related('match', 'player', 'author', 'match__home_team', 'match__away_team', 'match__competition')
     
-    search_query = request.GET.get('search')
+    category_filter = request.GET.get('category')
+    if category_filter:
+        articles = articles.filter(category=category_filter)
+
+    search_query = request.GET.get('search') or request.GET.get('q')
     if search_query:
         articles = articles.filter(
             Q(title__icontains=search_query) |
@@ -26,8 +30,14 @@ def article_list(request):
     context = {
         'page_obj': page_obj,
         'search_query': search_query,
+        'category_filter': category_filter,
+        'categories': Article.CATEGORY_CHOICES,
         'page_title': 'All Analysis & Intelligence Articles'
     }
+
+    if request.headers.get('HX-Request') or request.META.get('HTTP_HX_REQUEST') == 'true':
+        return render(request, 'analysis/partials/article_grid.html', context)
+
     return render(request, 'analysis/article_list.html', context)
 
 

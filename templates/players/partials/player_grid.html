@@ -1,0 +1,43 @@
+{% if players %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem;">
+        {% for player in players %}
+            <div class="surface-card" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    {% if player.profile_image %}
+                        <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" style="width: 100%; height: 260px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+                    {% else %}
+                        <div class="crest-icon" style="width: 100%; height: 260px; font-size: 3rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+                            #{{ player.jersey_number }}
+                        </div>
+                    {% endif %}
+
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <span class="badge" style="background: rgba(237, 187, 0, 0.15); color: var(--accent-gold);">
+                            #{{ player.jersey_number }}
+                        </span>
+                        <span class="badge">{{ player.get_position_display }}</span>
+                    </div>
+
+                    <h4 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.25rem;">
+                        <a href="{% url 'players:player_detail' player.id %}" style="color: var(--text-primary);">
+                            {{ player.full_name }}
+                        </a>
+                    </h4>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">{{ player.nationality }}</span>
+                </div>
+
+                <div style="margin-top: 1.25rem; pt-2; border-top: 1px solid var(--border-subtle); padding-top: 0.75rem;">
+                    <a href="{% url 'players:player_detail' player.id %}" class="cta-pill" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+                        Profile & Analytics &rarr;
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state-card">
+        <i class="fa-solid fa-users empty-state-icon"></i>
+        <h3>No players found</h3>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">No squad players match the selected position filter.</p>
+    </div>
+{% endif %}

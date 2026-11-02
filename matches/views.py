@@ -10,7 +10,7 @@ from .models import Match, Comment
 
 
 def match_list(request):
-    """Display all matches, newest first, with N+1 query optimization"""
+    """Display all matches, newest first, with N+1 query optimization and HTMX support"""
     matches = Match.objects.select_related(
         'competition', 'home_team', 'away_team', 'statistic', 'posted_by'
     ).prefetch_related('events').all()
@@ -23,8 +23,18 @@ def match_list(request):
             Q(competition__name__icontains=competition_filter)
         )
     
+    # Optional filtering by season
+    season_filter = request.GET.get('season')
+    if season_filter:
+        matches = matches.filter(season=season_filter)
+
+    # Optional filtering by status
+    status_filter = request.GET.get('status')
+    if status_filter:
+        matches = matches.filter(status=status_filter)
+
     # Optional search functionality
-    search_query = request.GET.get('search')
+    search_query = request.GET.get('search') or request.GET.get('q')
     if search_query:
         matches = matches.filter(
             Q(home_team__name__icontains=search_query) |
@@ -41,28 +51,38 @@ def match_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Get all competitions for filter dropdown
     competitions = Match.COMPETITION_CHOICES
     
     context = {
         'page_obj': page_obj,
         'competitions': competitions,
         'current_competition': competition_filter,
+        'current_season': season_filter,
+        'current_status': status_filter,
         'search_query': search_query,
         'total_matches': matches.count(),
     }
     
+    # HTMX Partial request handling
+    if request.headers.get('HX-Request') or request.META.get('HTTP_HX_REQUEST') == 'true':
+        return render(request, 'matches/partials/match_grid.html', context)
+
     return render(request, 'matches/match_list.html', context)
 
 
 def match_detail(request, match_id):
-    """Display detailed match information with pre-fetched statistics and events"""
+    """Display detailed match information with pre-fetched statistics, events, and linked AI review"""
     match = get_object_or_404(
         Match.objects.select_related(
             'competition', 'home_team', 'away_team', 'statistic', 'posted_by'
         ).prefetch_related('events'), 
         pk=match_id
     )
+
+    # Get linked AI Match Review Article
+    ai_review = match.analysis_articles.filter(
+        status='PUBLISHED'
+    ).select_related('author').first()
     
     # Get approved comments for this match
     comments = Comment.objects.filter(
@@ -81,6 +101,7 @@ def match_detail(request, match_id):
     
     context = {
         'match': match,
+        'ai_review': ai_review,
         'comments': comments,
         'related_matches': related_matches,
     }

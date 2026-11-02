@@ -1,382 +1,55 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Players - FC Barcelona{% endblock %}
+{% block title %}FC Barcelona First-Team Squad | Culer Intel{% endblock %}
 
 {% block content %}
-<style>
-    /* Clean Professional Styling */
-    .players-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
 
-    .page-header {
-        text-align: center;
-        margin-bottom: 3rem;
-    }
-
-    .page-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.025em;
-    }
-
-    .page-header p {
-        font-size: 1.1rem;
-        color: #6b7280;
-        font-weight: 400;
-    }
-
-    /* Players Grid */
-    .players-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
-    }
-
-    .player-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    .player-card:hover {
-        border-color: #d1d5db;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        transform: translateY(-4px);
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .player-image-wrapper {
-        position: relative;
-        width: 100%;
-        padding-bottom: 100%;
-        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-        overflow: hidden;
-    }
-
-    .player-image-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .player-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .default-avatar {
-        font-size: 4rem;
-        color: #d1d5db;
-    }
-
-    .player-info {
-        padding: 1.5rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .player-name {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
-    }
-
-    .player-meta {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.75rem;
-    }
-
-    .player-position {
-        background: #f3f4f6;
-        color: #374151;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .player-number {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #374151;
-    }
-
-    .player-nationality {
-        color: #6b7280;
-        font-size: 0.85rem;
-        font-weight: 400;
-    }
-
-    /* Position Groups */
-    .position-group {
-        margin-bottom: 3rem;
-    }
-
-    .position-header {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f3f4f6;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .position-header h2 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin: 0;
-    }
-
-    .position-count {
-        background: #e5e7eb;
-        color: #374151;
-        padding: 0.4rem 0.9rem;
-        border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-
-    /* Empty State */
-    .no-players {
-        text-align: center;
-        padding: 4rem 2rem;
-        color: #6b7280;
-    }
-
-    .no-players h3 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin-bottom: 0.5rem;
-    }
-
-    .no-players p {
-        font-size: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .players-container {
-            padding: 1.5rem 1rem;
-        }
-
-        .page-header h1 {
-            font-size: 2rem;
-        }
-
-        .players-grid {
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .position-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-
-        .position-count {
-            align-self: flex-start;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .players-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-
-        .page-header h1 {
-            font-size: 1.75rem;
-        }
-
-        .player-info {
-            padding: 1rem;
-        }
-
-        .player-name {
-            font-size: 0.95rem;
-        }
-    }
-</style>
-
-<div class="players-container">
-    <div class="page-header">
-        <h1>Our Squad</h1>
-        <p>Meet the players representing FC Barcelona</p>
+    <div class="section-header" style="margin-bottom: 2rem;">
+        <div class="section-title-wrap">
+            <span class="section-label">First-Team Roster</span>
+            <h1 class="section-title">Squad Intelligence</h1>
+        </div>
     </div>
 
-    {% if players %}
-        <!-- Goalkeepers -->
-        <div class="position-group">
-            <div class="position-header">
-                <h2>Goalkeepers</h2>
-                <span class="position-count">{{ gk_count }}</span>
-            </div>
-            <div class="players-grid">
-                {% for player in gk_players %}
-                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                        <div class="player-image-wrapper">
-                            <div class="player-image-container">
-                                {% if player.profile_image %}
-                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
-                                {% else %}
-                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="player-info">
-                            <div>
-                                <div class="player-name">{{ player.full_name }}</div>
-                                <div class="player-meta">
-                                    <span class="player-position">{{ player.get_position_display }}</span>
-                                    <span class="player-number">#{{ player.jersey_number }}</span>
-                                </div>
-                            </div>
-                            <p class="player-nationality">{{ player.nationality }}</p>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
+    <!-- Position Filter Bar with HTMX -->
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
+        <a href="{% url 'players:player_list' %}" 
+           hx-get="{% url 'players:player_list' %}" 
+           hx-target="#player-grid-container"
+           class="badge {% if not position_filter %}badge-ai{% endif %}" style="padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer;">
+            All Positions
+        </a>
+        <a href="{% url 'players:player_list' %}?position=GK" 
+           hx-get="{% url 'players:player_list' %}?position=GK" 
+           hx-target="#player-grid-container"
+           class="badge {% if position_filter == 'GK' %}badge-ai{% endif %}" style="padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer;">
+            Goalkeepers
+        </a>
+        <a href="{% url 'players:player_list' %}?position=DF" 
+           hx-get="{% url 'players:player_list' %}?position=DF" 
+           hx-target="#player-grid-container"
+           class="badge {% if position_filter == 'DF' %}badge-ai{% endif %}" style="padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer;">
+            Defenders
+        </a>
+        <a href="{% url 'players:player_list' %}?position=MF" 
+           hx-get="{% url 'players:player_list' %}?position=MF" 
+           hx-target="#player-grid-container"
+           class="badge {% if position_filter == 'MF' %}badge-ai{% endif %}" style="padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer;">
+            Midfielders
+        </a>
+        <a href="{% url 'players:player_list' %}?position=FW" 
+           hx-get="{% url 'players:player_list' %}?position=FW" 
+           hx-target="#player-grid-container"
+           class="badge {% if position_filter == 'FW' %}badge-ai{% endif %}" style="padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer;">
+            Forwards
+        </a>
+    </div>
 
-        <!-- Defenders -->
-        <div class="position-group">
-            <div class="position-header">
-                <h2>Defenders</h2>
-                <span class="position-count">{{ def_count }}</span>
-            </div>
-            <div class="players-grid">
-                {% for player in def_players %}
-                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                        <div class="player-image-wrapper">
-                            <div class="player-image-container">
-                                {% if player.profile_image %}
-                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
-                                {% else %}
-                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="player-info">
-                            <div>
-                                <div class="player-name">{{ player.full_name }}</div>
-                                <div class="player-meta">
-                                    <span class="player-position">{{ player.get_position_display }}</span>
-                                    <span class="player-number">#{{ player.jersey_number }}</span>
-                                </div>
-                            </div>
-                            <p class="player-nationality">{{ player.nationality }}</p>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
+    <!-- Player Grid Container -->
+    <div id="player-grid-container">
+        {% include 'players/partials/player_grid.html' %}
+    </div>
 
-        <!-- Midfielders -->
-        <div class="position-group">
-            <div class="position-header">
-                <h2>Midfielders</h2>
-                <span class="position-count">{{ mid_count }}</span>
-            </div>
-            <div class="players-grid">
-                {% for player in mid_players %}
-                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                        <div class="player-image-wrapper">
-                            <div class="player-image-container">
-                                {% if player.profile_image %}
-                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
-                                {% else %}
-                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="player-info">
-                            <div>
-                                <div class="player-name">{{ player.full_name }}</div>
-                                <div class="player-meta">
-                                    <span class="player-position">{{ player.get_position_display }}</span>
-                                    <span class="player-number">#{{ player.jersey_number }}</span>
-                                </div>
-                            </div>
-                            <p class="player-nationality">{{ player.nationality }}</p>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Forwards -->
-        <div class="position-group">
-            <div class="position-header">
-                <h2>Forwards</h2>
-                <span class="position-count">{{ fwd_count }}</span>
-            </div>
-            <div class="players-grid">
-                {% for player in fwd_players %}
-                    <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-                        <div class="player-image-wrapper">
-                            <div class="player-image-container">
-                                {% if player.profile_image %}
-                                    <img src="{{ player.profile_image }}" alt="{{ player.full_name }}" class="player-image" loading="lazy">
-                                {% else %}
-                                    <div class="default-avatar"><i class="fas fa-user"></i></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="player-info">
-                            <div>
-                                <div class="player-name">{{ player.full_name }}</div>
-                                <div class="player-meta">
-                                    <span class="player-position">{{ player.get_position_display }}</span>
-                                    <span class="player-number">#{{ player.jersey_number }}</span>
-                                </div>
-                            </div>
-                            <p class="player-nationality">{{ player.nationality }}</p>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
-        
-    {% else %}
-        <div class="no-players">
-            <h3>No Players Available</h3>
-            <p>The squad list is currently being updated. Please check back soon.</p>
-        </div>
-    {% endif %}
 </div>
-
 {% endblock %}

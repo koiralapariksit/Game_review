@@ -8,9 +8,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from .search_views import global_search_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('search/', global_search_view, name='global_search'),
     path('', include('camp.urls')),         # Homepage, countdown, highlights, etc.
     path('matches/', include('matches.urls')),  # Match reviews, fixtures
     path('players/', include('players.urls')),  # Player profiles

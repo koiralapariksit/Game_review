@@ -1,0 +1,43 @@
+{% if page_obj %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% for match in page_obj %}
+            <div class="surface-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span class="badge" style="background: rgba(0, 77, 152, 0.2); color: #93c5fd;">
+                        {{ match.competition.name }}
+                    </span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">
+                        {{ match.match_date|date:"d M Y · H:i" }}
+                    </span>
+                </div>
+
+                <h4 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.3;">
+                    <a href="{% url 'matches:match_detail' match.id %}" style="color: var(--text-primary);">
+                        {{ match.home_team.name }} vs {{ match.away_team.name }}
+                    </a>
+                </h4>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle);">
+                    <div>
+                        {% if match.home_score is not None and match.away_score is not None %}
+                            <span class="tabular-numbers" style="font-size: 1.35rem; font-weight: 900; color: var(--accent-gold);">
+                                {{ match.home_score }} - {{ match.away_score }}
+                            </span>
+                        {% else %}
+                            <span class="badge">{{ match.get_status_display }}</span>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'matches:match_detail' match.id %}" style="color: var(--accent-gold); font-size: 0.85rem; font-weight: 600;">
+                        Details &rarr;
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state-card">
+        <i class="fa-regular fa-futbol empty-state-icon"></i>
+        <h3>No matches found</h3>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">No matches match the selected criteria.</p>
+    </div>
+{% endif %}
