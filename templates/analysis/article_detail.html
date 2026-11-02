@@ -2,6 +2,28 @@
 
 {% block title %}{{ article.title }} - FC Barcelona{% endblock %}
 
+{% block extra_head %}
+<!-- JSON-LD NewsArticle Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "{{ article.title|escapejs }}",
+  "description": "{{ article.subtitle|default:article.get_content_preview|escapejs }}",
+  "datePublished": "{{ article.published_at|default:article.created_at|date:'c' }}",
+  "dateModified": "{{ article.updated_at|date:'c' }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ article.author.username|default:'FCB Intelligence Editorial' }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Culer Intelligence"
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="article-detail-section">
     <!-- Breadcrumb Navigation -->

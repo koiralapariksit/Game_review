@@ -3,6 +3,30 @@
 
 {% block title %}{{ match.home_team.name }} vs {{ match.away_team.name }} - Match Intelligence{% endblock %}
 
+{% block extra_head %}
+<!-- JSON-LD SportsEvent Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsEvent",
+  "name": "{{ match.home_team.name }} vs {{ match.away_team.name }}",
+  "startDate": "{{ match.match_date|date:'c' }}",
+  "location": {
+    "@type": "Place",
+    "name": "{{ match.venue|default:'Spotify Camp Nou' }}"
+  },
+  "homeTeam": {
+    "@type": "SportsTeam",
+    "name": "{{ match.home_team.name }}"
+  },
+  "awayTeam": {
+    "@type": "SportsTeam",
+    "name": "{{ match.away_team.name }}"
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
 

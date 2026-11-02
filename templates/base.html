@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FC Barcelona Football Intelligence & Editorial Platform{% endblock %}</title>
     
+    <!-- Technical SEO & Social Graph Meta -->
+    <meta name="description" content="{% block meta_description %}Deterministic, fact-checked FC Barcelona tactical analytics, match reports, and squad intelligence.{% endblock %}">
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    
+    <meta property="og:site_name" content="Culer Intel">
+    <meta property="og:title" content="{% block og_title %}{% block title_inner %}FC Barcelona Football Intelligence{% endblock %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Automated tactical analyses, fact-checked match reports, and squad telemetry for FC Barcelona supporters.{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    
     <!-- Google Fonts: Inter (Sans) and Playfair Display (Editorial Serif) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
