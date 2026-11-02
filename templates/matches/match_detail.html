@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load tactical_viz %}
 
 {% block title %}{{ match.home_team.name }} vs {{ match.away_team.name }} - Match Intelligence{% endblock %}
 
@@ -78,6 +79,24 @@
         </div>
     </div>
 
+    <!-- SVG Tactical Pitch & Formation Blueprint -->
+    <div class="surface-card" style="margin-bottom: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+                <span class="badge badge-ai" style="margin-bottom: 0.35rem;"><i class="fa-solid fa-shapes"></i> TACTICAL FORMATION</span>
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+                    Starting XI Tactical Structure
+                </h3>
+            </div>
+            <span class="badge" style="background: rgba(255, 215, 0, 0.15); color: #fbbf24;">
+                <i class="fa-solid fa-compass-drafting"></i> Zero-JS SVG Engine
+            </span>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; width: 100%; overflow-x: auto; padding: 0.5rem 0;">
+            {% render_starting_pitch match %}
+        </div>
+    </div>
+
     <!-- 2-Column Grid: Match Stats vs Events -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
         
@@ -91,68 +110,11 @@
             </div>
 
             {% if match.statistic %}
-                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                    
-                    <!-- Possession -->
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                            <span class="tabular-numbers" style="font-weight: 700;">
-                                {% if match.statistic.possession_home is not None %}{{ match.statistic.possession_home }}%{% else %}Unavailable{% endif %}
-                            </span>
-                            <span style="color: var(--text-muted); font-weight: 600;">Possession</span>
-                            <span class="tabular-numbers" style="font-weight: 700;">
-                                {% if match.statistic.possession_away is not None %}{{ match.statistic.possession_away }}%{% else %}Unavailable{% endif %}
-                            </span>
-                        </div>
-                        <div style="height: 8px; border-radius: var(--radius-full); background: var(--bg-elevated); display: flex; overflow: hidden;">
-                            {% if match.statistic.possession_home is not None and match.statistic.possession_away is not None %}
-                                <div style="width: {{ match.statistic.possession_home }}%; background: var(--accent-blau);"></div>
-                                <div style="width: {{ match.statistic.possession_away }}%; background: var(--accent-grana);"></div>
-                            {% else %}
-                                <div style="width: 100%; background: var(--border-subtle);"></div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Total Shots -->
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                            <span class="tabular-numbers" style="font-weight: 700;">
-                                {% if match.statistic.shots_home is not None %}{{ match.statistic.shots_home }}{% else %}Unavailable{% endif %}
-                            </span>
-                            <span style="color: var(--text-muted); font-weight: 600;">Total Shots</span>
-                            <span class="tabular-numbers" style="font-weight: 700;">
-                                {% if match.statistic.shots_away is not None %}{{ match.statistic.shots_away }}{% else %}Unavailable{% endif %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Shots on Target -->
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                            <span class="tabular-numbers" style="font-weight: 700;">
-                                {% if match.statistic.shots_on_target_home is not None %}{{ match.statistic.shots_on_target_home }}{% else %}Unavailable{% endif %}
-                            </span>
-                            <span style="color: var(--text-muted); font-weight: 600;">Shots on Target</span>
-                            <span class="tabular-numbers" style="font-weight: 700;">
-                                {% if match.statistic.shots_on_target_away is not None %}{{ match.statistic.shots_on_target_away }}{% else %}Unavailable{% endif %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- xG (Expected Goals) -->
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
-                            <span class="tabular-numbers" style="font-weight: 700; color: var(--accent-gold);">
-                                {% if match.statistic.xg_home is not None %}{{ match.statistic.xg_home }}{% else %}Unavailable{% endif %}
-                            </span>
-                            <span style="color: var(--text-muted); font-weight: 600;">Expected Goals (xG)</span>
-                            <span class="tabular-numbers" style="font-weight: 700; color: var(--accent-gold);">
-                                {% if match.statistic.xg_away is not None %}{{ match.statistic.xg_away }}{% else %}Unavailable{% endif %}
-                            </span>
-                        </div>
-                    </div>
-
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    {% render_stat_comparison_bar "Possession" match.statistic.possession_home match.statistic.possession_away "%" %}
+                    {% render_stat_comparison_bar "Total Shots" match.statistic.shots_home match.statistic.shots_away "" %}
+                    {% render_stat_comparison_bar "Shots on Target" match.statistic.shots_on_target_home match.statistic.shots_on_target_away "" %}
+                    {% render_stat_comparison_bar "Expected Goals (xG)" match.statistic.xg_home match.statistic.xg_away "xG" %}
                 </div>
             {% else %}
                 <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 2rem 0;">
