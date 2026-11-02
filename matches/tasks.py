@@ -61,3 +61,4 @@ def sync_barca_squad_task(self):
     except Exception as exc:
         logger.error(f"Error syncing squad: {exc}", exc_info=True)
         raise self.retry(exc=exc)
+

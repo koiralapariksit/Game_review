@@ -183,3 +183,4 @@ class APIFootballFallbackProvider(FootballDataProvider):
         if items and "players" in items[0]:
             return items[0]["players"]
         return items
+

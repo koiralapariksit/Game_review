@@ -438,3 +438,4 @@ class MatchDataNormalizer:
             saved_count += 1
 
         return saved_count
+

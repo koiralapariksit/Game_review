@@ -73,3 +73,4 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS(f"Successfully synchronized match: {match} (ID: {match.id})."))
             except Exception as e:
                 raise CommandError(f"Failed to synchronize match details for '{match_id}': {e}")
+
