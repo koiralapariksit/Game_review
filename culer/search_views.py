@@ -75,3 +75,4 @@ def global_search_view(request):
     }
 
     return render(request, 'search/search_results.html', context)
+

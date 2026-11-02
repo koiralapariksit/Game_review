@@ -168,3 +168,4 @@ class FactCheckerAndPublishingTestCase(TestCase):
         self.assertEqual(article.status, Article.STATUS_APPROVED)
         self.assertIsNone(article.published_at)
         self.assertEqual(self.execution.stage, AIWorkflowExecution.STAGE_APPROVED)
+

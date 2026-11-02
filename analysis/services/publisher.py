@@ -66,3 +66,4 @@ def publish_article_with_policy(
         }
     )
     return article
+

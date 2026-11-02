@@ -68,3 +68,4 @@ class SEODiscoveryTestCase(TestCase):
         self.assertContains(response, 'Disallow: /customadmin/')
         self.assertContains(response, 'Sitemap:')
         self.assertContains(response, '/sitemap.xml')
+

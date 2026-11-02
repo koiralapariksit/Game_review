@@ -6,6 +6,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.http import HttpResponse
 
 from .search_views import global_search_view
+from .health_views import health_check
 from .sitemaps import PublishedArticleSitemap, MatchSitemap, PlayerSitemap, StaticViewSitemap
 
 sitemaps = {
@@ -29,6 +30,7 @@ def robots_txt(request):
 
 
 urlpatterns = [
+    path('healthz/', health_check, name='health_check'),
     path('admin/', admin.site.urls),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),

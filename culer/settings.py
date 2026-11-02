@@ -5,6 +5,7 @@ Configured with Environment & Secret Isolation (P0-1)
 and Database Engine Upgrade to PostgreSQL (P0-2).
 """
 import os
+import sys
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 import dj_database_url
@@ -140,11 +141,72 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": (
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+            if ("test" in sys.argv or DEBUG or os.environ.get("DISABLE_WHITENOISE_MANIFEST"))
+            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
+    },
+}
+
+# Structured Logging Configuration (stdout for container logging)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} [{name}:{lineno}] {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'matches': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'analysis': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'celery': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
