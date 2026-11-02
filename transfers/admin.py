@@ -7,39 +7,47 @@ from .models import Transfer
 class TransferAdmin(admin.ModelAdmin):
     """Admin configuration for Transfer model"""
     
-    # List display configuration
     list_display = [
         'player_name', 
         'from_club', 
         'to_club', 
-        'transfer_type', 
+        'transfer_type',
+        'reliability_tier',
+        'verification_status',
+        'is_ai_generated',
         'transfer_date', 
         'fee', 
         'posted_by',
         'created_at'
     ]
     
-    # Filters in the right sidebar
     list_filter = [
         'transfer_type',
+        'reliability_tier',
+        'verification_status',
+        'is_ai_generated',
         'transfer_date',
         'to_club',
         'created_at',
     ]
     
-    # Search functionality
     search_fields = [
         'player_name',
         'from_club',
         'to_club',
+        'source_url',
+        'source',
     ]
     
-    # Fields to display in the form
     fields = [
         'player_name',
         'from_club', 
         'to_club',
         'transfer_type',
+        'reliability_tier',
+        'verification_status',
+        'source_url',
+        'is_ai_generated',
         'transfer_date',
         'fee',
         'source',
@@ -48,13 +56,12 @@ class TransferAdmin(admin.ModelAdmin):
         'posted_by',
     ]
     
-    # Additional configurations
     list_per_page = 25
     date_hierarchy = 'transfer_date'
-    list_editable = ['transfer_type', 'fee']
+    list_editable = ['verification_status', 'reliability_tier']
     
     def save_model(self, request, obj, form, change):
         """Override save to set posted_by if not provided"""
-        if not change:  # If creating new object
+        if not change and not obj.posted_by_id:
             obj.posted_by = request.user
         super().save_model(request, obj, form, change)

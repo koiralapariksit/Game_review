@@ -11,20 +11,27 @@ from .models import Match, Comment
 
 def match_list(request):
     """Display all matches, newest first"""
-    matches = Match.objects.select_related('posted_by').all()
+    matches = Match.objects.select_related('posted_by', 'competition', 'home_team', 'away_team').all()
     
     # Optional filtering by competition
     competition_filter = request.GET.get('competition')
     if competition_filter:
-        matches = matches.filter(competition=competition_filter)
+        matches = matches.filter(
+            Q(competition__code=competition_filter) |
+            Q(competition__name__icontains=competition_filter)
+        )
     
     # Optional search functionality
     search_query = request.GET.get('search')
     if search_query:
         matches = matches.filter(
-            Q(opponent__icontains=search_query) |
+            Q(home_team__name__icontains=search_query) |
+            Q(away_team__name__icontains=search_query) |
+            Q(home_team__short_name__icontains=search_query) |
+            Q(away_team__short_name__icontains=search_query) |
             Q(summary__icontains=search_query) |
-            Q(competition__icontains=search_query)
+            Q(competition__name__icontains=search_query) |
+            Q(venue__icontains=search_query)
         )
     
     # Pagination
@@ -49,7 +56,7 @@ def match_list(request):
 def match_detail(request, match_id):
     """Display detailed match information"""
     match = get_object_or_404(
-        Match.objects.select_related('posted_by'), 
+        Match.objects.select_related('posted_by', 'competition', 'home_team', 'away_team'), 
         pk=match_id
     )
     
@@ -60,9 +67,11 @@ def match_detail(request, match_id):
     ).order_by('-created_at')
     
     # Get related matches (same opponent, excluding current match)
-    related_matches = Match.objects.filter(
-        opponent=match.opponent
-    ).exclude(pk=match.pk).order_by('-date')[:3]
+    opp_name = match.opponent
+    related_matches = Match.objects.select_related('home_team', 'away_team', 'competition').filter(
+        Q(home_team__name=opp_name) | Q(away_team__name=opp_name) |
+        Q(home_team__short_name=opp_name) | Q(away_team__short_name=opp_name)
+    ).exclude(pk=match.pk).order_by('-match_date')[:3]
     
     context = {
         'match': match,
@@ -159,14 +168,17 @@ def post_comment(request, match_id):
 
 def upcoming_matches(request):
     """Display upcoming matches (no result or future dates)"""
-    upcoming = Match.objects.select_related('posted_by').filter(
-        Q(result__isnull=True) | Q(result__exact='') | Q(date__gt=timezone.now())
-    ).order_by('date')
+    upcoming = Match.objects.select_related('posted_by', 'home_team', 'away_team', 'competition').filter(
+        Q(status=Match.STATUS_SCHEDULED) | Q(match_date__gt=timezone.now()) | Q(home_score__isnull=True)
+    ).order_by('match_date')
     
     # Optional filtering by competition
     competition_filter = request.GET.get('competition')
     if competition_filter:
-        upcoming = upcoming.filter(competition=competition_filter)
+        upcoming = upcoming.filter(
+            Q(competition__code=competition_filter) |
+            Q(competition__name__icontains=competition_filter)
+        )
     
     # Pagination
     paginator = Paginator(upcoming, 8)  # Show 8 upcoming matches per page
@@ -188,15 +200,17 @@ def upcoming_matches(request):
 
 def completed_matches(request):
     """Display completed matches with results"""
-    completed = Match.objects.select_related('posted_by').filter(
-        result__isnull=False,
-        date__lte=timezone.now()
-    ).exclude(result__exact='').order_by('-date')
+    completed = Match.objects.select_related('posted_by', 'home_team', 'away_team', 'competition').filter(
+        Q(status=Match.STATUS_FINISHED) | Q(home_score__isnull=False, match_date__lte=timezone.now())
+    ).order_by('-match_date')
     
     # Optional filtering by competition
     competition_filter = request.GET.get('competition')
     if competition_filter:
-        completed = completed.filter(competition=competition_filter)
+        completed = completed.filter(
+            Q(competition__code=competition_filter) |
+            Q(competition__name__icontains=competition_filter)
+        )
     
     # Pagination
     paginator = Paginator(completed, 10)  # Show 10 completed matches per page

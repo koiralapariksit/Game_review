@@ -1,121 +1,118 @@
+# matches/admin.py
 from django.contrib import admin
 from django.utils.html import format_html
-from django.utils import timezone
-from .models import Match, Comment
+from .models import Competition, Team, Match, MatchStatistic, MatchEvent, Comment
+
+
+@admin.register(Competition)
+class CompetitionAdmin(admin.ModelAdmin):
+    list_display = ['name', 'code', 'logo_url']
+    search_fields = ['name', 'code']
+
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ['name', 'short_name', 'tla', 'provider_id', 'crest_url']
+    search_fields = ['name', 'short_name', 'tla']
+    list_filter = ['tla']
+
+
+class MatchStatisticInline(admin.StackedInline):
+    model = MatchStatistic
+    extra = 0
+    can_delete = False
+
+
+class MatchEventInline(admin.TabularInline):
+    model = MatchEvent
+    extra = 1
 
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
     list_display = [
-        'opponent', 
-        'date', 
-        'competition_display', 
-        'venue_display', 
-        'result', 
-        'match_status_display',
+        '__str__',
+        'competition',
+        'season',
+        'match_date',
+        'status',
+        'home_score',
+        'away_score',
+        'venue',
         'posted_by',
-        'created_at'
+        'created_at',
     ]
     list_filter = [
-        'competition', 
-        'venue', 
-        'date',
-        'posted_by'
+        'competition',
+        'season',
+        'status',
+        'match_date',
     ]
     search_fields = [
-        'opponent', 
-        'competition', 
-        'result',
-        'summary'
+        'home_team__name',
+        'away_team__name',
+        'home_team__short_name',
+        'away_team__short_name',
+        'venue',
+        'provider_match_id',
     ]
+    raw_id_fields = ['home_team', 'away_team', 'competition']
     readonly_fields = [
-        'created_at', 
-        'updated_at', 
+        'created_at',
+        'updated_at',
         'match_status_display',
-        'image_preview'
     ]
-    fieldsets = (
-        ('Match Information', {
-            'fields': (
-                'opponent', 
-                'date', 
-                'venue', 
-                'competition'
-            )
-        }),
-        ('Match Result', {
-            'fields': (
-                'result',
-                'match_status_display'
-            ),
-            'description': 'Leave result blank for upcoming matches'
-        }),
-        ('Content', {
-            'fields': (
-                'summary',
-                'image_url',
-                'image_preview'
-            )
-        }),
-        ('Metadata', {
-            'fields': (
-                'posted_by',
-                'created_at',
-                'updated_at'
-            ),
-            'classes': ('collapse',)
-        }),
-    )
-    
-    date_hierarchy = 'date'
-    ordering = ['-date']
-    
+    inlines = [MatchStatisticInline, MatchEventInline]
+    date_hierarchy = 'match_date'
+    ordering = ['-match_date']
+
     def match_status_display(self, obj):
-        if obj.is_upcoming:
-            return format_html(
-                '<span style="color: #2196F3; font-weight: bold;">📅 Upcoming</span>'
-            )
-        elif obj.is_completed:
-            return format_html(
-                '<span style="color: #4CAF50; font-weight: bold;">✅ Completed</span>'
-            )
-        else:
-            return format_html(
-                '<span style="color: #FF9800; font-weight: bold;">🔴 Live</span>'
-            )
+        if obj.status == Match.STATUS_SCHEDULED:
+            return format_html('<span style="color: #2196F3; font-weight: bold;">📅 Scheduled</span>')
+        elif obj.status == Match.STATUS_LIVE:
+            return format_html('<span style="color: #FF9800; font-weight: bold;">🔴 Live</span>')
+        elif obj.status == Match.STATUS_FINISHED:
+            return format_html('<span style="color: #4CAF50; font-weight: bold;">✅ Finished</span>')
+        elif obj.status == Match.STATUS_POSTPONED:
+            return format_html('<span style="color: #9C27B0; font-weight: bold;">⏸ Postponed</span>')
+        elif obj.status == Match.STATUS_CANCELLED:
+            return format_html('<span style="color: #F44336; font-weight: bold;">❌ Cancelled</span>')
+        return obj.status
     match_status_display.short_description = 'Status'
-    
-    def image_preview(self, obj):
-        if obj.image_url:
-            return format_html(
-                '<img src="{}" style="max-width: 200px; max-height: 150px; border-radius: 8px;" />',
-                obj.image_url
-            )
-        return "No image"
-    image_preview.short_description = 'Image Preview'
-    
+
     def save_model(self, request, obj, form, change):
-        if not change:
+        if not change and not obj.posted_by_id:
             obj.posted_by = request.user
         super().save_model(request, obj, form, change)
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('posted_by')
 
-    actions = ['mark_as_completed', 'mark_as_upcoming']
+@admin.register(MatchStatistic)
+class MatchStatisticAdmin(admin.ModelAdmin):
+    list_display = [
+        'match',
+        'possession_home',
+        'possession_away',
+        'shots_home',
+        'shots_away',
+        'shots_on_target_home',
+        'shots_on_target_away',
+        'xg_home',
+        'xg_away',
+        'is_verified',
+    ]
+    list_filter = ['is_verified']
+    search_fields = ['match__home_team__name', 'match__away_team__name']
+    raw_id_fields = ['match']
 
-    def mark_as_completed(self, request, queryset):
-        updated = queryset.filter(result__isnull=True).update(result='0-0')
-        self.message_user(request, f'{updated} matches marked as completed. Update results manually.')
-    mark_as_completed.short_description = "Mark selected matches as completed"
 
-    def mark_as_upcoming(self, request, queryset):
-        updated = queryset.update(result=None)
-        self.message_user(request, f'{updated} matches marked as upcoming.')
-    mark_as_upcoming.short_description = "Mark selected matches as upcoming"
+@admin.register(MatchEvent)
+class MatchEventAdmin(admin.ModelAdmin):
+    list_display = ['match', 'minute', 'event_type', 'player_name', 'detail']
+    list_filter = ['event_type']
+    search_fields = ['player_name', 'detail', 'match__home_team__name', 'match__away_team__name']
+    raw_id_fields = ['match']
 
 
-# ✅ Register Comment model with custom admin
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('name', 'short_comment', 'match', 'is_approved', 'is_featured', 'created_at')
