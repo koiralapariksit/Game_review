@@ -1,694 +1,627 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Home - Football Club{% endblock %}
+{% block title %}Culer Intelligence | FC Barcelona Match Analytics, Tactics & Transfers{% endblock %}
 
 {% block content %}
-<style>
-    /* Hero Slideshow Styles */
-    .hero-slideshow {
-        position: relative;
-        width: 100%;
-        height: 500px;
-        overflow: hidden;
-        border-radius: 12px;
-        margin-bottom: 4rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
-    .slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: opacity 0.8s ease-in-out;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .slide.active {
-        opacity: 1;
-    }
-
-    .slide-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        text-align: center;
-        color: white;
-        padding: 2rem;
-    }
-
-    .slide-title {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .slide-subtitle {
-        font-size: 1.25rem;
-        font-weight: 300;
-        opacity: 0.9;
-        max-width: 600px;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    }
-
-    .slideshow-nav {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .nav-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .nav-dot.active {
-        background: white;
-        transform: scale(1.2);
-    }
-
-    .slideshow-arrows {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        padding: 1rem;
-        cursor: pointer;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-    }
-
-    .slideshow-arrows:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-50%) scale(1.1);
-    }
-
-    .prev-arrow {
-        left: 20px;
-    }
-
-    .next-arrow {
-        right: 20px;
-    }
-
-    /* Section Styles */
-    .section {
-        margin-bottom: 5rem;
-    }
-
-    .section-header {
-        text-align: center;
-        margin-bottom: 3rem;
-    }
-
-    .section-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 0.5rem;
-    }
-
-    .section-subtitle {
-        font-size: 1.1rem;
-        color: #666666;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    /* Cards Grid */
-    .cards-grid {
-        display: grid;
-        gap: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .cards-grid.four-cols {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-
-    .cards-grid.three-cols {
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    }
-
-    .cards-grid.two-cols {
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    }
-
-    /* Player Cards */
-    .player-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .player-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .player-image {
-        width: 100%;
-        height: 200px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 3rem;
-        font-weight: 700;
-        background-size: cover;
-        background-position: center;
-    }
-
-    .player-info {
-        padding: 1.5rem;
-    }
-
-    .player-name {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-    }
-
-    .player-position {
-        color: #666666;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    /* Match Cards */
-    .match-card {
-        background: white;
-        border-radius: 12px;
-        padding: 2rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .match-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .match-teams {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-    }
-
-    .team {
-        text-align: center;
-        flex: 1;
-    }
-
-    .team-name {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #1a1a1a;
-    }
-
-    .match-vs {
-        font-size: 0.9rem;
-        color: #666666;
-        margin: 0 1rem;
-    }
-
-    .match-info {
-        text-align: center;
-        padding-top: 1rem;
-        border-top: 1px solid #e5e5e5;
-    }
-
-    .match-date {
-        font-size: 0.9rem;
-        color: #666666;
-        margin-bottom: 0.25rem;
-    }
-
-    .match-venue {
-        font-size: 0.85rem;
-        color: #888888;
-    }
-
-    /* Article Cards */
-    .article-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .article-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .article-image {
-        width: 100%;
-        height: 200px;
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 2rem;
-        background-size: cover;
-        background-position: center;
-    }
-
-    .article-content {
-        padding: 1.5rem;
-    }
-
-    .article-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-        color: #1a1a1a;
-        line-height: 1.4;
-    }
-
-    .article-description {
-        color: #666666;
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-
-    /* Transfer Cards */
-    .transfer-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        border-left: 4px solid #ff6b6b;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .transfer-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .transfer-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-    }
-
-    .transfer-description {
-        color: #666666;
-        font-size: 0.9rem;
-        line-height: 1.6;
-        margin-bottom: 0.75rem;
-    }
-
-    .transfer-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.8rem;
-        color: #888888;
-    }
-
-    /* Community Cards */
-    .community-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .community-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .community-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-        color: #1a1a1a;
-        line-height: 1.4;
-    }
-
-    .community-meta {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        font-size: 0.85rem;
-        color: #666666;
-    }
-
-    /* Section Action Buttons */
-    .section-action {
-        text-align: center;
-        margin-top: 2rem;
-    }
-
-    .btn-primary {
-        display: inline-block;
-        padding: 0.75rem 2rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        text-decoration: none;
-        color: white;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .hero-slideshow {
-            height: 350px;
-            margin-bottom: 3rem;
-        }
-
-        .slide-title {
-            font-size: 2rem;
-        }
-
-        .slide-subtitle {
-            font-size: 1rem;
-        }
-
-        .section-title {
-            font-size: 2rem;
-        }
-
-        .section {
-            margin-bottom: 3rem;
-        }
-
-        .cards-grid {
-            gap: 1.5rem;
-        }
-
-        .cards-grid.four-cols,
-        .cards-grid.three-cols,
-        .cards-grid.two-cols {
-            grid-template-columns: 1fr;
-        }
-
-        .slideshow-arrows {
-            font-size: 1.2rem;
-            padding: 0.75rem;
-        }
-
-        .prev-arrow {
-            left: 15px;
-        }
-
-        .next-arrow {
-            right: 15px;
-        }
-    }
-</style>
-
-<!-- Hero Slideshow -->
-<div class="hero-slideshow">
-    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&h=500&fit=crop');">
-        <div class="slide-overlay">
-            <h2 class="slide-title">Welcome to Football Club</h2>
-            <p class="slide-subtitle">Experience the passion, pride, and glory of our beloved team</p>
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+    <!-- =========================================================================
+         SECTION 1: MATCH HERO BANNER
+         ========================================================================= -->
+    <section class="intel-section" style="padding-top: 0;">
+        {% if hero_match %}
+            <div class="hero-match-banner">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                    <span class="badge" style="background: rgba(0, 77, 152, 0.3); color: #93c5fd; border-color: rgba(0, 77, 152, 0.5);">
+                        <i class="fa-solid fa-trophy"></i> {{ hero_match.competition.name }}
+                    </span>
+                    <span class="badge">
+                        <i class="fa-regular fa-calendar"></i> {{ hero_match.match_date|date:"l, d M Y · H:i" }}
+                    </span>
+                    {% if hero_match.status == 'LIVE' %}
+                        <span class="badge badge-live"><i class="fa-solid fa-circle"></i> LIVE</span>
+                    {% elif hero_match.status == 'FINISHED' %}
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">FINAL RESULT</span>
+                    {% else %}
+                        <span class="badge">UPCOMING FIXTURE</span>
+                    {% endif %}
+                </div>
+
+                <div class="hero-match-scoreboard">
+                    <!-- Home Team -->
+                    <div class="hero-team">
+                        {% if hero_match.home_team.crest_url %}
+                            <img src="{{ hero_match.home_team.crest_url }}" alt="{{ hero_match.home_team.name }}" class="hero-team-crest">
+                        {% else %}
+                            <div class="crest-icon" style="width: 72px; height: 72px; font-size: 1.5rem;">{{ hero_match.home_team.tla|default:"FCB" }}</div>
+                        {% endif %}
+                        <h3 class="hero-team-name">{{ hero_match.home_team.name }}</h3>
+                    </div>
+
+                    <!-- Scoreline / Time -->
+                    <div class="hero-score-display">
+                        {% if hero_match.home_score is not None and hero_match.away_score is not None %}
+                            <div class="hero-score tabular-numbers">{{ hero_match.home_score }} - {{ hero_match.away_score }}</div>
+                        {% else %}
+                            <div class="hero-score" style="font-size: 2.2rem; color: var(--accent-gold);">VS</div>
+                        {% endif %}
+                        <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fa-solid fa-location-dot"></i> {{ hero_match.venue|default:"Spotify Camp Nou" }}</span>
+                    </div>
+
+                    <!-- Away Team -->
+                    <div class="hero-team">
+                        {% if hero_match.away_team.crest_url %}
+                            <img src="{{ hero_match.away_team.crest_url }}" alt="{{ hero_match.away_team.name }}" class="hero-team-crest">
+                        {% else %}
+                            <div class="crest-icon" style="width: 72px; height: 72px; font-size: 1.5rem; background: var(--bg-elevated);">{{ hero_match.away_team.tla|default:"OPP" }}</div>
+                        {% endif %}
+                        <h3 class="hero-team-name">{{ hero_match.away_team.name }}</h3>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
+                    <a href="{% url 'matches:match_detail' hero_match.id %}" class="cta-pill" style="font-size: 0.9rem; padding: 0.65rem 1.4rem;">
+                        <i class="fa-solid fa-chart-pie"></i> View Full Match Center
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state-card">
+                <i class="fa-regular fa-futbol empty-state-icon"></i>
+                <h3>No Matches Available Yet</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Match fixtures will automatically populate once external synchronization runs.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================================================================
+         SECTION 2: LATEST MATCH ANALYSIS & VERIFIED STATS
+         ========================================================================= -->
+    <section class="intel-section">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Editorial Breakdown</span>
+                <h2 class="section-title">Latest Tactical Analysis</h2>
+            </div>
+            {% if latest_match_article %}
+                <a href="{% url 'analysis:article_detail' latest_match_article.slug %}" class="section-link">
+                    Read Complete Report <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            {% endif %}
         </div>
-    </div>
-    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1459865264687-595d652de67e?w=1200&h=500&fit=crop');">
-        <div class="slide-overlay">
-            <h2 class="slide-title">Our Champions</h2>
-            <p class="slide-subtitle">Meet the extraordinary players who make our club legendary</p>
+
+        {% if latest_match_article %}
+            <div class="surface-card" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                        <span class="badge badge-ai"><i class="fa-solid fa-brain"></i> AI VERIFIED</span>
+                        <span class="rating-pill"><i class="fa-solid fa-star"></i> 8.4 / 10</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">{{ latest_match_article.created_at|date:"d M Y" }}</span>
+                    </div>
+
+                    <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; line-height: 1.3;">
+                        <a href="{% url 'analysis:article_detail' latest_match_article.slug %}" style="color: var(--text-primary);">
+                            {{ latest_match_article.title }}
+                        </a>
+                    </h3>
+
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem;">
+                        {{ latest_match_article.get_content_preview }}
+                    </p>
+
+                    <div style="display: flex; align-items: center; gap: 1.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                        <span><i class="fa-solid fa-user-pen"></i> Editorial Desk</span>
+                        <span><i class="fa-solid fa-clock"></i> 4 min read</span>
+                    </div>
+                </div>
+
+                <!-- Verified Stats Bar -->
+                <div style="background: var(--bg-elevated); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-gold); font-weight: 700;">
+                        Verified Telemetry
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Possession</span>
+                        <span class="tabular-numbers" style="font-weight: 700; color: var(--text-primary);">
+                            {% if hero_metrics and hero_metrics.barca_possession is not None %}{{ hero_metrics.barca_possession }}%{% else %}Unavailable{% endif %}
+                        </span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Total Shots</span>
+                        <span class="tabular-numbers" style="font-weight: 700; color: var(--text-primary);">
+                            {% if hero_metrics and hero_metrics.barca_shots is not None %}{{ hero_metrics.barca_shots }}{% else %}Unavailable{% endif %}
+                        </span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Shot Conversion</span>
+                        <span class="tabular-numbers" style="font-weight: 700; color: var(--text-primary);">
+                            {% if hero_metrics and hero_metrics.shot_conversion_rate is not None %}{{ hero_metrics.shot_conversion_rate|floatformat:2 }}{% else %}Unavailable{% endif %}
+                        </span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Expected Goals (xG)</span>
+                        <span class="tabular-numbers" style="font-weight: 700; color: var(--text-primary);">
+                            {% if hero_metrics and hero_metrics.barca_xg is not None %}{{ hero_metrics.barca_xg }}{% else %}Unavailable{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state-card">
+                <i class="fa-solid fa-pen-nib empty-state-icon"></i>
+                <h3>No Match Analysis Published Yet</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Verified tactical reviews will be synthesized after the next fixture completes.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================================================================
+         SECTION 3: LATEST NEWS & EDITORIAL
+         ========================================================================= -->
+    <section class="intel-section">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Editorial Coverage</span>
+                <h2 class="section-title">Latest News & Dispatches</h2>
+            </div>
+            <a href="{% url 'analysis:article_list' %}" class="section-link">
+                View All Articles <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </div>
-    </div>
-    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=500&fit=crop');">
-        <div class="slide-overlay">
-            <h2 class="slide-title">Match Day Experience</h2>
-            <p class="slide-subtitle">Join thousands of fans in creating an unforgettable atmosphere</p>
+
+        {% if recent_articles %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                {% for article in recent_articles %}
+                    <div class="surface-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                                <span class="badge" style="background: rgba(0, 77, 152, 0.2); color: #93c5fd;">
+                                    {{ article.get_category_display }}
+                                </span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">
+                                    {{ article.created_at|date:"d M Y" }}
+                                </span>
+                            </div>
+                            <h4 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4;">
+                                <a href="{% url 'analysis:article_detail' article.slug %}" style="color: var(--text-primary);">
+                                    {{ article.title }}
+                                </a>
+                            </h4>
+                            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                                {{ article.get_content_preview|truncatewords:20 }}
+                            </p>
+                        </div>
+                        <a href="{% url 'analysis:article_detail' article.slug %}" style="color: var(--accent-gold); font-size: 0.85rem; font-weight: 600;">
+                            Read dispatch &rarr;
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state-card">
+                <i class="fa-regular fa-newspaper empty-state-icon"></i>
+                <h3>No Editorial Articles Yet</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Fresh news and articles will appear here as they are published.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================================================================
+         SECTION 4: PLAYER SPOTLIGHT
+         ========================================================================= -->
+    <section class="intel-section">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Squad Profile</span>
+                <h2 class="section-title">Player Spotlight</h2>
+            </div>
+            <a href="{% url 'players:player_list' %}" class="section-link">
+                Full Squad Roster <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </div>
-    </div>
-    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&h=500&fit=crop');">
-        <div class="slide-overlay">
-            <h2 class="slide-title">Victory Awaits</h2>
-            <p class="slide-subtitle">Together we rise, together we conquer every challenge</p>
+
+        {% if featured_player %}
+            <div class="surface-card" style="display: grid; grid-template-columns: 240px 1fr; gap: 2.5rem; align-items: center;">
+                <div style="text-align: center;">
+                    {% if featured_player.profile_image %}
+                        <img src="{{ featured_player.profile_image }}" alt="{{ featured_player.full_name }}" style="width: 100%; border-radius: var(--radius-md); border: 2px solid var(--border-subtle); object-fit: cover; max-height: 280px;">
+                    {% else %}
+                        <div class="crest-icon" style="width: 100%; height: 240px; font-size: 3rem; border-radius: var(--radius-md);">
+                            #{{ featured_player.jersey_number }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                        <span class="badge" style="background: rgba(237, 187, 0, 0.15); color: var(--accent-gold); font-size: 0.85rem;">
+                            #{{ featured_player.jersey_number }}
+                        </span>
+                        <span class="badge">{{ featured_player.get_position_display }}</span>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">{{ featured_player.nationality }}</span>
+                    </div>
+
+                    <h3 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">
+                        {{ featured_player.full_name }}
+                    </h3>
+
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 650px;">
+                        {{ featured_player.bio|default:"First-team standout demonstrating exceptional positional discipline and dynamic offensive threat in the current season."|truncatewords:45 }}
+                    </p>
+
+                    <!-- Player Stats Row -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; background: var(--bg-elevated); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Appearances</div>
+                            <div class="tabular-numbers" style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+                                {% if player_stats_summary %}{{ player_stats_summary.appearances }}{% else %}Unavailable{% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Goals</div>
+                            <div class="tabular-numbers" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-gold);">
+                                {% if player_stats_summary %}{{ player_stats_summary.goals }}{% else %}Unavailable{% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Assists</div>
+                            <div class="tabular-numbers" style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+                                {% if player_stats_summary %}{{ player_stats_summary.assists }}{% else %}Unavailable{% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Minutes</div>
+                            <div class="tabular-numbers" style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+                                {% if player_stats_summary %}{{ player_stats_summary.minutes_played }}{% else %}Unavailable{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'players:player_detail' featured_player.id %}" class="cta-pill" style="font-size: 0.85rem;">
+                        View Intelligence Profile &rarr;
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state-card">
+                <i class="fa-solid fa-users empty-state-icon"></i>
+                <h3>No Players Registered</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Player roster sync will populate official first-team profiles.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================================================================
+         SECTION 5: TACTICAL INTELLIGENCE ARCHIVE
+         ========================================================================= -->
+    <section class="intel-section">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Tactical In-Depth</span>
+                <h2 class="section-title">Tactical Intelligence</h2>
+            </div>
+            <a href="{% url 'analysis:tactical_analysis_list' %}" class="section-link">
+                Tactics Archive <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </div>
-    </div>
-    
-    <button class="slideshow-arrows prev-arrow" onclick="changeSlide(-1)">‹</button>
-    <button class="slideshow-arrows next-arrow" onclick="changeSlide(1)">›</button>
-    
-    <div class="slideshow-nav">
-        <span class="nav-dot active" onclick="goToSlide(0)"></span>
-        <span class="nav-dot" onclick="goToSlide(1)"></span>
-        <span class="nav-dot" onclick="goToSlide(2)"></span>
-        <span class="nav-dot" onclick="goToSlide(3)"></span>
-    </div>
+
+        {% if tactical_articles %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;">
+                {% for article in tactical_articles %}
+                    <div class="surface-card">
+                        <span class="badge" style="margin-bottom: 0.75rem; background: rgba(0, 77, 152, 0.2); color: #93c5fd;">
+                            <i class="fa-solid fa-chess-board"></i> TACTICAL SYSTEM
+                        </span>
+                        <h4 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.35;">
+                            <a href="{% url 'analysis:article_detail' article.slug %}" style="color: var(--text-primary);">
+                                {{ article.title }}
+                            </a>
+                        </h4>
+                        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                            {{ article.get_content_preview|truncatewords:24 }}
+                        </p>
+                        <a href="{% url 'analysis:article_detail' article.slug %}" class="section-link" style="color: var(--accent-gold);">
+                            Examine Tactical Map <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state-card">
+                <i class="fa-solid fa-chess-knight empty-state-icon"></i>
+                <h3>No Tactical Analyses Yet</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">In-depth tactical breakdowns of buildup, pressing structures, and defensive blocks will be listed here.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================================================================
+         SECTION 6: UPCOMING FIXTURES
+         ========================================================================= -->
+    <section class="intel-section">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Schedule</span>
+                <h2 class="section-title">Upcoming Fixtures</h2>
+            </div>
+            <a href="{% url 'matches:upcoming_matches' %}" class="section-link">
+                All Scheduled Fixtures <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        {% if upcoming_fixtures %}
+            <div class="surface-card" style="padding: 0; overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Competition</th>
+                            <th>Date & Time</th>
+                            <th>Fixture</th>
+                            <th>Venue</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for match in upcoming_fixtures %}
+                            <tr>
+                                <td>
+                                    <span class="badge">{{ match.competition.name }}</span>
+                                </td>
+                                <td>{{ match.match_date|date:"d M Y · H:i" }}</td>
+                                <td style="font-weight: 600; color: var(--text-primary);">
+                                    {{ match.home_team.short_name|default:match.home_team.name }} vs {{ match.away_team.short_name|default:match.away_team.name }}
+                                </td>
+                                <td>{{ match.venue|default:"Camp Nou" }}</td>
+                                <td style="text-align: right;">
+                                    <a href="{% url 'matches:match_detail' match.id %}" style="color: var(--accent-gold); font-size: 0.85rem; font-weight: 600;">
+                                        Preview &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state-card">
+                <i class="fa-regular fa-calendar-check empty-state-icon"></i>
+                <h3>No Upcoming Fixtures Scheduled</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Check back once next round dates are confirmed by the league.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================================================================
+         SECTION 7: TRANSFER INTELLIGENCE (Confirmed vs Rumors)
+         ========================================================================= -->
+    <section class="intel-section">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Mercato Hub</span>
+                <h2 class="section-title">Transfer Intelligence</h2>
+            </div>
+            <a href="{% url 'transfers:transfer_list' %}" class="section-link">
+                View Full Mercato <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Official / Confirmed Deals -->
+            <div class="surface-card">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: #10b981;">
+                        <i class="fa-solid fa-certificate"></i> Confirmed & Official Deals
+                    </h3>
+                    <a href="{% url 'transfers:latest_transfers' %}" style="font-size: 0.8rem; color: var(--text-muted);">See all</a>
+                </div>
+
+                {% if confirmed_transfers %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for t in confirmed_transfers %}
+                            <div style="background: var(--bg-elevated); padding: 0.9rem 1.1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">
+                                        {{ t.player_name }}
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                        {{ t.from_club }} &rarr; {{ t.to_club }}
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span class="badge badge-tier1">OFFICIAL</span>
+                                    <div class="tabular-numbers" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                                        {{ t.fee|default:"Undisclosed" }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="font-size: 0.88rem; color: var(--text-muted); text-align: center; padding: 1.5rem 0;">No confirmed deals in this window.</p>
+                {% endif %}
+            </div>
+
+            <!-- Rumors with Tier Badges -->
+            <div class="surface-card">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--accent-gold);">
+                        <i class="fa-solid fa-bullhorn"></i> Labeled Rumor Tracker
+                    </h3>
+                    <a href="{% url 'transfers:transfer_rumors' %}" style="font-size: 0.8rem; color: var(--text-muted);">See all</a>
+                </div>
+
+                {% if transfer_rumors %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for t in transfer_rumors %}
+                            <div style="background: var(--bg-elevated); padding: 0.9rem 1.1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">
+                                        {{ t.player_name }}
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                        {{ t.from_club }} &rarr; {{ t.to_club }}
+                                    </div>
+                                </div>
+                                <div>
+                                    {% if t.reliability_tier == 1 %}
+                                        <span class="badge badge-tier1">TIER 1 (HERE WE GO)</span>
+                                    {% elif t.reliability_tier == 2 %}
+                                        <span class="badge badge-tier2">TIER 2 (HIGH)</span>
+                                    {% elif t.reliability_tier == 3 %}
+                                        <span class="badge badge-tier3">TIER 3 (MEDIUM)</span>
+                                    {% else %}
+                                        <span class="badge badge-tier4">TIER {{ t.reliability_tier }} (SPECULATION)</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="font-size: 0.88rem; color: var(--text-muted); text-align: center; padding: 1.5rem 0;">No active rumors tracked currently.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 8: COMMUNITY PULSE
+         ========================================================================= -->
+    <section class="intel-section">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Discussion</span>
+                <h2 class="section-title">Community Pulse</h2>
+            </div>
+            <a href="{% url 'community:post_list' %}" class="section-link">
+                Join Discussions <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        {% if community_posts %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                {% for post in community_posts %}
+                    <div class="surface-card">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+                            <span><i class="fa-regular fa-user"></i> {{ post.author.username }}</span>
+                            <span>{{ post.created_at|date:"d M" }}</span>
+                        </div>
+                        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.35;">
+                            <a href="{% url 'community:post_detail' post.pk %}" style="color: var(--text-primary);">
+                                {{ post.title }}
+                            </a>
+                        </h4>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--accent-gold); margin-top: 1rem;">
+                            <i class="fa-regular fa-comment"></i> {{ post.comments.count }} comments
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state-card">
+                <i class="fa-regular fa-comments empty-state-icon"></i>
+                <h3>No Community Discussions Yet</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Be the first Culer to start a conversation in our sanitized fan forum.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================================================================
+         SECTION 9: VERIFIED SEASON STATISTICS
+         ========================================================================= -->
+    <section class="intel-section" style="border-bottom: none;">
+        <div class="section-header">
+            <div class="section-title-wrap">
+                <span class="section-label">Deterministic Telemetry</span>
+                <h2 class="section-title">Verified Season Performance</h2>
+            </div>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">
+                <i class="fa-solid fa-rotate"></i> Synced: {{ last_synced_at|date:"H:i, d M Y" }}
+            </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Form Streak & Team Numbers -->
+            <div class="surface-card">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1.25rem;">
+                    Recent Form Sequence (Last 5)
+                </h3>
+
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.5rem;">
+                    {% if team_form and team_form.form_sequence %}
+                        <div style="font-size: 1.25rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent-gold);">
+                            {{ team_form.form_sequence }}
+                        </div>
+                    {% else %}
+                        <span style="color: var(--text-muted);">Unavailable</span>
+                    {% endif %}
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; background: var(--bg-elevated); padding: 1rem; border-radius: var(--radius-sm);">
+                    <div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Goals Scored</div>
+                        <div class="tabular-numbers" style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">
+                            {% if team_form.goals_scored is not None %}{{ team_form.goals_scored }}{% else %}Unavailable{% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Goals Conceded</div>
+                        <div class="tabular-numbers" style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">
+                            {% if team_form.goals_conceded is not None %}{{ team_form.goals_conceded }}{% else %}Unavailable{% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Clean Sheets</div>
+                        <div class="tabular-numbers" style="font-size: 1.35rem; font-weight: 800; color: #10b981;">
+                            {% if team_form.clean_sheets is not None %}{{ team_form.clean_sheets }}{% else %}Unavailable{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Scorers Table -->
+            <div class="surface-card">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1.25rem;">
+                    Top Squad Goalscorers
+                </h3>
+
+                {% if top_scorers %}
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th style="text-align: right;">Goals</th>
+                                <th style="text-align: right;">Assists</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in top_scorers %}
+                                <tr>
+                                    <td style="font-weight: 600; color: var(--text-primary);">
+                                        #{{ stat.player.jersey_number }} {{ stat.player.full_name }}
+                                    </td>
+                                    <td class="tabular-numbers" style="text-align: right; font-weight: 700; color: var(--accent-gold);">
+                                        {{ stat.goals }}
+                                    </td>
+                                    <td class="tabular-numbers" style="text-align: right;">
+                                        {{ stat.assists }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p style="font-size: 0.88rem; color: var(--text-muted); padding: 1.5rem 0; text-align: center;">
+                        Goal stats will populate once match data syncs.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
 </div>
-
-<!-- Top Players Section -->
-<section class="section">
-    <div class="section-header">
-        <h2 class="section-title">Our Star Players</h2>
-        <p class="section-subtitle">Meet the talented athletes who represent our club with pride and excellence</p>
-    </div>
-    
-    <div class="cards-grid four-cols">
-        {% for player in top_players %}
-        <a href="{% url 'players:player_detail' player.id %}" class="player-card">
-            <div class="player-image" {% if player.image %}style="background-image: url('{{ player.image.url }}');"{% endif %}>
-                {% if not player.image %}
-                    {{ player.name|first }}
-                {% endif %}
-            </div>
-            <div class="player-info">
-                <h3 class="player-name">{{ player.name }}</h3>
-                <p class="player-position">{{ player.position }}</p>
-            </div>
-        </a>
-        {% empty %}
-        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
-            No players available at the moment.
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div class="section-action">
-        <a href="{% url 'players:player_list' %}" class="btn-primary">View All Players</a>
-    </div>
-</section>
-
-<!-- Recent Matches Section -->
-<section class="section">
-    <div class="section-header">
-        <h2 class="section-title">Recent Matches</h2>
-        <p class="section-subtitle">Catch up on our latest games and upcoming fixtures</p>
-    </div>
-    
-    <div class="cards-grid three-cols">
-        {% for match in recent_matches %}
-        <a href="{% url 'matches:match_detail' match.id %}" class="match-card">
-            <div class="match-teams">
-                <div class="team">
-                    <div class="team-name">{{ match.home_team }}</div>
-                </div>
-                <div class="match-vs">VS</div>
-                <div class="team">
-                    <div class="team-name">{{ match.away_team }}</div>
-                </div>
-            </div>
-            <div class="match-info">
-                <div class="match-date">{{ match.date|date:"F j, Y" }}</div>
-                <div class="match-venue">{{ match.venue }}</div>
-            </div>
-        </a>
-        {% empty %}
-        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
-            No recent matches available.
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div class="section-action">
-        <a href="{% url 'matches:match_list' %}" class="btn-primary">View All Matches</a>
-    </div>
-</section>
-
-<!-- Transfer Rumors Section -->
-<section class="section">
-    <div class="section-header">
-        <h2 class="section-title">Transfer Rumors</h2>
-        <p class="section-subtitle">Stay updated with the latest transfer news and rumors</p>
-    </div>
-    
-    <div class="cards-grid three-cols">
-        {% for rumor in rumors %}
-        <a href="{% url 'transfers:transfer_detail' rumor.id %}" class="transfer-card">
-            <h3 class="transfer-title">{{ rumor.title }}</h3>
-            <p class="transfer-description">{{ rumor.description|truncatewords:20 }}</p>
-            <div class="transfer-meta">
-                <span>{{ rumor.created_at|date:"M j, Y" }}</span>
-                <span>{{ rumor.source }}</span>
-            </div>
-        </a>
-        {% empty %}
-        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
-            No transfer rumors available.
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div class="section-action">
-        <a href="{% url 'transfers:transfer_rumors' %}" class="btn-primary">View All Rumors</a>
-    </div>
-</section>
-
-<!-- Latest Analysis Section -->
-<section class="section">
-    <div class="section-header">
-        <h2 class="section-title">Match Analysis</h2>
-        <p class="section-subtitle">In-depth analysis and tactical insights from our experts</p>
-    </div>
-    
-    <div class="cards-grid two-cols">
-        {% for article in analysis_articles %}
-        <a href="{% url 'analysis:article_detail' article.slug %}" class="article-card">
-            <div class="article-image" {% if article.image %}style="background-image: url('{{ article.image.url }}');"{% endif %}>
-                {% if not article.image %}
-                    <i class="fas fa-chart-line"></i>
-                {% endif %}
-            </div>
-            <div class="article-content">
-                <h3 class="article-title">{{ article.title }}</h3>
-                <p class="article-description">{{ article.description|truncatewords:15 }}</p>
-            </div>
-        </a>
-        {% empty %}
-        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
-            No analysis articles available.
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div class="section-action">
-        <a href="{% url 'analysis:article_list' %}" class="btn-primary">View All Analysis</a>
-    </div>
-</section>
-
-<!-- Community Posts Section -->
-<section class="section">
-    <div class="section-header">
-        <h2 class="section-title">Community Discussions</h2>
-        <p class="section-subtitle">Join the conversation with fellow fans and share your thoughts</p>
-    </div>
-    
-    <div class="cards-grid two-cols">
-        {% for post in community_posts %}
-        <a href="{% url 'community:post_detail' post.pk %}" class="community-card">
-            <h3 class="community-title">{{ post.title }}</h3>
-            <div class="community-meta">
-                <span><i class="fas fa-user"></i> {{ post.author.username }}</span>
-                <span><i class="fas fa-clock"></i> {{ post.created_at|date:"M j, Y" }}</span>
-                <span><i class="fas fa-comments"></i> {{ post.comments.count }} comments</span>
-            </div>
-        </a>
-        {% empty %}
-        <div style="grid-column: 1 / -1; text-align: center; color: #666666; font-style: italic;">
-            No community posts available.
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div class="section-action">
-        <a href="{% url 'community:post_list' %}" class="btn-primary">Join the Discussion</a>
-    </div>
-</section>
-
-<script>
-    // Slideshow functionality
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.nav-dot');
-    const totalSlides = slides.length;
-
-    function showSlide(n) {
-        slides[currentSlide].classList.remove('active');
-        dots[currentSlide].classList.remove('active');
-        
-        currentSlide = (n + totalSlides) % totalSlides;
-        
-        slides[currentSlide].classList.add('active');
-        dots[currentSlide].classList.add('active');
-    }
-
-    function changeSlide(direction) {
-        showSlide(currentSlide + direction);
-    }
-
-    function goToSlide(n) {
-        showSlide(n);
-    }
-
-    // Auto-advance slideshow
-    setInterval(() => {
-        changeSlide(1);
-    }, 5000);
-</script>
 {% endblock %}

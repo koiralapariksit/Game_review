@@ -10,8 +10,10 @@ from .models import Match, Comment
 
 
 def match_list(request):
-    """Display all matches, newest first"""
-    matches = Match.objects.select_related('posted_by', 'competition', 'home_team', 'away_team').all()
+    """Display all matches, newest first, with N+1 query optimization"""
+    matches = Match.objects.select_related(
+        'competition', 'home_team', 'away_team', 'statistic', 'posted_by'
+    ).prefetch_related('events').all()
     
     # Optional filtering by competition
     competition_filter = request.GET.get('competition')
@@ -34,8 +36,8 @@ def match_list(request):
             Q(venue__icontains=search_query)
         )
     
-    # Pagination
-    paginator = Paginator(matches, 10)  # Show 10 matches per page
+    # Pagination (12 matches per page)
+    paginator = Paginator(matches, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -54,9 +56,11 @@ def match_list(request):
 
 
 def match_detail(request, match_id):
-    """Display detailed match information"""
+    """Display detailed match information with pre-fetched statistics and events"""
     match = get_object_or_404(
-        Match.objects.select_related('posted_by', 'competition', 'home_team', 'away_team'), 
+        Match.objects.select_related(
+            'competition', 'home_team', 'away_team', 'statistic', 'posted_by'
+        ).prefetch_related('events'), 
         pk=match_id
     )
     
@@ -68,7 +72,9 @@ def match_detail(request, match_id):
     
     # Get related matches (same opponent, excluding current match)
     opp_name = match.opponent
-    related_matches = Match.objects.select_related('home_team', 'away_team', 'competition').filter(
+    related_matches = Match.objects.select_related(
+        'home_team', 'away_team', 'competition', 'statistic'
+    ).filter(
         Q(home_team__name=opp_name) | Q(away_team__name=opp_name) |
         Q(home_team__short_name=opp_name) | Q(away_team__short_name=opp_name)
     ).exclude(pk=match.pk).order_by('-match_date')[:3]
@@ -141,13 +147,13 @@ def post_comment(request, match_id):
                 comment=comment_text,
                 email=email if email else None,
                 ip_address=ip_address,
-                is_approved=True  # Auto-approve for now, change to False if you want moderation
+                is_approved=True
             )
             
             messages.success(request, 'Your comment has been posted successfully!')
             return HttpResponseRedirect(reverse('matches:match_detail', kwargs={'match_id': match.pk}) + f'#comment-{comment.pk}')
             
-        except Exception as e:
+        except Exception:
             messages.error(request, 'There was an error posting your comment. Please try again.')
             return render(request, 'matches/post_comment.html', {
                 'match': match,
@@ -158,7 +164,6 @@ def post_comment(request, match_id):
                 }
             })
     
-    # GET request - show the comment form
     context = {
         'match': match,
     }
@@ -168,7 +173,9 @@ def post_comment(request, match_id):
 
 def upcoming_matches(request):
     """Display upcoming matches (no result or future dates)"""
-    upcoming = Match.objects.select_related('posted_by', 'home_team', 'away_team', 'competition').filter(
+    upcoming = Match.objects.select_related(
+        'competition', 'home_team', 'away_team', 'statistic', 'posted_by'
+    ).filter(
         Q(status=Match.STATUS_SCHEDULED) | Q(match_date__gt=timezone.now()) | Q(home_score__isnull=True)
     ).order_by('match_date')
     
@@ -180,12 +187,11 @@ def upcoming_matches(request):
             Q(competition__name__icontains=competition_filter)
         )
     
-    # Pagination
-    paginator = Paginator(upcoming, 8)  # Show 8 upcoming matches per page
+    # Pagination (12 items per page)
+    paginator = Paginator(upcoming, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Get all competitions for filter dropdown
     competitions = Match.COMPETITION_CHOICES
     
     context = {
@@ -199,8 +205,10 @@ def upcoming_matches(request):
 
 
 def completed_matches(request):
-    """Display completed matches with results"""
-    completed = Match.objects.select_related('posted_by', 'home_team', 'away_team', 'competition').filter(
+    """Display completed matches with results and stats"""
+    completed = Match.objects.select_related(
+        'competition', 'home_team', 'away_team', 'statistic', 'posted_by'
+    ).prefetch_related('events').filter(
         Q(status=Match.STATUS_FINISHED) | Q(home_score__isnull=False, match_date__lte=timezone.now())
     ).order_by('-match_date')
     
@@ -212,12 +220,11 @@ def completed_matches(request):
             Q(competition__name__icontains=competition_filter)
         )
     
-    # Pagination
-    paginator = Paginator(completed, 10)  # Show 10 completed matches per page
+    # Pagination (12 items per page)
+    paginator = Paginator(completed, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Get all competitions for filter dropdown
     competitions = Match.COMPETITION_CHOICES
     
     context = {

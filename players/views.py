@@ -1,27 +1,31 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 from .models import Player
 
+
 def player_list(request):
-    """Display all players grouped by position"""
-    gk_players = Player.objects.filter(position='GK').order_by('jersey_number')
-    cb_players = Player.objects.filter(position='CB').order_by('jersey_number')
-    rb_players = Player.objects.filter(position='RB').order_by('jersey_number')
-    lb_players = Player.objects.filter(position='LB').order_by('jersey_number')
-    def_players = list(cb_players) + list(rb_players) + list(lb_players)
+    """Display all first-team players with optimized performance and season statistic prefetching"""
+    players = Player.objects.prefetch_related('season_statistics', 'match_performances').all().order_by('jersey_number')
     
-    cm_players = Player.objects.filter(position='CM').order_by('jersey_number')
-    dm_players = Player.objects.filter(position='DM').order_by('jersey_number')
-    am_players = Player.objects.filter(position='AM').order_by('jersey_number')
-    mid_players = list(cm_players) + list(dm_players) + list(am_players)
+    gk_players = [p for p in players if p.position == 'GK']
+    cb_players = [p for p in players if p.position == 'CB']
+    rb_players = [p for p in players if p.position == 'RB']
+    lb_players = [p for p in players if p.position == 'LB']
+    def_players = cb_players + rb_players + lb_players
     
-    cf_players = Player.objects.filter(position='CF').order_by('jersey_number')
-    w_players = Player.objects.filter(position='W').order_by('jersey_number')
-    fwd_players = list(cf_players) + list(w_players)
+    cm_players = [p for p in players if p.position == 'CM']
+    dm_players = [p for p in players if p.position == 'DM']
+    am_players = [p for p in players if p.position == 'AM']
+    mid_players = cm_players + dm_players + am_players
+    
+    cf_players = [p for p in players if p.position == 'CF']
+    w_players = [p for p in players if p.position == 'W']
+    fwd_players = cf_players + w_players
     
     context = {
-        'players': Player.objects.all(),
+        'players': players,
         'gk_players': gk_players,
-        'gk_count': gk_players.count(),
+        'gk_count': len(gk_players),
         'def_players': def_players,
         'def_count': len(def_players),
         'mid_players': mid_players,
@@ -31,11 +35,25 @@ def player_list(request):
     }
     return render(request, 'players/player_list.html', context)
 
+
 def player_detail(request, player_id):
-    """Display detailed information for a specific player"""
-    player = get_object_or_404(Player, pk=player_id)
+    """Display detailed player intelligence profile with pre-fetched performances"""
+    player = get_object_or_404(
+        Player.objects.prefetch_related(
+            'season_statistics',
+            'match_performances__match__home_team',
+            'match_performances__match__away_team',
+            'match_performances__match__competition'
+        ),
+        pk=player_id
+    )
+    
+    recent_performances = player.match_performances.all().order_by('-match__match_date')[:10]
+    season_stats = player.season_statistics.all().order_by('-season')
     
     context = {
         'player': player,
+        'recent_performances': recent_performances,
+        'season_stats': season_stats,
     }
     return render(request, 'players/player_detail.html', context)

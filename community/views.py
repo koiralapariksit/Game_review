@@ -11,8 +11,8 @@ from .forms import CommunityPostForm, CommentForm
 
 
 def post_list(request):
-    """Display all published community posts with pagination and search"""
-    posts = CommunityPost.objects.filter(is_published=True).select_related('author')
+    """Display all published community posts with author prefetching and pagination"""
+    posts = CommunityPost.objects.filter(is_published=True).select_related('author').prefetch_related('comments__author')
     
     # Search functionality
     search_query = request.GET.get('search', '')
@@ -23,8 +23,8 @@ def post_list(request):
             Q(author__username__icontains=search_query)
         )
     
-    # Pagination
-    paginator = Paginator(posts, 6)  # 6 posts per page
+    # Pagination (12 posts per page)
+    paginator = Paginator(posts, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -38,9 +38,9 @@ def post_list(request):
 
 
 def post_detail(request, pk):
-    """Display individual post detail with comments"""
+    """Display individual post detail with pre-fetched comments and authors"""
     post = get_object_or_404(
-        CommunityPost.objects.select_related('author'),
+        CommunityPost.objects.select_related('author').prefetch_related('comments__author'),
         pk=pk,
         is_published=True
     )
@@ -79,23 +79,23 @@ def post_create(request):
                     author = User.objects.create_user(username='barca_fan', email='fan@fcbarcelona.cat')
                 post.author = author
             post.save()
-            messages.success(request, 'Post created successfully!')
+            messages.success(request, 'Your post has been published to the community!')
             return redirect('community:post_detail', pk=post.pk)
-        else:
-            messages.error(request, 'Please correct the errors below.')
     else:
         form = CommunityPostForm()
-
-    return render(request, 'community/post_form.html', {
+    
+    context = {
         'form': form,
-        'title': 'Create New Post'
-    })
+        'page_title': 'Start a New Discussion'
+    }
+    return render(request, 'community/post_form.html', context)
 
 
-@ratelimit(key='ip', rate='10/m', method='POST', block=True)
+@ratelimit(key='ip', rate='15/m', method='POST', block=True)
 def add_comment(request, pk):
-    """Submit a comment on a community post with rate limiting and input sanitization."""
+    """Create a comment on a community post with rate limiting and sanitization."""
     post = get_object_or_404(CommunityPost, pk=pk, is_published=True)
+    
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -103,10 +103,17 @@ def add_comment(request, pk):
             comment.post = post
             if request.user.is_authenticated:
                 comment.author = request.user
-                if not comment.name:
-                    comment.name = request.user.username
+            else:
+                author = User.objects.filter(is_active=True).first()
+                if not author:
+                    author = User.objects.create_user(username='barca_fan', email='fan@fcbarcelona.cat')
+                comment.author = author
             comment.save()
             messages.success(request, 'Comment added successfully!')
-        else:
-            messages.error(request, 'Please correct the errors in your comment.')
+            return redirect('community:post_detail', pk=post.pk)
+    
     return redirect('community:post_detail', pk=post.pk)
+
+
+comment_create = add_comment
+
