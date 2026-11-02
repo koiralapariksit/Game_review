@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django_ratelimit.decorators import ratelimit
 
-from community.models import CommunityPost, Comment as CommunityComment
+from community.models import CommunityPost, Comment as CommunityComment, ContentReport
 from matches.models import Match, Comment as MatchComment
 from players.models import Player
 from transfers.models import Transfer
@@ -54,6 +54,15 @@ def admin_dashboard(request):
     recent_posts = CommunityPost.objects.select_related('author').order_by('-created_at')[:5]
     recent_comments = CommunityComment.objects.select_related('author', 'post').order_by('-created_at')[:5]
 
+    # Moderation Queue items
+    flagged_posts = CommunityPost.objects.filter(
+        moderation_status=CommunityPost.MODERATION_STATUS_FLAGGED
+    ).select_related('author').prefetch_related('reports__reported_by')
+
+    unresolved_reports = ContentReport.objects.filter(
+        resolved=False
+    ).select_related('post', 'comment', 'reported_by').order_by('-created_at')
+
     context = {
         'total_posts': total_posts,
         'total_comments': total_comments,
@@ -62,6 +71,51 @@ def admin_dashboard(request):
         'total_transfers': total_transfers,
         'recent_posts': recent_posts,
         'recent_comments': recent_comments,
+        'flagged_posts': flagged_posts,
+        'unresolved_reports': unresolved_reports,
+        'flagged_count': flagged_posts.count() + unresolved_reports.count(),
         'user': request.user,
     }
     return render(request, 'customadmin/dashboard.html', context)
+
+
+@staff_member_required(login_url='customadmin:login')
+def moderate_post(request, post_id):
+    """1-click moderation action for community posts: approve, hide, lock, unlock, delete."""
+    post = get_object_or_404(CommunityPost, pk=post_id)
+    if request.method == 'POST':
+        action = request.POST.get('action', '').lower()
+        if action == 'approve':
+            post.moderation_status = CommunityPost.MODERATION_STATUS_ACTIVE
+            post.save(update_fields=['moderation_status'])
+            post.reports.filter(resolved=False).update(resolved=True)
+            messages.success(request, f"Post #{post.id} '{post.title[:30]}' approved and returned to active feed.")
+        elif action == 'hide':
+            post.moderation_status = CommunityPost.MODERATION_STATUS_HIDDEN
+            post.save(update_fields=['moderation_status'])
+            post.reports.filter(resolved=False).update(resolved=True)
+            messages.warning(request, f"Post #{post.id} hidden from public view.")
+        elif action == 'lock':
+            post.is_locked = True
+            post.save(update_fields=['is_locked'])
+            messages.info(request, f"Post #{post.id} comments locked.")
+        elif action == 'unlock':
+            post.is_locked = False
+            post.save(update_fields=['is_locked'])
+            messages.info(request, f"Post #{post.id} comments unlocked.")
+        elif action == 'delete':
+            title_preview = post.title[:30]
+            post.delete()
+            messages.error(request, f"Post '{title_preview}' deleted permanently.")
+    return redirect('customadmin:dashboard')
+
+
+@staff_member_required(login_url='customadmin:login')
+def resolve_report(request, report_id):
+    """Resolve an individual content report ticket."""
+    report = get_object_or_404(ContentReport, pk=report_id)
+    if request.method == 'POST':
+        report.resolved = True
+        report.save(update_fields=['resolved'])
+        messages.success(request, f"Report #{report.id} marked as resolved.")
+    return redirect('customadmin:dashboard')

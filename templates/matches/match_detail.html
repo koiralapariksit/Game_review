@@ -231,7 +231,7 @@
     <!-- Comments Section -->
     <div class="surface-card">
         <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem;">
-            Match Discussions ({{ comments|length }})
+            Match Quick Reactions ({{ comments|length }})
         </h3>
         <a href="{% url 'matches:post_comment' match.id %}" class="cta-pill" style="font-size: 0.85rem; margin-bottom: 1.5rem;">
             <i class="fa-regular fa-comment-dots"></i> Add Match Reaction
@@ -251,6 +251,65 @@
             </div>
         {% else %}
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Be the first supporter to leave a comment on this match.</p>
+        {% endif %}
+    </div>
+
+    <!-- Match Discussion Threads (Supporter Intelligence Hub) -->
+    <div class="surface-card" style="margin-top: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <span class="badge badge-ai" style="margin-bottom: 0.35rem;"><i class="fa-solid fa-comments"></i> SUPPORTER INTELLIGENCE</span>
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+                    Match Discussion Threads ({{ match_discussions|length }})
+                </h3>
+            </div>
+            <a href="{% url 'community:post_create' %}?match_id={{ match.id }}" class="cta-pill" style="font-size: 0.85rem;">
+                <i class="fa-solid fa-plus"></i> Start Tactical Debate
+            </a>
+        </div>
+
+        {% if match_discussions %}
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                {% for post in match_discussions %}
+                    <div style="background: var(--bg-elevated); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+                                {% if post.is_pinned %}
+                                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;"><i class="fa-solid fa-thumbtack"></i> Pinned</span>
+                                {% endif %}
+                                <span class="badge" style="background: rgba(0, 77, 152, 0.2); color: #93c5fd;">{{ post.get_category_display }}</span>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">by <strong>{{ post.author.username }}</strong> · {{ post.created_at|date:"d M Y · H:i" }}</span>
+                            </div>
+                            <h4 style="margin: 0; font-size: 1.05rem;">
+                                <a href="{% url 'community:post_detail' post.id %}" style="color: var(--text-primary); text-decoration: none;">
+                                    {{ post.title }}
+                                </a>
+                            </h4>
+                            <p style="margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                                {{ post.get_excerpt }}
+                            </p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">
+                                <i class="fa-regular fa-comment"></i> {{ post.comments.count }} replies
+                            </span>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">
+                                <i class="fa-solid fa-arrow-up"></i> {{ post.reactions.count }} reactions
+                            </span>
+                            <a href="{% url 'community:post_detail' post.id %}" class="badge" style="background: rgba(255, 255, 255, 0.08); text-decoration: none; padding: 0.4rem 0.8rem;">
+                                Join Debate &rarr;
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); background: var(--bg-elevated); border-radius: var(--radius-sm); border: 1px dashed var(--border-subtle);">
+                <p style="margin-bottom: 1rem;">No supporter discussion threads linked to this match yet.</p>
+                <a href="{% url 'community:post_create' %}?match_id={{ match.id }}" class="cta-pill" style="font-size: 0.85rem;">
+                    <i class="fa-solid fa-pen"></i> Start the first tactical debate
+                </a>
+            </div>
         {% endif %}
     </div>
 

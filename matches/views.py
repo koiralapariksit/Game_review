@@ -89,6 +89,16 @@ def match_detail(request, match_id):
         match=match,
         is_approved=True
     ).order_by('-created_at')
+
+    # Get linked Community Match Discussion Threads
+    from community.models import CommunityPost
+    match_discussions = (
+        CommunityPost.objects.filter(related_match=match, is_published=True)
+        .exclude(moderation_status=CommunityPost.MODERATION_STATUS_HIDDEN)
+        .select_related('author')
+        .prefetch_related('comments', 'reactions')
+        .order_by('-is_pinned', '-created_at')
+    )
     
     # Get related matches (same opponent, excluding current match)
     opp_name = match.opponent
@@ -103,6 +113,7 @@ def match_detail(request, match_id):
         'match': match,
         'ai_review': ai_review,
         'comments': comments,
+        'match_discussions': match_discussions,
         'related_matches': related_matches,
     }
     

@@ -295,6 +295,39 @@
         </div>
     </div>
 
+    <!-- Supporter Reactions & Report Bar -->
+    <div style="
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 1.5rem 2.5rem;
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    ">
+        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <span style="font-weight: 600; color: #cbd5e1; font-size: 0.95rem;">
+                <i class="fa-solid fa-fire" style="color: var(--gold); margin-right: 0.35rem;"></i> Supporter Reactions:
+            </span>
+            {% include 'community/partials/reaction_badges.html' with post=post reactions=reactions %}
+        </div>
+
+        <div>
+            <form hx-post="{% url 'community:report_content' post.pk %}" hx-target="#report-response-{{ post.pk }}" hx-swap="innerHTML" style="display: inline; margin: 0;">
+                {% csrf_token %}
+                <input type="hidden" name="reason" value="SPAM">
+                <button type="submit" onclick="return confirm('Report this post to moderation staff?');" style="background: transparent; border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; border-radius: 9999px; padding: 0.35rem 0.85rem; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.2s;">
+                    <i class="fa-solid fa-flag"></i> Report Post
+                </button>
+            </form>
+            <div id="report-response-{{ post.pk }}"></div>
+        </div>
+    </div>
+
     <!-- Comments Section -->
     <div class="comments-section" style="
         background: rgba(255, 255, 255, 0.03);
@@ -320,46 +353,55 @@
             Discussion ({{ comments|length }})
         </h3>
 
-        <!-- Comment Form -->
-        <form method="post" action="{% url 'community:add_comment' post.pk %}" style="margin-bottom: 2.5rem;">
-            {% csrf_token %}
-            <div style="margin-bottom: 1rem;">
-                <input type="text" name="name" placeholder="Your name (optional)" style="
-                    width: 100%;
-                    max-width: 300px;
-                    padding: 0.75rem 1rem;
-                    background: rgba(255, 255, 255, 0.08);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 10px;
-                    color: white;
-                    font-size: 0.95rem;
-                    margin-bottom: 0.75rem;
-                    display: block;
-                ">
-                <textarea name="content" rows="3" required placeholder="Join the discussion..." style="
-                    width: 100%;
-                    padding: 0.875rem 1rem;
-                    background: rgba(255, 255, 255, 0.08);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 10px;
-                    color: white;
-                    font-size: 1rem;
-                    resize: vertical;
-                    font-family: inherit;
-                    box-sizing: border-box;
-                "></textarea>
+        {% if post.is_locked %}
+            <div style="background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-lock" style="font-size: 1.25rem;"></i>
+                <div>
+                    <strong>Discussion Locked:</strong> Moderators have locked this thread. Further comments are disabled.
+                </div>
             </div>
-            <button type="submit" style="
-                padding: 0.75rem 1.75rem;
-                background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
-                color: white;
-                border: none;
-                border-radius: 10px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: transform 0.2s ease;
-            ">Post Comment</button>
-        </form>
+        {% else %}
+            <!-- Comment Form -->
+            <form method="post" action="{% url 'community:add_comment' post.pk %}" style="margin-bottom: 2.5rem;">
+                {% csrf_token %}
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" name="name" placeholder="Your name (optional)" style="
+                        width: 100%;
+                        max-width: 300px;
+                        padding: 0.75rem 1rem;
+                        background: rgba(255, 255, 255, 0.08);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        border-radius: 10px;
+                        color: white;
+                        font-size: 0.95rem;
+                        margin-bottom: 0.75rem;
+                        display: block;
+                    ">
+                    <textarea name="content" rows="3" required placeholder="Join the discussion..." style="
+                        width: 100%;
+                        padding: 0.875rem 1rem;
+                        background: rgba(255, 255, 255, 0.08);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        border-radius: 10px;
+                        color: white;
+                        font-size: 1rem;
+                        resize: vertical;
+                        font-family: inherit;
+                        box-sizing: border-box;
+                    "></textarea>
+                </div>
+                <button type="submit" style="
+                    padding: 0.75rem 1.75rem;
+                    background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 10px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: transform 0.2s ease;
+                ">Post Comment</button>
+            </form>
+        {% endif %}
 
         <!-- Comments List -->
         {% if comments %}

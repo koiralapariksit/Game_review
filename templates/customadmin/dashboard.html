@@ -12,7 +12,7 @@
             </h1>
             <p style="color: #94a3b8; font-size: 1rem; margin: 0;">Welcome, {{ user.username }} (Staff Member)</p>
         </div>
-        <div style="display: flex; gap: 1rem;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="{% url 'admin:index' %}" style="padding: 0.75rem 1.25rem; background: rgba(0, 77, 152, 0.6); color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 500; border: 1px solid rgba(0, 77, 152, 0.8);">
                 <i class="fas fa-cog" style="margin-right: 0.5rem;"></i>Django Admin
             </a>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Quick Stats Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
         <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.04); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
             <i class="fas fa-users" style="font-size: 2rem; color: #38bdf8; margin-bottom: 0.75rem;"></i>
             <div style="font-size: 2rem; font-weight: 700; color: #ffffff;">{{ total_players }}</div>
@@ -53,6 +53,142 @@
             <div style="font-size: 2rem; font-weight: 700; color: #ffffff;">{{ total_transfers }}</div>
             <div style="color: #94a3b8; font-size: 0.9rem;">Transfers Logged</div>
         </div>
+
+        <div style="padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border-radius: 16px; border: 1px solid rgba(239, 68, 68, 0.3); text-align: center;">
+            <i class="fas fa-shield-halved" style="font-size: 2rem; color: #ef4444; margin-bottom: 0.75rem;"></i>
+            <div style="font-size: 2rem; font-weight: 700; color: #f87171;">{{ flagged_count }}</div>
+            <div style="color: #fca5a5; font-size: 0.9rem;">Moderation Items</div>
+        </div>
+    </div>
+
+    <!-- Community Moderation Queue -->
+    <div style="margin-bottom: 3rem; padding: 2rem; background: rgba(255, 255, 255, 0.04); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <h2 style="font-size: 1.5rem; color: #ffb700; margin: 0; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-gavel"></i> Community Moderation Queue
+            </h2>
+            <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 9999px;">
+                {{ flagged_posts.count }} Flagged Posts · {{ unresolved_reports.count }} Open Tickets
+            </span>
+        </div>
+
+        {% if flagged_posts %}
+            <h3 style="font-size: 1.15rem; color: #ffffff; margin-bottom: 1rem;">Flagged Posts Pending Staff Action</h3>
+            <div style="display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem;">
+                {% for post in flagged_posts %}
+                    <div style="background: rgba(20, 24, 40, 0.8); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.75rem;">
+                            <div>
+                                <span class="badge" style="background: rgba(239, 68, 68, 0.3); color: #fca5a5; margin-right: 0.5rem;">FLAGGED</span>
+                                <span class="badge" style="background: rgba(0, 77, 152, 0.3); color: #93c5fd; margin-right: 0.5rem;">{{ post.get_category_display }}</span>
+                                {% if post.is_locked %}<span class="badge" style="background: rgba(245, 158, 11, 0.3); color: #fbbf24; margin-right: 0.5rem;">LOCKED</span>{% endif %}
+                                <strong style="color: #ffffff; font-size: 1.1rem;">{{ post.title }}</strong>
+                            </div>
+                            <span style="font-size: 0.85rem; color: #94a3b8;">
+                                by {{ post.author.username }} · {{ post.created_at|date:"M d, Y H:i" }}
+                            </span>
+                        </div>
+                        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem; background: rgba(0, 0, 0, 0.2); padding: 0.75rem; border-radius: 8px;">
+                            {{ post.content|truncatewords:40 }}
+                        </p>
+                        
+                        <!-- Moderation Actions -->
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                            <form method="post" action="{% url 'customadmin:moderate_post' post.pk %}" style="display: inline; margin: 0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="approve">
+                                <button type="submit" style="background: #10b981; color: white; border: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">
+                                    <i class="fas fa-check"></i> Approve & Restore
+                                </button>
+                            </form>
+
+                            <form method="post" action="{% url 'customadmin:moderate_post' post.pk %}" style="display: inline; margin: 0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="hide">
+                                <button type="submit" style="background: #f59e0b; color: white; border: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">
+                                    <i class="fas fa-eye-slash"></i> Hide Post
+                                </button>
+                            </form>
+
+                            <form method="post" action="{% url 'customadmin:moderate_post' post.pk %}" style="display: inline; margin: 0;">
+                                {% csrf_token %}
+                                {% if post.is_locked %}
+                                    <input type="hidden" name="action" value="unlock">
+                                    <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">
+                                        <i class="fas fa-lock-open"></i> Unlock Comments
+                                    </button>
+                                {% else %}
+                                    <input type="hidden" name="action" value="lock">
+                                    <button type="submit" style="background: #6366f1; color: white; border: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">
+                                        <i class="fas fa-lock"></i> Lock Comments
+                                    </button>
+                                {% endif %}
+                            </form>
+
+                            <form method="post" action="{% url 'customadmin:moderate_post' post.pk %}" style="display: inline; margin: 0;" onsubmit="return confirm('Are you sure you want to permanently delete this post?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit" style="background: #ef4444; color: white; border: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem;">No posts currently flagged for moderation.</p>
+        {% endif %}
+
+        <!-- Content Reports Table -->
+        <h3 style="font-size: 1.15rem; color: #ffffff; margin-bottom: 1rem;">Open User Report Tickets</h3>
+        {% if unresolved_reports %}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: #94a3b8; text-align: left;">
+                            <th style="padding: 0.75rem;">Target</th>
+                            <th style="padding: 0.75rem;">Reported By</th>
+                            <th style="padding: 0.75rem;">Reason</th>
+                            <th style="padding: 0.75rem;">Details</th>
+                            <th style="padding: 0.75rem;">Date</th>
+                            <th style="padding: 0.75rem; text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in unresolved_reports %}
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #ffffff;">
+                                <td style="padding: 0.75rem;">
+                                    {% if report.post %}
+                                        <a href="{% url 'community:post_detail' report.post.pk %}" style="color: #60a5fa; text-decoration: none;">
+                                            Post #{{ report.post.id }}: {{ report.post.title|truncatechars:30 }}
+                                        </a>
+                                    {% elif report.comment %}
+                                        Comment #{{ report.comment.id }}
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 0.75rem; color: #cbd5e1;">{{ report.reported_by.username }}</td>
+                                <td style="padding: 0.75rem;">
+                                    <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">{{ report.get_reason_display }}</span>
+                                </td>
+                                <td style="padding: 0.75rem; color: #cbd5e1;">{{ report.details|default:"No details provided"|truncatechars:40 }}</td>
+                                <td style="padding: 0.75rem; color: #94a3b8;">{{ report.created_at|date:"M d, H:i" }}</td>
+                                <td style="padding: 0.75rem; text-align: right;">
+                                    <form method="post" action="{% url 'customadmin:resolve_report' report.pk %}" style="display: inline; margin: 0;">
+                                        {% csrf_token %}
+                                        <button type="submit" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                                            <i class="fas fa-check"></i> Resolve
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="color: #94a3b8; font-size: 0.95rem;">No unresolved report tickets.</p>
+        {% endif %}
     </div>
 
     <!-- Recent Activity -->
@@ -105,4 +241,3 @@
     </div>
 </div>
 {% endblock %}
-

@@ -1,8 +1,12 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.db import IntegrityError
+from django.utils import timezone
 from django_ratelimit.exceptions import Ratelimited
-from community.models import CommunityPost, Comment
+
+from community.models import CommunityPost, Comment, Reaction, ContentReport
+from matches.models import Competition, Team, Match
 from culer.sanitizers import sanitize_plain_text, sanitize_rich_text
 from culer.middleware import RatelimitMiddleware
 
@@ -75,7 +79,8 @@ class XSSSanitizationTestCase(TestCase):
         self.client.login(username='testbarcafan', password='testpassword123')
         response = self.client.post(reverse('community:post_create'), {
             'title': '<script>alert("pwnd")</script>Match Preview',
-            'content': '<p>Here is preview</p><script>alert("xss")</script>'
+            'content': '<p>Here is preview</p><script>alert("xss")</script>',
+            'category': CommunityPost.CATEGORY_MATCH_DISCUSSION,
         }, follow=True)
         self.assertEqual(response.status_code, 200)
         created_post = CommunityPost.objects.latest('id')
@@ -98,6 +103,173 @@ class XSSSanitizationTestCase(TestCase):
         self.assertEqual(latest_comment.name, 'Inigo')
         self.assertNotIn('<script>', latest_comment.content)
         self.assertIn('<b>Viva Pedri!</b>', latest_comment.content)
+
+
+class CommunityModerationAndReactionsTestCase(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username='culer1', password='password123')
+        self.user2 = User.objects.create_user(username='culer2', password='password123')
+        self.user3 = User.objects.create_user(username='culer3', password='password123')
+        self.staff_user = User.objects.create_user(username='staffmod', password='adminpassword', is_staff=True)
+
+        self.post = CommunityPost.objects.create(
+            title="Tactical High Defensive Line Analysis",
+            content="<p>An in-depth debate on tactical offside traps.</p>",
+            category=CommunityPost.CATEGORY_TACTICAL_DEBATE,
+            author=self.user1,
+            moderation_status=CommunityPost.MODERATION_STATUS_ACTIVE
+        )
+
+        self.comp = Competition.objects.create(name="La Liga", code="PD")
+        self.barca = Team.objects.create(name="FC Barcelona", short_name="Barça", tla="FCB", provider_id=81)
+        self.madrid = Team.objects.create(name="Real Madrid CF", short_name="Real Madrid", tla="RMA", provider_id=86)
+        self.match = Match.objects.create(
+            competition=self.comp,
+            home_team=self.barca,
+            away_team=self.madrid,
+            season="2026/2027",
+            status=Match.STATUS_FINISHED,
+            match_date=timezone.now()
+        )
+
+    def test_duplicate_reactions_by_same_user_prevented(self):
+        """UniqueConstraint on [post, user, reaction_type] blocks duplicate DB records."""
+        Reaction.objects.create(
+            post=self.post,
+            user=self.user1,
+            reaction_type=Reaction.TYPE_UPVOTE
+        )
+        with self.assertRaises(IntegrityError):
+            Reaction.objects.create(
+                post=self.post,
+                user=self.user1,
+                reaction_type=Reaction.TYPE_UPVOTE
+            )
+
+    def test_toggle_reaction_endpoint(self):
+        """toggle_reaction adds reaction on first click and removes it on second click."""
+        self.client.login(username='culer1', password='password123')
+        url = reverse('community:toggle_reaction', kwargs={'post_id': self.post.id})
+
+        # 1. Toggle ON
+        res1 = self.client.post(url, {'reaction_type': 'UPVOTE'}, HTTP_HX_REQUEST='true')
+        self.assertEqual(res1.status_code, 200)
+        self.assertEqual(self.post.reactions.filter(reaction_type='UPVOTE').count(), 1)
+        self.assertContains(res1, 'active')
+
+        # 2. Toggle OFF
+        res2 = self.client.post(url, {'reaction_type': 'UPVOTE'}, HTTP_HX_REQUEST='true')
+        self.assertEqual(res2.status_code, 200)
+        self.assertEqual(self.post.reactions.filter(reaction_type='UPVOTE').count(), 0)
+
+    def test_three_user_reports_automatically_flags_post(self):
+        """Receiving 3 unresolved user reports transitions moderation_status to FLAGGED."""
+        self.assertEqual(self.post.moderation_status, CommunityPost.MODERATION_STATUS_ACTIVE)
+
+        # User 1 reports
+        self.client.login(username='culer1', password='password123')
+        self.client.post(reverse('community:report_content', kwargs={'post_id': self.post.id}), {
+            'reason': 'SPAM',
+            'details': 'Spam post 1'
+        })
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.moderation_status, CommunityPost.MODERATION_STATUS_ACTIVE)
+
+        # User 2 reports
+        self.client.login(username='culer2', password='password123')
+        self.client.post(reverse('community:report_content', kwargs={'post_id': self.post.id}), {
+            'reason': 'ABUSE',
+            'details': 'Harassment'
+        })
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.moderation_status, CommunityPost.MODERATION_STATUS_ACTIVE)
+
+        # User 3 reports -> threshold reached!
+        self.client.login(username='culer3', password='password123')
+        self.client.post(reverse('community:report_content', kwargs={'post_id': self.post.id}), {
+            'reason': 'MISINFORMATION',
+            'details': 'False injury rumor'
+        })
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.moderation_status, CommunityPost.MODERATION_STATUS_FLAGGED)
+        self.assertEqual(self.post.reports.count(), 3)
+
+    def test_hidden_posts_do_not_appear_in_public_community_feeds(self):
+        """Posts with moderation_status='HIDDEN' must not render in post_list or match detail."""
+        hidden_post = CommunityPost.objects.create(
+            title="Banned Harmful Content",
+            content="<p>This should never be seen.</p>",
+            author=self.user2,
+            moderation_status=CommunityPost.MODERATION_STATUS_HIDDEN,
+            is_published=True
+        )
+
+        response = self.client.get(reverse('community:post_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.post, response.context['page_obj'])
+        self.assertNotIn(hidden_post, response.context['page_obj'])
+        self.assertContains(response, self.post.title)
+        self.assertNotContains(response, hidden_post.title)
+
+        # Detail view returns 404 for regular users
+        detail_res = self.client.get(reverse('community:post_detail', kwargs={'pk': hidden_post.pk}))
+        self.assertEqual(detail_res.status_code, 404)
+
+    def test_locked_post_prevents_new_comments(self):
+        """When is_locked=True, further comments cannot be submitted."""
+        self.post.is_locked = True
+        self.post.save()
+
+        res = self.client.post(reverse('community:add_comment', kwargs={'pk': self.post.pk}), {
+            'name': 'Fan',
+            'content': 'Attempted comment on locked thread'
+        }, follow=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(self.post.comments.count(), 0)
+        self.assertContains(res, 'locked')
+
+    def test_match_detail_embeds_match_discussion_threads(self):
+        """Match detail page renders linked supporter discussion threads."""
+        match_post = CommunityPost.objects.create(
+            title="Spotify Camp Nou Tactical Review Discussion",
+            content="<p>Discuss the pressing and xG of this Clásico.</p>",
+            category=CommunityPost.CATEGORY_MATCH_DISCUSSION,
+            related_match=self.match,
+            author=self.user1
+        )
+
+        res = self.client.get(reverse('matches:match_detail', kwargs={'match_id': self.match.id}))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, "Match Discussion Threads")
+        self.assertContains(res, match_post.title)
+
+    def test_staff_moderation_actions_in_customadmin(self):
+        """Staff admins can 1-click approve, hide, lock, or delete flagged posts."""
+        self.client.login(username='staffmod', password='adminpassword')
+        self.post.moderation_status = CommunityPost.MODERATION_STATUS_FLAGGED
+        self.post.save()
+
+        mod_url = reverse('customadmin:moderate_post', kwargs={'post_id': self.post.id})
+
+        # 1. Hide post
+        self.client.post(mod_url, {'action': 'hide'})
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.moderation_status, CommunityPost.MODERATION_STATUS_HIDDEN)
+
+        # 2. Approve post
+        self.client.post(mod_url, {'action': 'approve'})
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.moderation_status, CommunityPost.MODERATION_STATUS_ACTIVE)
+
+        # 3. Lock post
+        self.client.post(mod_url, {'action': 'lock'})
+        self.post.refresh_from_db()
+        self.assertTrue(self.post.is_locked)
+
+        # 4. Delete post
+        self.client.post(mod_url, {'action': 'delete'})
+        self.assertFalse(CommunityPost.objects.filter(id=self.post.id).exists())
 
 
 class RateLimitingAndMiddlewareTestCase(TestCase):
