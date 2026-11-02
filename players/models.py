@@ -10,11 +10,14 @@ class Player(models.Model):
         ('CB', 'Centre-Back'),
         ('RB', 'Right-Back'),
         ('LB', 'Left-Back'),
+        ('DF', 'Defender'),
         ('CM', 'Central Midfield'),
         ('AM', 'Attacking Midfield'),
         ('DM', 'Defensive Midfield'),
+        ('MF', 'Midfielder'),
         ('W', 'Winger'),
         ('CF', 'Centre-Forward'),
+        ('FW', 'Forward'),
     ]
     
     FOOT_CHOICES = [

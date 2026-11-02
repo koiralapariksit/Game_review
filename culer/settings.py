@@ -33,9 +33,11 @@ if not SECRET_KEY:
 # 3. Host and Origin Security
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+    for host in os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver').split(',')
     if host.strip()
 ]
+if 'testserver' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('testserver')
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
