@@ -1,7 +1,7 @@
 # matches/admin.py
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Competition, Team, Match, MatchStatistic, MatchEvent, Comment
+from .models import Competition, Team, Match, MatchStatistic, MatchEvent, Comment, ProviderSyncLog
 
 
 @admin.register(Competition)
@@ -141,3 +141,40 @@ class CommentAdmin(admin.ModelAdmin):
         updated = queryset.update(is_featured=False)
         self.message_user(request, f'{updated} comment(s) unmarked as featured.')
     unfeature_comments.short_description = 'Unfeature selected comments'
+
+
+@admin.register(ProviderSyncLog)
+class ProviderSyncLogAdmin(admin.ModelAdmin):
+    list_display = [
+        'provider_name',
+        'endpoint',
+        'status_code',
+        'success',
+        'records_processed',
+        'response_time_ms',
+        'created_at',
+    ]
+    list_filter = [
+        'provider_name',
+        'success',
+        'status_code',
+        'created_at',
+    ]
+    search_fields = [
+        'endpoint',
+        'error_message',
+        'provider_name',
+    ]
+    readonly_fields = [
+        'provider_name',
+        'endpoint',
+        'status_code',
+        'success',
+        'records_processed',
+        'error_message',
+        'response_time_ms',
+        'created_at',
+    ]
+    date_hierarchy = 'created_at'
+    ordering = ['-created_at']
+

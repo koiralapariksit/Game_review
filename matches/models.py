@@ -396,3 +396,25 @@ class Comment(models.Model):
         if self.comment:
             self.comment = sanitize_rich_text(self.comment)
         super().save(*args, **kwargs)
+
+
+class ProviderSyncLog(models.Model):
+    provider_name = models.CharField(max_length=50, help_text="Data provider identifier (e.g. 'football-data.org')")
+    endpoint = models.CharField(max_length=255, help_text="API endpoint requested")
+    status_code = models.IntegerField(null=True, blank=True, help_text="HTTP response status code")
+    success = models.BooleanField(default=False, help_text="Whether the request succeeded and was ingested")
+    records_processed = models.PositiveIntegerField(default=0, help_text="Count of records parsed/updated")
+    error_message = models.TextField(blank=True, default='', help_text="Error details if request or ingestion failed")
+    response_time_ms = models.PositiveIntegerField(null=True, blank=True, help_text="Total roundtrip latency in milliseconds")
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Provider Sync Log"
+        verbose_name_plural = "Provider Sync Logs"
+
+    def __str__(self):
+        status = "SUCCESS" if self.success else f"FAILED ({self.status_code or 'ERR'})"
+        created_str = self.created_at.strftime('%Y-%m-%d %H:%M:%S') if self.created_at else 'pending'
+        return f"[{self.provider_name}] {self.endpoint} - {status} ({created_str})"
+
