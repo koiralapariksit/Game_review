@@ -33,3 +33,4 @@ class EditorialArticleSchema(BaseModel):
     claimed_score: str = Field(..., description="Final score in home-away format (e.g. '3-1')")
     claimed_goalscorers: List[str] = Field(default_factory=list, description="Names of goalscorers referenced in the text")
     claimed_stats_referenced: Dict[str, str] = Field(default_factory=dict, description="Key stats mentioned (e.g. {'possession': '62%', 'shots': '16'})")
+

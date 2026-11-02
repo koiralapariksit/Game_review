@@ -203,3 +203,4 @@ def compute_team_form(competition_code: Optional[str] = None, limit: int = 5) ->
         "avg_goals_scored": round(total_goals_scored / count, 2) if count > 0 else 0.0,
         "avg_goals_conceded": round(total_goals_conceded / count, 2) if count > 0 else 0.0,
     }
+

@@ -155,3 +155,4 @@ class OpenRouterClient:
         raise AllFreeModelsUnavailableException(
             f"All free OpenRouter models failed to generate valid structured data. Details: {error_summary}"
         )
+

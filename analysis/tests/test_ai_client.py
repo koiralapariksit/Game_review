@@ -101,3 +101,4 @@ class OpenRouterClientTestCase(TestCase):
                 system_prompt="You are an expert",
                 schema_class=DummySchema
             )
+
